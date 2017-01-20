@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Nearby</string>
-    <string name="password">Password</string>
-    <string name="email">Email</string>
-    <string name="login">Login</string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">730316910463943</string>
+    <string name="fb_login_protocol_scheme">fb730316910463943</string>
+
+
 </resources>
