@@ -7,4 +7,13 @@
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
     <color name="colorIcon">#ffffff</color>
+
+    <color name="colorhyperlink">#0F74BD</color>
+
+    <!-- Social -->
+    <color name="facebookBlue">#4267B2</color>
+    <color name="googleRed">#DF4A32</color>
+
+    <!-- Basic colors -->
+    <color name="white">#ffffff</color>
 </resources>

@@ -4,6 +4,15 @@
     <!-- Facebook -->
     <string name="facebook_app_id">730316910463943</string>
     <string name="fb_login_protocol_scheme">fb730316910463943</string>
+    <string name="sign_in_facebook">Sign in with Facebook</string>
+
+    <!-- Google -->
+    <string name="sign_in_google">Sign in with Google</string>
+
+    <!-- Login Activity -->
+    <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>
+    <string name="therms_of_service">By Signing up you accept the <a href="">ToS</a> and <a href="">Condition of usage.</a></string>
+
 
 
 </resources>

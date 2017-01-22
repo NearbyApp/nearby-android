@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
@@ -22,6 +24,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,11 +41,19 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     private static final String TAG = LoginFragment.class.getSimpleName();
     private static final int RC_GOOGLE_LOGIN = 101;
 
-    @BindView(R.id.facebook_login_button) LoginButton uFacebookLoginButton;
-    @BindView(R.id.google_login_button) SignInButton uGoogleLoginButton;
+    @BindView(R.id.facebook_login_button) Button uFacebookLoginButton;
+    @BindView(R.id.google_login_button) Button uGoogleLoginButton;
 
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //TODO uncomment
+        //initializeGoogleApi();
+    }
 
     @Nullable
     @Override
@@ -50,7 +62,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         ButterKnife.bind(this,view);
 
         initializeFacebook();
-        initializeGoogle();
 
         return view;
     }
@@ -65,6 +76,14 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        //TODO Uncomment
+        //mGoogleApiClient.stopAutoManage(getActivity());
+        //mGoogleApiClient.disconnect();
     }
 
     @Override
@@ -92,12 +111,16 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
     private void initializeFacebook(){
-        uFacebookLoginButton.setReadPermissions("public_profile","email");
-        uFacebookLoginButton.setFragment(this);
+        uFacebookLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email"));
+            }
+        });
 
         mCallbackManager = CallbackManager.Factory.create();
 
-        uFacebookLoginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 //TODO Do something on success
@@ -116,7 +139,8 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         });
     }
 
-    private void initializeGoogle() {
+    private void initializeGoogleApi() {
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -126,7 +150,5 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 .enableAutoManage(this.getActivity() , this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
-
-        uGoogleLoginButton.setSize(SignInButton.SIZE_WIDE);
     }
 }
