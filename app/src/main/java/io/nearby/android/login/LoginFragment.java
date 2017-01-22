@@ -14,7 +14,6 @@ import android.widget.Button;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
@@ -30,6 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.nearby.android.R;
+import io.nearby.android.google.GoogleApiClientBuilder;
 
 /**
  * Created by Marc on 2017-01-20.
@@ -81,14 +81,6 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
-
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
-    }
-
-    @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         //TODO DO something
         Log.e(TAG, "Connection failed");
@@ -137,15 +129,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
      * Creates the google api objects with the specified GoogleSignInOptions object.
      */
     private void initializeGoogleApi() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
-        mGoogleApiClient = new GoogleApiClient.Builder(this.getContext())
-                .enableAutoManage(this.getActivity() , this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
+        mGoogleApiClient = GoogleApiClientBuilder.build(this.getActivity(),null);
     }
 
     public interface LoginListener{
