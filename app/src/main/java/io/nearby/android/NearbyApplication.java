@@ -17,7 +17,5 @@ public class NearbyApplication extends Application {
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
-
-
     }
 }

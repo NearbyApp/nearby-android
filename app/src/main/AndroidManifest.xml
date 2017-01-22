@@ -16,12 +16,15 @@
 
         <activity android:name=".login.LoginActivity"
             android:screenOrientation="portrait">
+        </activity>
 
+        <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
 
         <!-- To enable Chrome custom tabs for Facebook login -->

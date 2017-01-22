@@ -14,15 +14,14 @@ import android.widget.Button;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Arrays;
@@ -46,19 +45,19 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
+    private LoginListener mLoginListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //TODO uncomment
-        //initializeGoogleApi();
+        initializeGoogleApi();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_login, container, false);
+        View view = inflater.inflate(R.layout.login_fragment, container, false);
         ButterKnife.bind(this,view);
 
         initializeFacebook();
@@ -71,7 +70,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == RC_GOOGLE_LOGIN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleGoogleLoginResult(result);
+            if (result.isSuccess()) {
+                GoogleSignInAccount account = result.getSignInAccount();
+                mLoginListener.onGoogleLogin(account);
+            }
         }
         else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -81,14 +83,15 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     @Override
     public void onDestroy() {
         super.onDestroy();
-        //TODO Uncomment
-        //mGoogleApiClient.stopAutoManage(getActivity());
-        //mGoogleApiClient.disconnect();
+
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         //TODO DO something
+        Log.e(TAG, "Connection failed");
     }
 
     @OnClick(R.id.google_login_button)
@@ -97,34 +100,25 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
     }
 
-    private void handleGoogleLoginResult(GoogleSignInResult result) {
-        Log.d(TAG, "handleGoogleLoginResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            //TODO DO something with login infos.
-            // Signed in successfully, show authenticated UI.
-            GoogleSignInAccount account = result.getSignInAccount();
-            //account.getDisplayName();
-            //account.getEmail();
-        } else {
-            // Signed out, show unauthenticated UI.
-        }
+    @OnClick(R.id.facebook_login_button)
+    public void onFacebookLoginButtonClick(View v){
+        LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email"));
     }
 
-    private void initializeFacebook(){
-        uFacebookLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email"));
-            }
-        });
+    public void setLoginListener(LoginListener listener){
+        mLoginListener = listener;
+    }
 
+    /**
+     * Creates the callback manager which will receive the anwers from the facebook service.
+     */
+    private void initializeFacebook(){
         mCallbackManager = CallbackManager.Factory.create();
 
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                //TODO Do something on success
-                //loginResult.getAccessToken().getUserId();
+                mLoginListener.onFacebookLogin(loginResult);
             }
 
             @Override
@@ -139,8 +133,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
         });
     }
 
+    /**
+     * Creates the google api objects with the specified GoogleSignInOptions object.
+     */
     private void initializeGoogleApi() {
-
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -150,5 +146,10 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
                 .enableAutoManage(this.getActivity() , this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+    }
+
+    public interface LoginListener{
+        void onGoogleLogin(GoogleSignInAccount account);
+        void onFacebookLogin(LoginResult loginResult);
     }
 }
