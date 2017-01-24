@@ -6,6 +6,8 @@ import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.GoogleApiClient;
 
+import io.nearby.android.R;
+
 /**
  * Created by Marc on 2017-01-22.
  */
@@ -15,7 +17,9 @@ public class GoogleApiClientBuilder {
     private GoogleApiClientBuilder(){}
 
     public static GoogleApiClient build(FragmentActivity activity, GoogleApiClient.OnConnectionFailedListener listener){
+        //TODO Add server client id.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(activity.getString(R.string.client_server_id))
                 .requestEmail()
                 .build();
 

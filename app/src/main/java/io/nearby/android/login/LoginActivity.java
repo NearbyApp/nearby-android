@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.Lo
         String id = account.getId();
         String name = account.getDisplayName();
         String email = account.getEmail();
-
+        String idToken = account.getIdToken();
         //TODO Make API call
     }
 

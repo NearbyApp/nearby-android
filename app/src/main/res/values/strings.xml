@@ -8,11 +8,11 @@
 
     <!-- Google -->
     <string name="sign_in_google">Sign in with Google</string>
+    <string name="client_server_id" ></string>
 
     <!-- Login Activity -->
     <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>
     <string name="therms_of_service">By Signing up you accept the <a href="">ToS</a> and <a href="">Condition of usage.</a></string>
-
 
 
 </resources>
