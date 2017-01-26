@@ -2,8 +2,8 @@ package io.nearby.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.Auth;
@@ -12,10 +12,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
-import java.util.concurrent.TimeUnit;
-
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.login.LoginActivity;
+
+import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_FACEBOOK;
+import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_GOOGLE;
 
 /**
  * Created by Marc on 2017-01-22.
@@ -23,27 +24,28 @@ import io.nearby.android.login.LoginActivity;
 
 public class LauncherActivity extends AppCompatActivity {
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Intent intent;
-        boolean isLoggedIn = isUserLogedWithFacebook() || isUserLoggedInWithGoogle();
+        if(SignInManager.hasUserAlreadySignedIn(this)){
+            int method = SignInManager.getLastSignInMethod(this);
 
-        if(isLoggedIn){
-            Toast.makeText(this,"Logged in",Toast.LENGTH_LONG).show();
-            intent = new Intent(this, LoginActivity.class);
+            switch (method){
+                case LAST_SIGN_IN_METHOD_FACEBOOK:
+                    facebookAuthentification();
+                    break;
+                case LAST_SIGN_IN_METHOD_GOOGLE:
+                    googleAuthentification();
+                    break;
+            }
         }
-        else {
-            intent = new Intent(this, LoginActivity.class);
-        }
-
-        startActivity(intent);
-        finish();
     }
 
     /**
      * If an AccessToken exists and is not expired, the user is considered logged in.
+     * The finish() method call will be called if the user id logged in.
      *
      * From Facebook developpers site :
      * Native mobile apps using Facebook's SDKs will get long-lived access tokens,
@@ -57,33 +59,65 @@ public class LauncherActivity extends AppCompatActivity {
      *
      * @return true if the user is logged in via Facebook
      */
-    private boolean isUserLogedWithFacebook(){
-        boolean isLoggedIn = false;
-
+    private void facebookAuthentification(){
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
-                isLoggedIn = true;
+                AccessToken.refreshCurrentAccessTokenAsync();
+                SignInManager.updateLastSignInMethod(this,LAST_SIGN_IN_METHOD_FACEBOOK);
+                userIsSignedIn();
+                return;
             }
         }
 
-        return isLoggedIn;
+        // If the process gets here, it means that the user was not logged in with facebook
+        // or that the token used to log in was expired.
+        userIsNotSignedIn();
     }
 
     /**
      * To validate that the google account exist. We try a silent sign_in.
      * If it fails, the client is not logded in.
-     * @return True if the session is still valid.
      */
-    private boolean isUserLoggedInWithGoogle(){
-        boolean isLoggedIn = false;
-
+    private void googleAuthentification(){
         GoogleApiClient googleApiClient = GoogleApiClientBuilder.build(this,null);
 
         OptionalPendingResult<GoogleSignInResult> resultOptionalPendingResult = Auth.GoogleSignInApi.silentSignIn(googleApiClient);
         if(resultOptionalPendingResult.isDone()){
-            isLoggedIn = resultOptionalPendingResult.get().isSuccess();
+            handleGoogleResult(resultOptionalPendingResult.get());
         }
+        else {
+            // If the user has not previously signed in on this device or the sign-in has expired,
+            // this asynchronous branch will attempt to sign in the user silently.  Cross-device
+            // single sign-on will occur in this branch.
+            resultOptionalPendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
+                @Override
+                public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
+                    handleGoogleResult(googleSignInResult);
+                }
+            });
+        }
+    }
 
-        return isLoggedIn;
+    private void handleGoogleResult(GoogleSignInResult googleSignInResult){
+        if(googleSignInResult != null && googleSignInResult.isSuccess()){
+            SignInManager.updateLastSignInMethod(this,LAST_SIGN_IN_METHOD_GOOGLE);
+            userIsSignedIn();
+        }
+        else {
+            userIsNotSignedIn();
+        }
+    }
+
+    private void userIsSignedIn(){
+        //TODO Go to MainActivity
+        //Intent intent = new Intent(this,MainActivity.class);
+        //startActivity(intent);
+        //finish();
+    }
+
+    private void userIsNotSignedIn(){
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

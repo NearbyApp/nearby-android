@@ -31,11 +31,6 @@ dependencies {
     // Facebook
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
 
-    // Butterknife
-    compile 'com.jakewharton:butterknife:8.4.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
-
-
     // Default compile stuff
     compile fileTree(dir: 'libs', include: ['*.jar'])
 

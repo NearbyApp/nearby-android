@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -18,16 +17,12 @@ import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Arrays;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
 
@@ -35,13 +30,10 @@ import io.nearby.android.google.GoogleApiClientBuilder;
  * Created by Marc on 2017-01-20.
  */
 
-public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener {
+public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     private static final String TAG = LoginFragment.class.getSimpleName();
-    private static final int RC_GOOGLE_LOGIN = 101;
-
-    @BindView(R.id.facebook_login_button) Button uFacebookLoginButton;
-    @BindView(R.id.google_login_button) Button uGoogleLoginButton;
+    private static final int RC_GOOGLE_LOGIN = 9001;
 
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
@@ -51,16 +43,36 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initializeGoogleApi();
+        //Google Api initialization
+        mGoogleApiClient = GoogleApiClientBuilder.build(this.getActivity(),null);
+
+        //Facebook initialization
+        mCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                mLoginListener.onFacebookLogin(loginResult);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(TAG,"Facebook Login result canceled");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(TAG,"Facebook Login result error");
+            }
+        });
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.login_fragment, container, false);
-        ButterKnife.bind(this,view);
 
-        initializeFacebook();
+        view.findViewById(R.id.facebook_login_button).setOnClickListener(this);
+        view.findViewById(R.id.google_login_button).setOnClickListener(this);
 
         return view;
     }
@@ -82,54 +94,32 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        //TODO DO something
-        Log.e(TAG, "Connection failed");
+        Log.d(TAG, "Connection failed - " + connectionResult);
     }
 
-    @OnClick(R.id.google_login_button)
-    public void onGoogleLoginButtonClick(View v){
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
-    }
-
-    @OnClick(R.id.facebook_login_button)
-    public void onFacebookLoginButtonClick(View v){
-        LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email"));
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.facebook_login_button:
+                facebookSignIn();
+                break;
+            case R.id.google_login_button:
+                googleSignIn();
+                break;
+        }
     }
 
     public void setLoginListener(LoginListener listener){
         mLoginListener = listener;
     }
 
-    /**
-     * Creates the callback manager which will receive the anwers from the facebook service.
-     */
-    private void initializeFacebook(){
-        mCallbackManager = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                mLoginListener.onFacebookLogin(loginResult);
-            }
-
-            @Override
-            public void onCancel() {
-                Log.d(TAG,"Facebook Login result canceled");
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.d(TAG,"Facebook Login result error");
-            }
-        });
+    private void googleSignIn(){
+        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+        startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
     }
 
-    /**
-     * Creates the google api objects with the specified GoogleSignInOptions object.
-     */
-    private void initializeGoogleApi() {
-        mGoogleApiClient = GoogleApiClientBuilder.build(this.getActivity(),null);
+    private void facebookSignIn(){
+        LoginManager.getInstance().logInWithReadPermissions(LoginFragment.this, Arrays.asList("public_profile","email"));
     }
 
     public interface LoginListener{
