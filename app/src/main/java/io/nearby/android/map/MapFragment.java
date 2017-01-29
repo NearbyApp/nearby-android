@@ -10,18 +10,33 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.clustering.ClusterManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import io.nearby.android.R;
+import io.nearby.android.model.Spotted;
+import io.nearby.android.util.BitmapUtil;
 
 /**
  * Created by Marc on 2017-01-27.
  */
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnCameraIdleListener, GoogleMap.OnMarkerClickListener {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
 
     private GoogleMap mGoogleMap;
+    private List<Marker> mMarkers = new ArrayList<>();
+    private ClusterManager<SpottedClusterItem> mClusterManager;
+
+    private boolean spottedClustered = false;
 
     @Override
     public void onCreate(Bundle bundle) {
@@ -47,7 +62,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * This is where we can add mMarkers or lines, add listeners or move the camera. In this case,
      * we just add a marker near Sydney, Australia.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
@@ -57,14 +72,63 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
         mGoogleMap.setOnMyLocationButtonClickListener(this);
-        mGoogleMap.setOnCameraIdleListener(this);
+
+        if(spottedClustered){
+            mClusterManager = new ClusterManager<>(getContext(),mGoogleMap);
+            mClusterManager.setRenderer(new MapIconRenderer(getContext(),mGoogleMap,mClusterManager));
+            mGoogleMap.setOnCameraIdleListener(mClusterManager);
+            mGoogleMap.setOnMarkerClickListener(mClusterManager);
+
+            addDummyClusteredSpotted();
+        }
+        else {
+            mGoogleMap.setOnCameraIdleListener(this);
+            mGoogleMap.setOnMarkerClickListener(this);
+
+            addDummySpotted();
+        }
 
         addMyLocationFeature();
 
-        // Add a marker in Sydney and move the camera
-        //LatLng sydney = new LatLng(-34, 151);
-        //mGoogleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        //mGoogleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+    }
+
+    private void addDummyClusteredSpotted(){
+        // Set some lat/lng coordinates to start with.
+        double lat = 45.4946433;
+        double lng = -73.5627956;
+
+        for (int i = 0; i < 25; i++) {
+            double offset = i / 180d;
+            lat = lat + offset;
+            lng = lng + offset;
+            Spotted spotted = new Spotted("Y ce passe quelque chose");
+            SpottedClusterItem spottedClusterItem = new SpottedClusterItem(spotted,new LatLng(lat,lng));
+
+            mClusterManager.addItem(spottedClusterItem);
+
+        }
+    }
+
+    private void addDummySpotted(){
+        // Set some lat/lng coordinates to start with.
+        double lat = 45.4946433;
+        double lng = -73.5627956;
+
+        for (int i = 0; i < 25; i++) {
+            double offset = i / 180d;
+            lat = lat + offset;
+            lng = lng + offset;
+            Spotted spotted = new Spotted("Y ce passe quelque chose");
+
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(new LatLng(lat,lng))
+                    .icon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.vectorDrawableToBitmap(getContext(), R.drawable.circle)))
+                    .title("ETS");
+            Marker marker = mGoogleMap.addMarker(markerOptions);
+            marker.setTag(spotted);
+
+            mMarkers.add(marker);
+        }
     }
 
     private void addMyLocationFeature(){
@@ -99,5 +163,13 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         //  }
         LatLng northEast = visibleRegion.latLngBounds.northeast;
         LatLng southWest = visibleRegion.latLngBounds.southwest;
+
+        //TODO Refresh spotted
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        //TODO show the clicked spotted
+        return false;
     }
 }
