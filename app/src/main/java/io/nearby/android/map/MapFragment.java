@@ -36,7 +36,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     private List<Marker> mMarkers = new ArrayList<>();
     private ClusterManager<SpottedClusterItem> mClusterManager;
 
-    private boolean spottedClustered = false;
+    private boolean spottedClustered = true;
 
     @Override
     public void onCreate(Bundle bundle) {
