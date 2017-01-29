@@ -7,4 +7,5 @@
 
     <dimen name="avatar">48dp</dimen>
     <dimen name="icon">24dp</dimen>
+    <dimen name="toolbar_height">56dp</dimen>
 </resources>

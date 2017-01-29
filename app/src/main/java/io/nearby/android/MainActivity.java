@@ -1,15 +1,18 @@
 package io.nearby.android;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -21,7 +24,7 @@ import io.nearby.android.map.MapFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private static final int DEFALT_NAV_DRAWER_INDEX = 0;
+    private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";
 
     private DrawerLayout mDrawerLayout;
@@ -29,7 +32,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private Toolbar mToolbar;
     private FloatingActionButton mFab;
 
-    private int mCurrentNavDrawerItemIndex = DEFALT_NAV_DRAWER_INDEX;
+    private ActionBarDrawerToggle mDrawerToggle;
+
+    private int mCurrentNavDrawerItem = DEFAULT_NAV_DRAWER_ITEM;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,42 +48,54 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mFab.setOnClickListener(this);
 
-        this.setupActionBarAndNavigationDrawer();
-
         if(savedInstanceState != null){
-            int navDrawer_index = savedInstanceState.getInt(NAV_DRAWER_INDEX);
-            onNavigationItemSelected(mNavigationView.getMenu().getItem(navDrawer_index));
+            mCurrentNavDrawerItem = savedInstanceState.getInt(NAV_DRAWER_INDEX);
         }
-        else {
-            onNavigationItemSelected(mNavigationView.getMenu().getItem(DEFALT_NAV_DRAWER_INDEX));
-        }
+
+        this.setupActionBarAndNavigationDrawer();
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putInt(NAV_DRAWER_INDEX, mCurrentNavDrawerItemIndex);
-
         super.onSaveInstanceState(outState);
+        outState.putInt(NAV_DRAWER_INDEX, mCurrentNavDrawerItem);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == android.support.v7.appcompat.R.id.home){
+            return mDrawerToggle.onOptionsItemSelected(item);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
+            mDrawerLayout.closeDrawer(GravityCompat.START);
+        }else {
+            super.onBackPressed();
+        }
+
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         boolean shouldItemBeSelected = false;
 
-
         switch(item.getItemId()){
             case R.id.map:
-                mCurrentNavDrawerItemIndex = 0;
+                mCurrentNavDrawerItem = item.getItemId();
                 shouldItemBeSelected = true;
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.container,new MapFragment())
-                        .addToBackStack(null)
-                        .commit();
-
                 break;
             case R.id.my_spotted:
-                mCurrentNavDrawerItemIndex = 1;
+                mCurrentNavDrawerItem = item.getItemId();
                 shouldItemBeSelected = true;
                 break;
             case R.id.settings:
@@ -89,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
         }
 
-        mDrawerLayout.closeDrawers();
+        mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return shouldItemBeSelected;
     }
@@ -104,15 +121,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void setupActionBarAndNavigationDrawer(){
         //Setting toolbar
-        this.setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbar);
+
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         //Initializing ActionBArDrawerToggle
-        ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.nav_drawer_open, R.string.nav_drawer_close);
+        mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.nav_drawer_open, R.string.nav_drawer_close);
 
         // Adding a drawer listener
         this.mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        mNavigationView.setNavigationItemSelectedListener(this);
+        mNavigationView.setCheckedItem(mCurrentNavDrawerItem);
+        navigate(mCurrentNavDrawerItem);
+    }
+
+    private void navigate(int itemId){
+        switch(itemId){
+            case R.id.map:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .add(R.id.container,new MapFragment())
+                        .addToBackStack(null)
+                        .commit();
+                break;
+            case R.id.my_spotted:
+                break;
+            case R.id.settings:
+                break;
+            case R.id.help:
+                break;
+            default:
+                break;
+        }
     }
 }
