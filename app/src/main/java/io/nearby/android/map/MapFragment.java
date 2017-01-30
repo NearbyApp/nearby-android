@@ -105,7 +105,6 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
             SpottedClusterItem spottedClusterItem = new SpottedClusterItem(spotted,new LatLng(lat,lng));
 
             mClusterManager.addItem(spottedClusterItem);
-
         }
     }
 
