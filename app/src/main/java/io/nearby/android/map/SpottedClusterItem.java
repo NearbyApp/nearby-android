@@ -11,22 +11,12 @@ import io.nearby.android.model.Spotted;
 
 public class SpottedClusterItem extends Spotted implements ClusterItem {
 
-    private LatLng latLng;
-
     public SpottedClusterItem(Spotted spotted){
-        super(spotted.getMessage());
-
-        latLng = new LatLng(Double.parseDouble(spotted.getLatitude()),
-                Double.parseDouble(spotted.getLongitude()));
-    }
-
-    public SpottedClusterItem(Spotted spotted, LatLng latLng) {
-        super(spotted.getMessage());
-        this.latLng = latLng;
+        super(spotted.getMessage(), spotted.getLatitude(), spotted.getLongitude());
     }
 
     @Override
     public LatLng getPosition() {
-        return latLng;
+        return getLatLng();
     }
 }
