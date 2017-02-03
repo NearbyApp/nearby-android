@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
+        navigate(item.getItemId());
 
         return shouldItemBeSelected;
     }

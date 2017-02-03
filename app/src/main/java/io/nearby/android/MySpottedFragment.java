@@ -9,7 +9,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.nearby.android.adapter.SpottedAdapter;
+import io.nearby.android.model.Spotted;
 
 /**
  * Created by Marc on 2017-02-02.
@@ -18,7 +22,7 @@ import io.nearby.android.adapter.SpottedAdapter;
 public class MySpottedFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private SpottedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
 
@@ -36,5 +40,22 @@ public class MySpottedFragment extends Fragment {
         mRecyclerView.setAdapter(mAdapter);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addDummySpotted();
+    }
+
+    private void addDummySpotted(){
+        List<Spotted> spotteds = new ArrayList<>();
+
+        for (int i = 0; i < 25 ; i++){
+            Spotted spotted = new Spotted("I spotted the spotted #" + i);
+            spotteds.add(spotted);
+        }
+
+        mAdapter.addItems(spotteds);
     }
 }

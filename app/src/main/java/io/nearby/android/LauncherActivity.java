@@ -41,6 +41,9 @@ public class LauncherActivity extends AppCompatActivity {
                     break;
             }
         }
+        else {
+            userIsNotSignedIn();
+        }
     }
 
     /**

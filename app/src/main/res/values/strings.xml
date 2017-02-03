@@ -29,6 +29,7 @@
     <!-- Misc -->
     <string name="nav_drawer_open">Drawer open</string>
     <string name="nav_drawer_close">Drawer closed</string>
+    <string name="new_spotted_hint">What did you spot?</string>
 
 
 </resources>

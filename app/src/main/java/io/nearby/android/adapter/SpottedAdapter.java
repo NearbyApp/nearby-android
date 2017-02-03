@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,12 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class SpottedMessageViewHolder extends RecyclerView.ViewHolder {
+        TextView mMessageTextView;
+
         public SpottedMessageViewHolder(View v) {
             super(v);
             //TODO Call findViewById to set view value
-
+            mMessageTextView = (TextView) itemView.findViewById(R.id.info_text);
         }
     }
 
@@ -69,6 +72,7 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
             case R.layout.spotted_message_card:
                 SpottedMessageViewHolder spottedMessageViewHolder = (SpottedMessageViewHolder) holder;
                 // TODO setValue
+                spottedMessageViewHolder.mMessageTextView.setText(spotted.getMessage());
                 break;
             case R.layout.spotted_image_card:
                 SpottedImageViewHolder spottedImageViewHolder = (SpottedImageViewHolder) holder;

@@ -8,6 +8,8 @@
     android:orientation="vertical"
     >
 
+    <include layout="@layout/generic_toolbar" />
+
     <EditText
         android:id="@+id/spotted_text"
 
@@ -15,17 +17,27 @@
         android:layout_height="0dp"
         android:layout_weight="1"
 
+        android:hint="@string/new_spotted_hint"
+        android:padding="@dimen/medium"
+
         android:gravity="top|start"
+        android:background="@android:color/transparent"
         />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCC"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0"
 
-        android:paddingLeft="@dimen/medium"
-        android:paddingRight="@dimen/medium"
-        android:paddingTop="@dimen/small"
-        android:paddingBottom="@dimen/small"
+        android:clipChildren="true"
+        android:clipToPadding="true"
+
+        android:background="@color/white"
         >
 
         <ImageButton
@@ -35,6 +47,12 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
 
+            android:paddingLeft="@dimen/medium"
+            android:paddingTop="@dimen/small"
+            android:paddingRight="@dimen/small"
+            android:paddingBottom="@dimen/small"
+
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_add_a_photo"/>
 
         <FrameLayout
@@ -43,14 +61,20 @@
             android:layout_weight="1"
             />
 
-        <Button
+        <ImageButton
             android:id="@+id/send_button"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
 
-            android:text="@string/send"
+            android:paddingLeft="@dimen/small"
+            android:paddingTop="@dimen/small"
+            android:paddingRight="@dimen/medium"
+            android:paddingBottom="@dimen/small"
+
+            android:background="?attr/selectableItemBackground"
+            app:srcCompat="@drawable/ic_send_selector"
             />
     </LinearLayout>
 
