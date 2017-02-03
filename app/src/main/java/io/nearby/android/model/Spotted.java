@@ -34,6 +34,10 @@ public class Spotted {
         this.latLng = latLng;
     }
 
+    public boolean hasImage() {
+        return false;
+    }
+
     public String getMessage() {
         return message;
     }
@@ -69,4 +73,5 @@ public class Spotted {
     private void setLatLng(LatLng latLng) {
         this.latLng = latLng;
     }
+
 }

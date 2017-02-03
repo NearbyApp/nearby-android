@@ -14,6 +14,9 @@
     <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>
     <string name="therms_of_service">By Signing up you accept the <a href="">ToS</a> and <a href="">Condition of usage.</a></string>
 
+    <!-- New spotted Activity -->
+    <string name="send">Send</string>
+
     <!-- Drawer menu items -->
     <string name="map">Map</string>
     <string name="my_spotted">My spotted</string>
@@ -26,5 +29,6 @@
     <!-- Misc -->
     <string name="nav_drawer_open">Drawer open</string>
     <string name="nav_drawer_close">Drawer closed</string>
+
 
 </resources>

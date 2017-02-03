@@ -22,7 +22,7 @@ import io.nearby.android.map.MapFragment;
  * Created by Marc on 2017-01-26.
  */
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";
@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
-    private FloatingActionButton mFab;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -44,9 +43,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        mFab = (FloatingActionButton) findViewById(R.id.fab);
-
-        mFab.setOnClickListener(this);
 
         if(savedInstanceState != null){
             mCurrentNavDrawerItem = savedInstanceState.getInt(NAV_DRAWER_INDEX);
@@ -111,14 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return shouldItemBeSelected;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()){
-            case R.id.fab:
-                break;
-        }
-    }
-
     private void setupActionBarAndNavigationDrawer(){
         //Setting toolbar
         setSupportActionBar(mToolbar);
@@ -141,11 +129,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.map:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .add(R.id.container,new MapFragment())
-                        .addToBackStack(null)
+                        .replace(R.id.container,new MapFragment())
                         .commit();
                 break;
             case R.id.my_spotted:
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new MySpottedFragment())
+                        .commit();
                 break;
             case R.id.settings:
                 break;

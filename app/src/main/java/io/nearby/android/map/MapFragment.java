@@ -1,16 +1,27 @@
 package io.nearby.android.map;
 
 import android.Manifest;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import io.nearby.android.NewSpottedActivity;
+import io.nearby.android.R;
 import io.nearby.android.model.Spotted;
 
 /**
@@ -20,6 +31,7 @@ import io.nearby.android.model.Spotted;
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
+    private static final int FAB_ID = 285;
 
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
@@ -29,6 +41,42 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         super.onCreate(bundle);
 
         getMapAsync(this);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+        View view = super.onCreateView(layoutInflater, viewGroup, bundle);
+
+        FrameLayout frameLayout = new FrameLayout(getContext());
+        frameLayout.addView(view);
+
+        FloatingActionButton fab = initializeFab(getContext());
+        frameLayout.addView(fab);
+
+        return frameLayout;
+    }
+
+    private FloatingActionButton initializeFab(Context context) {
+        FloatingActionButton fab = new FloatingActionButton(getContext());
+        fab.setImageResource(R.drawable.ic_add);
+
+        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                Gravity.BOTTOM|Gravity.END);
+        int mediumMargin = getResources().getDimensionPixelSize(R.dimen.medium);
+        params.setMargins(0,0, mediumMargin, mediumMargin);
+        fab.setLayoutParams(params);
+
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return fab;
     }
 
     @Override

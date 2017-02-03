@@ -10,9 +10,6 @@ import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
-import com.google.maps.android.clustering.view.ClusterRenderer;
-
-import java.util.Collection;
 
 /**
  * Created by Marc on 2017-01-31.

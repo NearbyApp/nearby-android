@@ -30,7 +30,10 @@
 
         <activity
             android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait">
+
+        </activity>
+
         <activity android:name=".LauncherActivity">
 
             <!--
@@ -40,12 +43,18 @@
             </intent-filter>
             -->
         </activity>
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".NewSpottedActivity"
+            android:windowSoftInputMode="adjustResize|stateVisible">
+
         </activity>
 
         <!-- To enable Chrome custom tabs for Facebook login -->
