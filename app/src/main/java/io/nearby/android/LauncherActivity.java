@@ -13,7 +13,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.login.LoginActivity;
+import io.nearby.android.ui.login.LoginActivity;
 
 import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_FACEBOOK;
 import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_GOOGLE;

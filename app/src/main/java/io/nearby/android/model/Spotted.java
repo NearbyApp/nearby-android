@@ -1,6 +1,7 @@
 package io.nearby.android.model;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.annotations.Expose;
 
 /**
  * Created by Marc on 2017-01-29.
@@ -8,13 +9,22 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Spotted {
 
+    @Expose
     private int id;
 
+    @Expose
     private String message;
 
+    @Expose
     private double longitude;
+
+    @Expose
     private double latitude;
+
+    @Expose
     private LatLng latLng;
+
+    public Spotted(){}
 
     public Spotted(String message) {
         this.message = message;

@@ -1,4 +1,4 @@
-package io.nearby.android.map;
+package io.nearby.android.ui.map;
 
 import android.content.Context;
 

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
 
-    tools:context="io.nearby.android.login.LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"

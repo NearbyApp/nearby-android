@@ -1,4 +1,4 @@
-package io.nearby.android;
+package io.nearby.android.ui.myspotted;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,7 +12,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.nearby.android.adapter.SpottedAdapter;
+import io.nearby.android.R;
+import io.nearby.android.ui.adapter.SpottedAdapter;
 import io.nearby.android.model.Spotted;
 
 /**

@@ -1,7 +1,6 @@
-package io.nearby.android.map;
+package io.nearby.android.ui.map;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,7 +19,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import io.nearby.android.NewSpottedActivity;
+import io.nearby.android.ui.newspotted.NewSpottedActivity;
 import io.nearby.android.R;
 import io.nearby.android.model.Spotted;
 

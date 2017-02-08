@@ -1,4 +1,4 @@
-package io.nearby.android.map;
+package io.nearby.android.ui.map;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;

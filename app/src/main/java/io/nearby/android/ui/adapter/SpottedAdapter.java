@@ -1,4 +1,4 @@
-package io.nearby.android.adapter;
+package io.nearby.android.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

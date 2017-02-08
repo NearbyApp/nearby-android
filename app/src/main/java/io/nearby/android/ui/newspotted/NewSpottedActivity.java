@@ -1,4 +1,4 @@
-package io.nearby.android;
+package io.nearby.android.ui.newspotted;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,6 +9,8 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+
+import io.nearby.android.R;
 
 /**
  * Created by Marc on 2017-02-02.

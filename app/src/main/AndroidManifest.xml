@@ -29,7 +29,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".login.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:screenOrientation="portrait">
 
         </activity>
@@ -44,7 +44,7 @@
             -->
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.MainActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,9 +54,9 @@
 
         </activity>
 
-        <activity android:name=".NewSpottedActivity"
+        <activity android:name=".ui.newspotted.NewSpottedActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".ui.MainActivity">
 
         </activity>
 
