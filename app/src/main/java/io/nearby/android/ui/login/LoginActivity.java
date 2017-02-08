@@ -3,7 +3,6 @@ package io.nearby.android.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
@@ -14,10 +13,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.nearby.android.R;
+import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity implements LoginFragment.LoginListener{
-
-    private static final String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,14 +49,14 @@ public class LoginActivity extends AppCompatActivity implements LoginFragment.Lo
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
                 // Application code
-                Log.d(TAG,"Graph request completed");
+                Timber.d("Graph request completed");
                 if(response.getError() == null){
                     try {
                         String id = object.getString("id");
                         String name = object.getString("name");
                         String email = object.getString("email");
                     } catch (JSONException e) {
-                        Log.e(TAG,"Graph request failed");
+                        Timber.e("Graph request failed");
                     }
                 }
             }

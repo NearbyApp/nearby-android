@@ -25,6 +25,7 @@ import java.util.Arrays;
 
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-01-20.
@@ -32,7 +33,6 @@ import io.nearby.android.google.GoogleApiClientBuilder;
 
 public class LoginFragment extends Fragment implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
-    private static final String TAG = LoginFragment.class.getSimpleName();
     private static final int RC_GOOGLE_LOGIN = 9001;
 
     private CallbackManager mCallbackManager;
@@ -56,12 +56,12 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
             @Override
             public void onCancel() {
-                Log.d(TAG,"Facebook Login result canceled");
+                Timber.d("Facebook Login result canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.d(TAG,"Facebook Login result error");
+                Timber.d("Facebook Login result error");
             }
         });
     }
@@ -94,7 +94,7 @@ public class LoginFragment extends Fragment implements GoogleApiClient.OnConnect
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-        Log.d(TAG, "Connection failed - " + connectionResult);
+        Timber.d("Connection failed - " + connectionResult);
     }
 
     @Override
