@@ -19,7 +19,7 @@ public class GoogleApiClientBuilder {
     public static GoogleApiClient build(FragmentActivity activity, GoogleApiClient.OnConnectionFailedListener listener){
         //TODO Add server client id.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-               // .requestIdToken(activity.getString(R.string.client_server_id))
+                .requestIdToken(activity.getString(R.string.client_server_id))
                 .requestEmail()
                 .build();
 
