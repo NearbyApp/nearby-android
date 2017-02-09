@@ -19,9 +19,12 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import io.nearby.android.google.maps.MapIconRenderer;
+import io.nearby.android.google.maps.NearbyClusterManager;
+import io.nearby.android.google.maps.SpottedClusterItem;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
 import io.nearby.android.R;
-import io.nearby.android.model.Spotted;
+import io.nearby.android.data.model.Spotted;
 
 /**
  * Created by Marc on 2017-01-27.
@@ -34,6 +37,15 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
+
+    public static MapFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        MapFragment fragment = new MapFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public void onCreate(Bundle bundle) {

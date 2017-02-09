@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.nearby.android.R;
-import io.nearby.android.model.Spotted;
+import io.nearby.android.data.model.Spotted;
 
 /**
  * Created by Marc on 2017-02-02.

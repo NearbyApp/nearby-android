@@ -3,6 +3,7 @@ package io.nearby.android;
 import android.app.Application;
 import android.util.Log;
 
+import io.nearby.android.data.local.SharedPreferencesHelper;
 import timber.log.Timber;
 
 /**
@@ -19,6 +20,7 @@ public class NearbyApplication extends Application {
             Timber.plant(new DebugTree());
         }
 
+        SharedPreferencesHelper.getInstance().setContext(this);
 
         //Facebook is automatically done when the manifest contains
         // the facebook app-id in a meta-data tag.

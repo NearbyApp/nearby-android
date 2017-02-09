@@ -14,18 +14,37 @@ import java.util.List;
 
 import io.nearby.android.R;
 import io.nearby.android.ui.adapter.SpottedAdapter;
-import io.nearby.android.model.Spotted;
+import io.nearby.android.data.model.Spotted;
 
 /**
  * Created by Marc on 2017-02-02.
  */
 
-public class MySpottedFragment extends Fragment {
+public class MySpottedFragment extends Fragment implements MySpottedView{
+
+    private MySpottedPresenter mPresenter;
 
     private RecyclerView mRecyclerView;
     private SpottedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public static MySpottedFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        MySpottedFragment fragment = new MySpottedFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mPresenter = new MySpottedPresenter();
+        mPresenter.attachView(this);
+
+    }
 
     @Nullable
     @Override
@@ -40,6 +59,8 @@ public class MySpottedFragment extends Fragment {
         mAdapter = new SpottedAdapter();
         mRecyclerView.setAdapter(mAdapter);
 
+        mPresenter.loadMySpotted();
+
         return view;
     }
 
@@ -47,6 +68,18 @@ public class MySpottedFragment extends Fragment {
     public void onResume() {
         super.onResume();
         addDummySpotted();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        mPresenter.detachView();
+    }
+
+    @Override
+    public void onMySpottedReceived(List<Spotted> spottedList) {
+
     }
 
     private void addDummySpotted(){

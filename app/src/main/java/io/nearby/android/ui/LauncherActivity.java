@@ -1,4 +1,4 @@
-package io.nearby.android;
+package io.nearby.android.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +12,9 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
+import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.login.LoginActivity;
-
-import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_FACEBOOK;
-import static io.nearby.android.SignInManager.LAST_SIGN_IN_METHOD_GOOGLE;
 
 /**
  * Created by Marc on 2017-01-22.
@@ -29,14 +27,14 @@ public class LauncherActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(SignInManager.hasUserAlreadySignedIn(this)){
-            int method = SignInManager.getLastSignInMethod(this);
+        if(SharedPreferencesHelper.getInstance().hasUserAlreadySignedIn()){
+            int method = SharedPreferencesHelper.getInstance().getLastSignInMethod();
 
             switch (method){
-                case LAST_SIGN_IN_METHOD_FACEBOOK:
+                case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK:
                     facebookAuthentification();
                     break;
-                case LAST_SIGN_IN_METHOD_GOOGLE:
+                case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE:
                     googleAuthentification();
                     break;
             }
@@ -66,7 +64,8 @@ public class LauncherActivity extends AppCompatActivity {
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
                 AccessToken.refreshCurrentAccessTokenAsync();
-                SignInManager.updateLastSignInMethod(this,LAST_SIGN_IN_METHOD_FACEBOOK);
+                SharedPreferencesHelper.getInstance()
+                        .updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
                 userIsSignedIn();
                 return;
             }
@@ -103,7 +102,8 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void handleGoogleResult(GoogleSignInResult googleSignInResult){
         if(googleSignInResult != null && googleSignInResult.isSuccess()){
-            SignInManager.updateLastSignInMethod(this,LAST_SIGN_IN_METHOD_GOOGLE);
+            SharedPreferencesHelper.getInstance()
+                    .updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
             userIsSignedIn();
         }
         else {
@@ -112,10 +112,9 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
     private void userIsSignedIn(){
-        //TODO Go to MainActivity
-        //Intent intent = new Intent(this,MainActivity.class);
-        //startActivity(intent);
-        //finish();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void userIsNotSignedIn(){

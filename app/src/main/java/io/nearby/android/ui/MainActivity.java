@@ -128,13 +128,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.map:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container,new MapFragment())
+                        .replace(R.id.container, MapFragment.newInstance())
                         .commit();
                 break;
             case R.id.my_spotted:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container, new MySpottedFragment())
+                        .replace(R.id.container, MySpottedFragment.newInstance())
                         .commit();
                 break;
             case R.id.settings:

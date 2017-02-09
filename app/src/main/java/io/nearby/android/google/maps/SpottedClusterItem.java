@@ -1,9 +1,9 @@
-package io.nearby.android.ui.map;
+package io.nearby.android.google.maps;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import io.nearby.android.model.Spotted;
+import io.nearby.android.data.model.Spotted;
 
 /**
  * Created by Marc on 2017-01-29.

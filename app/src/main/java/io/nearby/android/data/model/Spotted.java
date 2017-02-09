@@ -1,4 +1,4 @@
-package io.nearby.android.model;
+package io.nearby.android.data.model;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
@@ -21,7 +21,6 @@ public class Spotted {
     @Expose
     private double latitude;
 
-    @Expose
     private LatLng latLng;
 
     public Spotted(){}
