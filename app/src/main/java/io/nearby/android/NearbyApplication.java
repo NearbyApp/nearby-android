@@ -3,7 +3,9 @@ package io.nearby.android;
 import android.app.Application;
 import android.util.Log;
 
-import io.nearby.android.data.local.SharedPreferencesHelper;
+import io.nearby.android.injection.component.ApplicationComponent;
+import io.nearby.android.injection.component.DaggerApplicationComponent;
+import io.nearby.android.injection.module.ApplicationModule;
 import timber.log.Timber;
 
 /**
@@ -11,6 +13,8 @@ import timber.log.Timber;
  */
 
 public class NearbyApplication extends Application {
+
+    ApplicationComponent mApplicationComponent;
 
     @Override
     public void onCreate() {
@@ -20,11 +24,15 @@ public class NearbyApplication extends Application {
             Timber.plant(new DebugTree());
         }
 
-        SharedPreferencesHelper.getInstance().setContext(this);
+        mApplicationComponent = DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
 
         //Facebook is automatically done when the manifest contains
         // the facebook app-id in a meta-data tag.
     }
+
+
 
     private class DebugTree extends Timber.Tree{
 

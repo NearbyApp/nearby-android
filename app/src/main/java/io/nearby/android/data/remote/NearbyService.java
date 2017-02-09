@@ -36,7 +36,7 @@ public interface NearbyService {
     void loginWithGoogle();
 
     class Creator{
-        public static NearbyService provideNearbyService(){
+        public static NearbyService build(){
             Gson gson = new GsonBuilder()
                     .create();
 

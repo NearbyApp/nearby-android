@@ -12,6 +12,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 
+import javax.inject.Inject;
+
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.login.LoginActivity;
@@ -22,13 +24,16 @@ import io.nearby.android.ui.login.LoginActivity;
 
 public class LauncherActivity extends AppCompatActivity {
 
+    @Inject
+    SharedPreferencesHelper mSharedPrefHelper;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(SharedPreferencesHelper.getInstance().hasUserAlreadySignedIn()){
-            int method = SharedPreferencesHelper.getInstance().getLastSignInMethod();
+        if(mSharedPrefHelper.hasUserAlreadySignedIn()){
+            int method = mSharedPrefHelper.getLastSignInMethod();
 
             switch (method){
                 case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK:
@@ -64,8 +69,7 @@ public class LauncherActivity extends AppCompatActivity {
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
                 AccessToken.refreshCurrentAccessTokenAsync();
-                SharedPreferencesHelper.getInstance()
-                        .updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+                mSharedPrefHelper.updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
                 userIsSignedIn();
                 return;
             }
@@ -102,8 +106,7 @@ public class LauncherActivity extends AppCompatActivity {
 
     private void handleGoogleResult(GoogleSignInResult googleSignInResult){
         if(googleSignInResult != null && googleSignInResult.isSuccess()){
-            SharedPreferencesHelper.getInstance()
-                    .updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+            mSharedPrefHelper.updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
             userIsSignedIn();
         }
         else {
