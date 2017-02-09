@@ -10,14 +10,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import io.nearby.android.ui.Presenter;
 import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-02-08.
  */
 
-public class LoginPresenter extends Presenter<LoginView>  {
+public class LoginPresenter  {
 
     public LoginPresenter() { }
 

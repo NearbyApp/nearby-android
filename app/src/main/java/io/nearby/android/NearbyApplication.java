@@ -24,10 +24,6 @@ public class NearbyApplication extends Application {
             Timber.plant(new DebugTree());
         }
 
-        mApplicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-
         //Facebook is automatically done when the manifest contains
         // the facebook app-id in a meta-data tag.
     }

@@ -22,7 +22,7 @@ import io.nearby.android.ui.login.LoginActivity;
  * Created by Marc on 2017-01-22.
  */
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends BaseActivity {
 
     @Inject
     SharedPreferencesHelper mSharedPrefHelper;
@@ -31,6 +31,8 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mComponent.inject(this);
 
         if(mSharedPrefHelper.hasUserAlreadySignedIn()){
             int method = mSharedPrefHelper.getLastSignInMethod();

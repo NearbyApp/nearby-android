@@ -2,13 +2,13 @@
     <string name="app_name">Nearby</string>
 
     <!-- Facebook -->
-    <string name="facebook_app_id">730316910463943</string>
-    <string name="fb_login_protocol_scheme">fb730316910463943</string>
+    <string name="facebook_app_id" translatable="false">730316910463943</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb730316910463943</string>
     <string name="sign_in_facebook">Sign in with Facebook</string>
 
     <!-- Google -->
     <string name="sign_in_google">Sign in with Google</string>
-    <string name="client_server_id"></string>
+    <string name="client_server_id" translatable="false">706449986158-p86vohdjrun9un1ai7k2ulq1lvi445nk.apps.googleusercontent.com</string>
 
     <!-- Login Activity -->
     <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>

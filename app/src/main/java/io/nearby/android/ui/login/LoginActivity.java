@@ -21,10 +21,11 @@ import java.util.Arrays;
 
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.ui.MainActivity;
 import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginView, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener, LoginView, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_GOOGLE_LOGIN = 9001;
 
@@ -38,7 +39,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.login_activity);
 
         mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
 
         findViewById(R.id.facebook_login_button).setOnClickListener(this);
         findViewById(R.id.google_login_button).setOnClickListener(this);
@@ -66,7 +66,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPresenter.detachView();
     }
 
     @Override

@@ -6,6 +6,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.remote.NearbyService;
 
 /**
@@ -29,5 +30,11 @@ public class ApplicationModule {
     @Singleton
     NearbyService provideNearbyService(){
         return NearbyService.Creator.build();
+    }
+
+    @Provides
+    @Singleton
+    SharedPreferencesHelper provideSharedPreferencesHelper(){
+        return new SharedPreferencesHelper(mApplication);
     }
 }
