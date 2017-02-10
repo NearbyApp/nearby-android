@@ -3,12 +3,9 @@ package io.nearby.android.injection.component;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.nearby.android.data.local.SharedPreferencesHelper;
-import io.nearby.android.data.remote.NearbyService;
 import io.nearby.android.injection.module.ApplicationModule;
-import io.nearby.android.ui.BaseActivity;
-import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.LauncherActivity;
+import io.nearby.android.ui.login.LoginActivity;
 
 /**
  * Created by Marc on 2017-02-09.
@@ -18,5 +15,5 @@ import io.nearby.android.ui.LauncherActivity;
 public interface ApplicationComponent {
 
     void inject(LauncherActivity baseActivity);
-    void inject(BaseFragment baseFragment);
+    void inject(LoginActivity loginActivity);
 }

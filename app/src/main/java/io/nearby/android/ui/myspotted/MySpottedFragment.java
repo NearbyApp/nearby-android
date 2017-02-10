@@ -42,7 +42,6 @@ public class MySpottedFragment extends Fragment implements MySpottedView{
         super.onCreate(savedInstanceState);
 
         mPresenter = new MySpottedPresenter();
-        mPresenter.attachView(this);
 
     }
 
@@ -73,8 +72,6 @@ public class MySpottedFragment extends Fragment implements MySpottedView{
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        mPresenter.detachView();
     }
 
     @Override

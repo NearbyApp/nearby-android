@@ -3,6 +3,7 @@ package io.nearby.android.data.local;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.StringRes;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -21,8 +22,6 @@ public class SharedPreferencesHelper {
     public static final int LAST_SIGN_IN_METHOD_NONE = 0;
     public static final int LAST_SIGN_IN_METHOD_GOOGLE = 1;
     public static final int LAST_SIGN_IN_METHOD_FACEBOOK = 2;
-
-    private static SharedPreferencesHelper instance;
 
     private SharedPreferences mPrefs;
     private Context mContext;
@@ -60,11 +59,47 @@ public class SharedPreferencesHelper {
         return lastMethod;
     }
 
-    public void updateLastSignInMethod(int method){
+    public void setLastSignInMethod(int method){
         SharedPreferences.Editor editor = mPrefs.edit();
         editor.putInt(mContext.getString(R.string.pref_last_social_login_used), method);
         editor.commit();
     }
 
+
+    /*
+     *  Token Management
+     */
+
+    private String getToken(@StringRes int prefKey, String defaultValue){
+        String token = "";
+
+        if(mPrefs.contains(mContext.getString(prefKey))){
+            token = mPrefs.getString(mContext.getString(prefKey), defaultValue);
+        }
+
+        return token;
+    }
+
+    private void setToken(@StringRes int prefKey, String token){
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(mContext.getString(prefKey), token);
+        editor.commit();
+    }
+
+    public String getFacebookToken() {
+        return getToken(R.string.pref_facebook_token,"");
+    }
+
+    public String getGoogleToken() {
+        return getToken(R.string.pref_google_token,"");
+    }
+
+    public void setFacebookToken(String token){
+        setToken(R.string.pref_facebook_token, token);
+    }
+
+    public void setGoogleToken(String token){
+        setToken(R.string.pref_google_token, token);
+    }
 
 }

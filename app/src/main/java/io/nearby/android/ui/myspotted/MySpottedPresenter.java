@@ -1,13 +1,12 @@
 package io.nearby.android.ui.myspotted;
 
 import io.nearby.android.data.model.Spotted;
-import io.nearby.android.ui.Presenter;
 
 /**
  * Created by Marc on 2017-02-08.
  */
 
-public class MySpottedPresenter extends Presenter<MySpottedView>{
+public class MySpottedPresenter {
 
     public MySpottedPresenter(){
 

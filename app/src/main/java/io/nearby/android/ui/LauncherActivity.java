@@ -3,7 +3,6 @@ package io.nearby.android.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.Auth;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.login.LoginActivity;
 
 /**
@@ -33,6 +33,9 @@ public class LauncherActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         mComponent.inject(this);
+
+        //TODO remove this line
+        mSharedPrefHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
 
         if(mSharedPrefHelper.hasUserAlreadySignedIn()){
             int method = mSharedPrefHelper.getLastSignInMethod();
@@ -71,7 +74,7 @@ public class LauncherActivity extends BaseActivity {
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
                 AccessToken.refreshCurrentAccessTokenAsync();
-                mSharedPrefHelper.updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+                mSharedPrefHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
                 userIsSignedIn();
                 return;
             }
@@ -108,7 +111,7 @@ public class LauncherActivity extends BaseActivity {
 
     private void handleGoogleResult(GoogleSignInResult googleSignInResult){
         if(googleSignInResult != null && googleSignInResult.isSuccess()){
-            mSharedPrefHelper.updateLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+            mSharedPrefHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
             userIsSignedIn();
         }
         else {

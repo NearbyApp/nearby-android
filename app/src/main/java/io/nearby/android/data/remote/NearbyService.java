@@ -7,12 +7,19 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.X509TrustManager;
+
+import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.model.Spotted;
 import io.reactivex.Observable;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.GET;
@@ -30,17 +37,29 @@ public interface NearbyService {
     Observable<List<Spotted>> getMySpotted();
 
     @POST("/v1/login/facebook")
-    void loginWithFacebook();
+    Call<ResponseBody> loginWithFacebook();
 
     @POST("/v1/login/google")
-    void loginWithGoogle();
+    Call loginWithGoogle();
 
-    class Creator{
-        public static NearbyService build(){
+    class Builder {
+
+        private static final String AUTHORIZATION_HEADER = "Authorization";
+        private static final String SERVICE_PROVIDER_HEADER = "Service-Provider";
+
+        private SharedPreferencesHelper mSharedPreferenceHelper;
+
+        public Builder(){ }
+
+        public NearbyService build(){
             Gson gson = new GsonBuilder()
                     .create();
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder();
+
+            //TODO Fix ssl problem
+            //builder.sslSocketFactory(SSLSocketFactory.getDefault())
+
             builder.addInterceptor(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
@@ -48,9 +67,25 @@ public interface NearbyService {
 
                     Request.Builder requestBuilder = originalRequest.newBuilder();
 
+                    int lastSignInMethod = mSharedPreferenceHelper.getLastSignInMethod();
+
+                    String token = "";
+                    String provider = "";
+
+                    switch(lastSignInMethod){
+                        case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK:
+                            provider = "facebook";
+                            token = mSharedPreferenceHelper.getFacebookToken();
+                            break;
+                        case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE:
+                            provider = "google";
+                            token = mSharedPreferenceHelper.getGoogleToken();
+                            break;
+                    }
+
                     //TODO Validate that the user is logged in
-                    requestBuilder.header("Authorization","");
-                    requestBuilder.addHeader("Provider","");
+                    requestBuilder.header(AUTHORIZATION_HEADER,token);
+                    requestBuilder.addHeader(SERVICE_PROVIDER_HEADER, provider);
 
                     Request request = requestBuilder.build();
 
@@ -68,6 +103,10 @@ public interface NearbyService {
                     .build();
 
             return retrofit.create(NearbyService.class);
+        }
+
+        public void addSharedPreferencesHelper(SharedPreferencesHelper sharedPreferencesHelper) {
+            mSharedPreferenceHelper = sharedPreferencesHelper;
         }
     }
 }

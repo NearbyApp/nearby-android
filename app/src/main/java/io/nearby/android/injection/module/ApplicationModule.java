@@ -29,7 +29,9 @@ public class ApplicationModule {
     @Provides
     @Singleton
     NearbyService provideNearbyService(){
-        return NearbyService.Creator.build();
+        NearbyService.Builder builder= new NearbyService.Builder();
+        builder.addSharedPreferencesHelper(provideSharedPreferencesHelper());
+        return builder.build();
     }
 
     @Provides

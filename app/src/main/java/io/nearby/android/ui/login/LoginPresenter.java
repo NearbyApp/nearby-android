@@ -1,15 +1,14 @@
 package io.nearby.android.ui.login;
 
-import android.os.Bundle;
-
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import io.nearby.android.data.local.SharedPreferencesHelper;
+import io.nearby.android.data.remote.NearbyService;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 /**
@@ -18,9 +17,18 @@ import timber.log.Timber;
 
 public class LoginPresenter  {
 
-    public LoginPresenter() { }
+    private final SharedPreferencesHelper mSharedPreferenceHelper;
+    private NearbyService mNearbyService;
+    private LoginView mLoginView;
+
+    public LoginPresenter(NearbyService nearbyService, SharedPreferencesHelper sharedPreferencesHelper, LoginView loginView) {
+        mNearbyService = nearbyService;
+        mSharedPreferenceHelper = sharedPreferencesHelper;
+        mLoginView = loginView;
+    }
 
     public void loginWithFacebook(LoginResult loginResult) {
+        /*
         GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
@@ -38,21 +46,46 @@ public class LoginPresenter  {
             }
         });
 
+
         Bundle param = new Bundle();
         param.putString("fields","id,name,email");
         request.setParameters(param);
         request.executeAsync();
+        */
 
-        //TODO Make API call
+        mSharedPreferenceHelper.setFacebookToken(loginResult.getAccessToken().getToken());
+        mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+
+        mNearbyService.loginWithFacebook().enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                mLoginView.onLoginSuccessful();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Timber.e(t);
+            }
+        });
     }
 
     public void loginWithGoogle(GoogleSignInAccount account) {
-        String id = account.getId();
         String idToken = account.getIdToken();
-        // String name = account.getDisplayName();
-        // String email = account.getEmail();
-        // TODO Make API call
 
+        mSharedPreferenceHelper.setGoogleToken(idToken);
+        mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+
+        mNearbyService.loginWithGoogle().enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) {
+                mLoginView.onLoginSuccessful();
+            }
+
+            @Override
+            public void onFailure(Call call, Throwable t) {
+
+            }
+        });
     }
 
 

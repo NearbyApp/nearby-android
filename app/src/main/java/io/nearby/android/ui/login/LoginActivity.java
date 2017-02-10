@@ -3,7 +3,6 @@ package io.nearby.android.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.facebook.CallbackManager;
@@ -19,9 +18,13 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import io.nearby.android.R;
+import io.nearby.android.data.local.SharedPreferencesHelper;
+import io.nearby.android.data.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.ui.BaseActivity;
+import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.MainActivity;
 import timber.log.Timber;
 
@@ -33,12 +36,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     private LoginPresenter mPresenter;
     private CallbackManager mCallbackManager;
 
+    @Inject
+    NearbyService nearbyService;
+
+    @Inject
+    SharedPreferencesHelper mSharedPreferencesHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        mPresenter = new LoginPresenter();
+        mComponent.inject(this);
+
+        mPresenter = new LoginPresenter(nearbyService, mSharedPreferencesHelper,this);
 
         findViewById(R.id.facebook_login_button).setOnClickListener(this);
         findViewById(R.id.google_login_button).setOnClickListener(this);

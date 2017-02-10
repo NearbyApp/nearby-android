@@ -1,4 +1,4 @@
-package io.nearby.android.ui;
+package io.nearby.android.ui.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
