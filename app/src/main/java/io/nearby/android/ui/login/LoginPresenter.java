@@ -56,7 +56,20 @@ public class LoginPresenter  {
         mSharedPreferenceHelper.setFacebookToken(loginResult.getAccessToken().getToken());
         mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
 
-        mNearbyService.loginWithFacebook().enqueue(new Callback<ResponseBody>() {
+        login();
+    }
+
+    public void loginWithGoogle(GoogleSignInAccount account) {
+        String idToken = account.getIdToken();
+
+        mSharedPreferenceHelper.setGoogleToken(idToken);
+        mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+
+        login();
+    }
+
+    private void login(){
+        mNearbyService.login().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 mLoginView.onLoginSuccessful();
@@ -68,26 +81,5 @@ public class LoginPresenter  {
             }
         });
     }
-
-    public void loginWithGoogle(GoogleSignInAccount account) {
-        String idToken = account.getIdToken();
-
-        mSharedPreferenceHelper.setGoogleToken(idToken);
-        mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
-
-        mNearbyService.loginWithGoogle().enqueue(new Callback() {
-            @Override
-            public void onResponse(Call call, Response response) {
-                mLoginView.onLoginSuccessful();
-            }
-
-            @Override
-            public void onFailure(Call call, Throwable t) {
-
-            }
-        });
-    }
-
-
 
 }

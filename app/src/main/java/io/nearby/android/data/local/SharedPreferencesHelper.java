@@ -33,9 +33,7 @@ public class SharedPreferencesHelper {
     }
 
     public boolean hasUserAlreadySignedIn(){
-        boolean hasAlready = false;
-
-        hasAlready = mPrefs.contains(mContext.getString(R.string.pref_last_social_login_used));
+        boolean hasAlready = mPrefs.contains(mContext.getString(R.string.pref_last_social_login_used));
 
         if(hasAlready){
             hasAlready = mPrefs.getInt(mContext.getString(R.string.pref_last_social_login_used),LAST_SIGN_IN_METHOD_NONE) != LAST_SIGN_IN_METHOD_NONE;

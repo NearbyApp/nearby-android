@@ -1,0 +1,78 @@
+---
+Certificate chain
+ 0 s:/CN=nbyapi.mo-bergeron.com
+   i:/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3
+---
+Server certificate
+-----BEGIN CERTIFICATE-----
+MIIFEDCCA/igAwIBAgISA44tEJe1Jyl8OTArbbSfldnpMA0GCSqGSIb3DQEBCwUA
+MEoxCzAJBgNVBAYTAlVTMRYwFAYDVQQKEw1MZXQncyBFbmNyeXB0MSMwIQYDVQQD
+ExpMZXQncyBFbmNyeXB0IEF1dGhvcml0eSBYMzAeFw0xNzAyMDcxODU2MDBaFw0x
+NzA1MDgxODU2MDBaMCExHzAdBgNVBAMTFm5ieWFwaS5tby1iZXJnZXJvbi5jb20w
+ggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCcyKmqkIiUfZbOW5L6jAUE
+vKEGdfOkoW1/UBcuY8sYzbfIHy1SAnqvXWK6KDIcGeFCL4ESSvmkh3qjeYMSqtFZ
+ISZC1OHl/OxlfBvUH+oNj0Pc2xqfEGXqwKZ0Bx+NJMcNetugSl+bSzCDCuv5AK/y
+NT8SKQ1jWNUbuUpLcXk0SI6XjCW0wf9yRGL3F6lg/aZM0mD3aacN7wzccp1fru2v
+K7qqgqoHNkMMRQcV2zdEbaBUolyv2DfsMVvybjyp7jFpQ+n/uvcVsC6A0SuWfhVX
+U9nXpM+MXnAzDiogyQOmuPoYWWFhcdwqBFNuaSYkNS9K6uf3GJlWvvKiPSXMQfYN
+AgMBAAGjggIXMIICEzAOBgNVHQ8BAf8EBAMCBaAwHQYDVR0lBBYwFAYIKwYBBQUH
+AwEGCCsGAQUFBwMCMAwGA1UdEwEB/wQCMAAwHQYDVR0OBBYEFGto6xOoziIHbp/R
+aBJQ0TFtETzpMB8GA1UdIwQYMBaAFKhKamMEfd265tE5t6ZFZe/zqOyhMHAGCCsG
+AQUFBwEBBGQwYjAvBggrBgEFBQcwAYYjaHR0cDovL29jc3AuaW50LXgzLmxldHNl
+bmNyeXB0Lm9yZy8wLwYIKwYBBQUHMAKGI2h0dHA6Ly9jZXJ0LmludC14My5sZXRz
+ZW5jcnlwdC5vcmcvMCEGA1UdEQQaMBiCFm5ieWFwaS5tby1iZXJnZXJvbi5jb20w
+gf4GA1UdIASB9jCB8zAIBgZngQwBAgEwgeYGCysGAQQBgt8TAQEBMIHWMCYGCCsG
+AQUFBwIBFhpodHRwOi8vY3BzLmxldHNlbmNyeXB0Lm9yZzCBqwYIKwYBBQUHAgIw
+gZ4MgZtUaGlzIENlcnRpZmljYXRlIG1heSBvbmx5IGJlIHJlbGllZCB1cG9uIGJ5
+IFJlbHlpbmcgUGFydGllcyBhbmQgb25seSBpbiBhY2NvcmRhbmNlIHdpdGggdGhl
+IENlcnRpZmljYXRlIFBvbGljeSBmb3VuZCBhdCBodHRwczovL2xldHNlbmNyeXB0
+Lm9yZy9yZXBvc2l0b3J5LzANBgkqhkiG9w0BAQsFAAOCAQEAP06k0qXVYXxkjRfS
+5joe48KLVIvUDxwVxH+xPIafo3gQITVac4IZnWnrXz07qpiA5ol404v77zrSdo19
+FhB8FbUk7GPkqb2DgrFSSvvBf/PDaVSLwoR5Jvu1VtqRNlR/XsEI1k4AOFlomd95
+SWr+XZb2yAXQ6ru/CGseyDn7nk1oWUcsPifLvUYbxFQ+Fek7zuxKF4NWLYfkc569
+Eycc95rzQcKP34qjPJ+I7XBDQSLTCTZM4TI+SxSHZT2e0LJINA3muWDeQJoCB4BC
+APeRGOPz1J+MQZY1Po9dLltCpIwcZlx+49B+m6NYKGrJBJvSfAEg/pkpb10SATUy
+RaOqQg==
+-----END CERTIFICATE-----
+subject=/CN=nbyapi.mo-bergeron.com
+issuer=/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3
+---
+No client certificate CA names sent
+Peer signing digest: SHA512
+Server Temp Key: ECDH, P-256, 256 bits
+---
+SSL handshake has read 1959 bytes and written 434 bytes
+---
+New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+Server public key is 2048 bit
+Secure Renegotiation IS supported
+Compression: NONE
+Expansion: NONE
+No ALPN negotiated
+SSL-Session:
+    Protocol  : TLSv1.2
+    Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+    Session-ID: 4BF9B480F604C4F5F08A68A510763B53954A50D482BD2CFA131D626C5A0E4B52
+    Session-ID-ctx: 
+    Master-Key: EDAC71ACC66CA02E3DE5E95E9A850F08A7F1A5D35651735DFF6BAC41EE9C8980F01DAA2248A84F591D4F2ED7B873F462
+    Key-Arg   : None
+    PSK identity: None
+    PSK identity hint: None
+    SRP username: None
+    TLS session ticket lifetime hint: 300 (seconds)
+    TLS session ticket:
+    0000 - 4f a2 64 37 2d 6c d4 aa-28 89 7e de 8f 29 e5 2e   O.d7-l..(.~..)..
+    0010 - d5 d3 0b 73 cc 82 ca 7d-c6 38 34 9f 27 8d 70 d5   ...s...}.84.'.p.
+    0020 - 25 79 52 42 51 54 1d 21-fb 9d 49 9a de ef 01 6b   %yRBQT.!..I....k
+    0030 - 9f 63 46 fe 3c d1 1c 20-d0 17 a0 26 dc a5 33 0b   .cF.<.. ...&..3.
+    0040 - a3 36 a8 5e f4 61 21 9d-a0 37 23 fb f1 f9 0b 53   .6.^.a!..7#....S
+    0050 - 3f 90 f5 5e ee e0 b3 1d-16 56 1e 38 c3 4c 5d 74   ?..^.....V.8.L]t
+    0060 - 46 d1 9b 32 04 cb 9d 3e-43 47 6a 10 9c a3 6b 98   F..2...>CGj...k.
+    0070 - c4 e6 38 1e 22 fa 34 a9-cf 67 f1 31 39 f2 25 85   ..8.".4..g.19.%.
+    0080 - dc 25 4b f7 63 d5 7e 5b-fc c7 30 af 78 8b c7 55   .%K.c.~[..0.x..U
+    0090 - 04 ae 00 49 a4 66 28 c7-4f 7c d7 dd 47 85 98 3c   ...I.f(.O|..G..<
+
+    Start Time: 1486688526
+    Timeout   : 300 (sec)
+    Verify return code: 21 (unable to verify the first certificate)
+---
