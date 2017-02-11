@@ -1,6 +1,5 @@
 package io.nearby.android.data.remote;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.google.gson.Gson;
@@ -9,19 +8,12 @@ import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.net.SocketFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
@@ -32,6 +24,7 @@ import io.nearby.android.R;
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.model.Spotted;
 import io.reactivex.Observable;
+import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -125,21 +118,26 @@ public interface NearbyService {
 
                     int lastSignInMethod = mSharedPreferenceHelper.getLastSignInMethod();
 
+                    String userId = "";
                     String token = "";
                     String provider = "";
 
                     switch(lastSignInMethod){
                         case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK:
                             provider = "Facebook";
+                            userId = mSharedPreferenceHelper.getFacebookUserId();
                             token = mSharedPreferenceHelper.getFacebookToken();
                             break;
                         case SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE:
                             provider = "Google";
+                            userId = mSharedPreferenceHelper.getGoogleUserId();
                             token = mSharedPreferenceHelper.getGoogleToken();
                             break;
                     }
 
-                    requestBuilder.header(AUTHORIZATION_HEADER,token);
+                    String authToken = Credentials.basic(userId, token);
+
+                    requestBuilder.header(AUTHORIZATION_HEADER,authToken);
                     requestBuilder.addHeader(SERVICE_PROVIDER_HEADER, provider);
 
                     Request request = requestBuilder.build();
@@ -147,6 +145,7 @@ public interface NearbyService {
                     return chain.proceed(request);
                 }
             });
+
 
             OkHttpClient client = builder.build();
 

@@ -53,6 +53,7 @@ public class LoginPresenter  {
         request.executeAsync();
         */
 
+        mSharedPreferenceHelper.setFacebookUserId(loginResult.getAccessToken().getUserId());
         mSharedPreferenceHelper.setFacebookToken(loginResult.getAccessToken().getToken());
         mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
 
@@ -61,7 +62,9 @@ public class LoginPresenter  {
 
     public void loginWithGoogle(GoogleSignInAccount account) {
         String idToken = account.getIdToken();
+        String userId = account.getId();
 
+        mSharedPreferenceHelper.setGoogleUserId(userId);
         mSharedPreferenceHelper.setGoogleToken(idToken);
         mSharedPreferenceHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
 
@@ -72,7 +75,16 @@ public class LoginPresenter  {
         mNearbyService.login().enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                mLoginView.onLoginSuccessful();
+                switch (response.code()){
+                    case 201:
+                        //TODO Show a tutorial?
+                    case 200:
+                        mLoginView.onLoginSuccessful();
+                        break;
+                    default:
+                        Timber.d("An error occured when loging in.");
+                        break;
+                }
             }
 
             @Override

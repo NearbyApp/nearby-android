@@ -84,6 +84,22 @@ public class SharedPreferencesHelper {
         editor.commit();
     }
 
+    private String getUserId(@StringRes int prefKey){
+        String userId = "";
+
+        if(mPrefs.contains(mContext.getString(prefKey))){
+            userId = mPrefs.getString(mContext.getString(prefKey), "");
+        }
+
+        return userId;
+    }
+
+    private void setUserId(@StringRes int prefKey, String userId){
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putString(mContext.getString(prefKey), userId);
+        editor.commit();
+    }
+
     public String getFacebookToken() {
         return getToken(R.string.pref_facebook_token,"");
     }
@@ -98,6 +114,22 @@ public class SharedPreferencesHelper {
 
     public void setGoogleToken(String token){
         setToken(R.string.pref_google_token, token);
+    }
+
+    public String getFacebookUserId(){
+        return getUserId(R.string.pref_facebook_user_id);
+    }
+
+    public String getGoogleUserId(){
+        return getUserId(R.string.pref_google_user_id);
+    }
+
+    public void setFacebookUserId(String userId) {
+        setUserId(R.string.pref_facebook_user_id,userId);
+    }
+
+    public void setGoogleUserId(String userId) {
+        setUserId(R.string.pref_google_user_id,userId);
     }
 
 }

@@ -3,9 +3,6 @@ package io.nearby.android;
 import android.app.Application;
 import android.util.Log;
 
-import io.nearby.android.injection.component.ApplicationComponent;
-import io.nearby.android.injection.component.DaggerApplicationComponent;
-import io.nearby.android.injection.module.ApplicationModule;
 import timber.log.Timber;
 
 /**
@@ -13,8 +10,6 @@ import timber.log.Timber;
  */
 
 public class NearbyApplication extends Application {
-
-    ApplicationComponent mApplicationComponent;
 
     @Override
     public void onCreate() {
