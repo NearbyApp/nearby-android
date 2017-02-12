@@ -14,7 +14,7 @@ import io.nearby.android.injection.module.ApplicationModule;
 
 public class BaseFragment extends Fragment {
 
-    private ApplicationComponent mComponent;
+    protected ApplicationComponent mComponent;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

@@ -23,6 +23,7 @@ import javax.net.ssl.X509TrustManager;
 import io.nearby.android.R;
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.model.Spotted;
+import io.nearby.android.data.model.SpottedListResponse;
 import io.reactivex.Observable;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
@@ -47,14 +48,11 @@ public interface NearbyService {
 
     String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
 
-    @GET("/v1/spotteds/me")
-    Observable<List<Spotted>> getMySpotted();
-
     @POST("/v1/login")
     Call<ResponseBody> login();
 
     @GET("/v1/spotteds/me")
-    Call<ResponseBody> getMySpotteds();
+    Call<SpottedListResponse> getMySpotteds();
 
     // TODO Fix anonymity when the server will be updated
     @FormUrlEncoded

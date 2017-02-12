@@ -6,6 +6,7 @@ import dagger.Component;
 import io.nearby.android.injection.module.ApplicationModule;
 import io.nearby.android.ui.LauncherActivity;
 import io.nearby.android.ui.login.LoginActivity;
+import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
 
 /**
@@ -18,4 +19,6 @@ public interface ApplicationComponent {
     void inject(LauncherActivity launcherActivity);
     void inject(LoginActivity loginActivity);
     void inject(NewSpottedActivity newSpottedActivity);
+
+    void inject(MySpottedFragment mySpottedFragment);
 }

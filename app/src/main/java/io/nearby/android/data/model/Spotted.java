@@ -2,6 +2,7 @@ package io.nearby.android.data.model;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Marc on 2017-01-29.
@@ -9,20 +10,31 @@ import com.google.gson.annotations.Expose;
 
 public class Spotted {
 
+    @SerializedName("spottedId")
     @Expose
-    private int id;
+    private String id;
+
+    @SerializedName("userId")
+    @Expose
+    private String userId;
 
     @Expose
     private String message;
 
+    @SerializedName("longitude")
     @Expose
-    private double longitude;
+    private double lng;
 
+    @SerializedName("latitude")
     @Expose
-    private double latitude;
+    private double lat;
 
     private LatLng latLng;
 
+
+    /*
+     * Constructors
+     */
     public Spotted(){}
 
     public Spotted(String message) {
@@ -31,20 +43,40 @@ public class Spotted {
 
     public Spotted(String message, double latitude, double longitude) {
         this.message = message;
-        this.longitude = longitude;
-        this.latitude = latitude;
+        this.lng = longitude;
+        this.lat = latitude;
         this.latLng = new LatLng(latitude,longitude);
     }
 
     public Spotted(String message, LatLng latLng) {
         this.message = message;
-        this.latitude = latLng.latitude;
-        this.longitude = latLng.longitude;
+        this.lat = latLng.latitude;
+        this.lng= latLng.longitude;
         this.latLng = latLng;
     }
 
     public boolean hasImage() {
         return false;
+    }
+
+    /*
+     * Getter and setter
+     */
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getMessage() {
@@ -56,24 +88,24 @@ public class Spotted {
     }
 
     public double getLongitude() {
-        return longitude;
+        return lng;
     }
 
     public void setLongitude(double longitude) {
-        this.longitude = longitude;
+        this.lng = longitude;
     }
 
     public double getLatitude() {
-        return latitude;
+        return lat;
     }
 
     public void setLatitude(double latitude) {
-        this.latitude = latitude;
+        this.lat = latitude;
     }
 
     public LatLng getLatLng() {
         if(latLng == null){
-            setLatLng(new LatLng(latitude,longitude));
+            setLatLng(new LatLng(lat,lng));
         }
 
         return latLng;

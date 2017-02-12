@@ -114,4 +114,13 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
     public void insert(Spotted spotted){
         mDataset.add(0, spotted);
     }
+
+    public Spotted getLastSpotted(){
+        Spotted lastSpotted = null;
+        if(mDataset.size() > 0){
+            lastSpotted = mDataset.get(mDataset.size() - 1 );
+        }
+
+        return lastSpotted;
+    }
 }
