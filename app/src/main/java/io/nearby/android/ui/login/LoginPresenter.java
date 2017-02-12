@@ -77,6 +77,7 @@ public class LoginPresenter  {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 switch (response.code()){
                     case 201:
+                        //Account created
                         //TODO Show a tutorial?
                     case 200:
                         mLoginView.onLoginSuccessful();

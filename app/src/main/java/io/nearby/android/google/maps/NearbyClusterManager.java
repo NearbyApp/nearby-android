@@ -50,6 +50,6 @@ public class NearbyClusterManager<SpottedClusterItem extends ClusterItem> extend
     @Override
     public boolean onMarkerClick(Marker marker) {
         //TODO show the clicked spotted
-        return super.onMarkerClick(marker);
+        return true;
     }
 }

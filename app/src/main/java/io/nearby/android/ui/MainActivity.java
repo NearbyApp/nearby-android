@@ -11,10 +11,10 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
-import io.nearby.android.ui.base.BaseActivity;
-import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.R;
+import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.map.MapFragment;
+import io.nearby.android.ui.myspotted.MySpottedFragment;
 
 /**
  * Created by Marc on 2017-01-26.
