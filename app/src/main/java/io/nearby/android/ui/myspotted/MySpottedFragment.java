@@ -3,6 +3,7 @@ package io.nearby.android.ui.myspotted;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -20,10 +21,11 @@ import io.nearby.android.data.model.Spotted;
  * Created by Marc on 2017-02-02.
  */
 
-public class MySpottedFragment extends Fragment implements MySpottedView{
+public class MySpottedFragment extends Fragment implements MySpottedView, SwipeRefreshLayout.OnRefreshListener{
 
     private MySpottedPresenter mPresenter;
 
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private SpottedAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -50,6 +52,9 @@ public class MySpottedFragment extends Fragment implements MySpottedView{
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.my_spotted_fragment, container, false);
 
+        mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
 
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -70,13 +75,17 @@ public class MySpottedFragment extends Fragment implements MySpottedView{
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onRefresh() {
+        mPresenter.refreshMySpotted();
     }
 
     @Override
     public void onMySpottedReceived(List<Spotted> spottedList) {
+        //TODO A merging would probably be better
+        mAdapter.addItems(spottedList);
+        mAdapter.notifyDataSetChanged();
 
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     private void addDummySpotted(){
