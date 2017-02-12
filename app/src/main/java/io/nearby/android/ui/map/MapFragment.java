@@ -1,42 +1,58 @@
 package io.nearby.android.ui.map;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import io.nearby.android.R;
+import io.nearby.android.data.model.Spotted;
+import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.MapIconRenderer;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
+import io.nearby.android.ui.base.BaseFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
-import io.nearby.android.R;
-import io.nearby.android.data.model.Spotted;
 
 /**
  * Created by Marc on 2017-01-27.
  */
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleMap.OnMyLocationButtonClickListener {
+public class MapFragment extends BaseFragment implements OnMapReadyCallback,
+        GoogleMap.OnMyLocationButtonClickListener,
+        View.OnClickListener,
+        MapView, GoogleApiClient.ConnectionCallbacks {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
-    private static final int FAB_ID = 285;
 
+    private MapPresenter mMapPresenter;
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
+    private boolean mGoogleLocationServiceIsConnected;
+    private GoogleApiClient mGoogleApiClient;
+    @Inject NearbyService mNearbyService;
 
     public static MapFragment newInstance() {
 
@@ -48,46 +64,25 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     }
 
     @Override
-    public void onCreate(Bundle bundle) {
-        super.onCreate(bundle);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-        getMapAsync(this);
+        mComponent.inject(this);
+
+        mMapPresenter = new MapPresenter(this, mNearbyService);
     }
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        View view = super.onCreateView(layoutInflater, viewGroup, bundle);
+        View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
 
-        FrameLayout frameLayout = new FrameLayout(getContext());
-        frameLayout.addView(view);
+        view.findViewById(R.id.fab).setOnClickListener(this);
 
-        FloatingActionButton fab = initializeFab(getContext());
-        frameLayout.addView(fab);
+        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        mapFragment.getMapAsync(this);
+        getChildFragmentManager().beginTransaction().add(R.id.support_map_fragment, mapFragment).commit();
 
-        return frameLayout;
-    }
-
-    private FloatingActionButton initializeFab(Context context) {
-        FloatingActionButton fab = new FloatingActionButton(getContext());
-        fab.setImageResource(R.drawable.ic_add);
-
-        FrameLayout.LayoutParams params = new  FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                Gravity.BOTTOM|Gravity.END);
-        int mediumMargin = getResources().getDimensionPixelSize(R.dimen.medium);
-        params.setMargins(0,0, mediumMargin, mediumMargin);
-        fab.setLayoutParams(params);
-
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        return fab;
+        return view;
     }
 
     @Override
@@ -120,7 +115,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         mClusterManager = new NearbyClusterManager<>(getContext(), mGoogleMap);
 
         //Setting a custom renderer to shot unique spotted with custom marker.
-        MapIconRenderer renderer = new MapIconRenderer(getContext(),mGoogleMap,mClusterManager);
+        MapIconRenderer<SpottedClusterItem> renderer = new MapIconRenderer<>(getContext(),mGoogleMap,mClusterManager);
         mClusterManager.setRenderer(renderer);
 
         mGoogleMap.setOnMyLocationButtonClickListener(this);
@@ -129,7 +124,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         addDummyClusteredSpotted();
 
         addMyLocationFeature();
-
+        mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this.getActivity(), this, null);
     }
 
     /**
@@ -141,6 +136,66 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public boolean onMyLocationButtonClick() {
         return false;
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.fab:
+                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
+                startActivity(intent);
+                break;
+        }
+    }
+
+    @Override
+    public void onSpottedsReceived(List<Spotted> spotteds) {
+        List<SpottedClusterItem> clusterItems = new ArrayList<>();
+        for (Spotted spotted : spotteds) {
+            clusterItems.add(new SpottedClusterItem(spotted));
+        }
+        mClusterManager.addItems(clusterItems);
+    }
+
+    @Override
+    public void onSpottedDetailReceived(Spotted spotted) {
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        double lat = lastLocation.getLatitude();
+        double lng = lastLocation.getLongitude();
+
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(lat,lng))
+                .zoom(17)
+                .build();
+        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleLocationServiceIsConnected = false;
+    }
+
+    private void addMyLocationFeature() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_REQUEST);
+            return;
+        }
+
+        mGoogleMap.setMyLocationEnabled(true);
+    }
+
+
 
     /**
      * Adds 25 dummy spotted
@@ -159,15 +214,5 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
             mClusterManager.addItem(spottedClusterItem);
         }
-    }
-
-    private void addMyLocationFeature(){
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION},FINE_LOCATION_PERMISSION_REQUEST);
-            return;
-        }
-        mGoogleMap.setMyLocationEnabled(true);
     }
 }
