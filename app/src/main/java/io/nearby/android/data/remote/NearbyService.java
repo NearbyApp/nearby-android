@@ -33,6 +33,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import timber.log.Timber;
@@ -50,6 +52,18 @@ public interface NearbyService {
 
     @POST("/v1/login")
     Call<ResponseBody> login();
+
+    @GET("/v1/spotteds/me")
+    Call<ResponseBody> getMySpotteds();
+
+    // TODO Fix anonymity when the server will be updated
+    @FormUrlEncoded
+    @POST("/v1/spotted")
+    Call<ResponseBody> createSpotted(@Field("anonimity") boolean anonymity,
+                                     @Field("latitude") double latitude,
+                                     @Field("longitude") double longitude,
+                                     @Field("message") String message,
+                                     @Field("picture") String pictureUrl);
 
     class Builder {
 

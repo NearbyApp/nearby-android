@@ -21,10 +21,10 @@ public class LoginPresenter  {
     private NearbyService mNearbyService;
     private LoginView mLoginView;
 
-    public LoginPresenter(NearbyService nearbyService, SharedPreferencesHelper sharedPreferencesHelper, LoginView loginView) {
+    public LoginPresenter(LoginView loginView, NearbyService nearbyService, SharedPreferencesHelper sharedPreferencesHelper) {
+        mLoginView = loginView;
         mNearbyService = nearbyService;
         mSharedPreferenceHelper = sharedPreferencesHelper;
-        mLoginView = loginView;
     }
 
     public void loginWithFacebook(LoginResult loginResult) {

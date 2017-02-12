@@ -49,7 +49,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
         mComponent.inject(this);
 
-        mPresenter = new LoginPresenter(nearbyService, mSharedPreferencesHelper,this);
+        mPresenter = new LoginPresenter(this, nearbyService, mSharedPreferencesHelper);
 
         findViewById(R.id.facebook_login_button).setOnClickListener(this);
         findViewById(R.id.google_login_button).setOnClickListener(this);
