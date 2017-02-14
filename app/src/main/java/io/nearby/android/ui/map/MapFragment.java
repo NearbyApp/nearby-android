@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -46,13 +47,15 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
         MapView, GoogleApiClient.ConnectionCallbacks {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
+    private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
 
     private MapPresenter mMapPresenter;
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
-    private boolean mGoogleLocationServiceIsConnected;
+
     private GoogleApiClient mGoogleApiClient;
     @Inject NearbyService mNearbyService;
+    private CameraPosition mMapInitCamPos;
 
     public static MapFragment newInstance() {
 
@@ -73,10 +76,17 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
 
         view.findViewById(R.id.fab).setOnClickListener(this);
+
+        if(savedInstanceState != null){
+            mMapInitCamPos = savedInstanceState.getParcelable(PARAMS_MAP_CAMERA_POSITION);
+        }
+        else if(mGoogleApiClient == null) {
+            mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this.getActivity(), this, null);
+        }
 
         SupportMapFragment mapFragment = SupportMapFragment.newInstance();
         mapFragment.getMapAsync(this);
@@ -97,6 +107,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
                 }
                 break;
         }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        mMapInitCamPos = mGoogleMap.getCameraPosition();
     }
 
     /**
@@ -124,7 +140,10 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
         addDummyClusteredSpotted();
 
         addMyLocationFeature();
-        mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this.getActivity(), this, null);
+
+        if(mMapInitCamPos != null){
+            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMapInitCamPos));
+        }
     }
 
     /**
@@ -175,13 +194,18 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
                 .target(new LatLng(lat,lng))
                 .zoom(17)
                 .build();
-        mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+        if(mGoogleMap != null){
+            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+        else if(mMapInitCamPos == null){
+            mMapInitCamPos = cameraPosition;
+        }
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-        mGoogleLocationServiceIsConnected = false;
+
     }
 
     private void addMyLocationFeature() {

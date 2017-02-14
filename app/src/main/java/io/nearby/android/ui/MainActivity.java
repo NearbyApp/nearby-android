@@ -23,11 +23,11 @@ import timber.log.Timber;
  * Created by Marc on 2017-01-26.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentManager.OnBackStackChangedListener {
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";
-    private static final String MY_SPOTTED_FRAGMENT_TAG = "MY_SPOTTED_FRAGMENT_TAG";
+    private static final String MAP_FRAGMENT_TAG = "MAP_FRAGMENT_TAG";
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -51,8 +51,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         }
 
         this.setupActionBarAndNavigationDrawer();
-
-        getSupportFragmentManager().addOnBackStackChangedListener(this);
     }
 
     @Override
@@ -79,10 +77,14 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     public void onBackPressed() {
         if(mDrawerLayout.isDrawerOpen(GravityCompat.START)){
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        }else {
+        }else{
+            if(mCurrentNavDrawerItem != R.id.map) {
+                mCurrentNavDrawerItem = R.id.map;
+                mNavigationView.setCheckedItem(R.id.map);
+            }
+
             super.onBackPressed();
         }
-
     }
 
     @Override
@@ -112,19 +114,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         return shouldItemBeSelected;
     }
 
-    @Override
-    public void onBackStackChanged() {
-        Timber.d("BackStackChanged");
-        Fragment fragment = getSupportFragmentManager().findFragmentByTag(MY_SPOTTED_FRAGMENT_TAG);
-        if(fragment == null){
-            mNavigationView.setCheckedItem(R.id.map);
-        }
-        else if(fragment instanceof MySpottedFragment) {
-            // Do nothingM
-        }
-
-    }
-
     private void setupActionBarAndNavigationDrawer(){
         //Setting toolbar
         setSupportActionBar(mToolbar);
@@ -147,13 +136,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
             case R.id.map:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container, MapFragment.newInstance())
+                        .replace(R.id.container, MapFragment.newInstance(), MAP_FRAGMENT_TAG)
                         .commit();
                 break;
             case R.id.my_spotted:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container, MySpottedFragment.newInstance(),MY_SPOTTED_FRAGMENT_TAG)
+                        .replace(R.id.container, MySpottedFragment.newInstance())
                         .addToBackStack(null)
                         .commit();
                 break;

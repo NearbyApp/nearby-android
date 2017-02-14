@@ -1,7 +1,6 @@
 package io.nearby.android.data.remote;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +34,7 @@ import timber.log.Timber;
  * Created by Marc on 2017-02-14.
  */
 
-public class ServiceBuilder<T> {
+public class ServiceCreator<T> {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String SERVICE_PROVIDER_HEADER = "Service-Provider";
@@ -44,27 +43,17 @@ public class ServiceBuilder<T> {
     private String mEndPoint;
     private Context mContext;
     private SharedPreferencesHelper mSharedPreferenceHelper;
+    private Class<T> mServiceClass;
 
-    public ServiceBuilder(){
+    public ServiceCreator(Class serviceClass, String endPoint, Context context, SharedPreferencesHelper sharedPreferencesHelper){
         mOkHttpClientBuilder = new OkHttpClient.Builder();
-    }
-
-    public ServiceBuilder endPoint(String endPoint) {
+        mServiceClass = serviceClass;
         mEndPoint = endPoint;
-        return this;
-    }
-
-    public ServiceBuilder context(Context context) {
         mContext = context;
-        return this;
+        mSharedPreferenceHelper = sharedPreferencesHelper;
     }
 
-    public ServiceBuilder sharedPreferenceHelper(SharedPreferencesHelper sharedPreferenceHelper){
-        mSharedPreferenceHelper = sharedPreferenceHelper;
-        return this;
-    }
-
-    public <T> T build() {
+    public T create() {
         Gson gson = new GsonBuilder().create();
 
         addSslInterceptor();
@@ -79,13 +68,13 @@ public class ServiceBuilder<T> {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        return mRetrofit.create();
+        return mRetrofit.create(mServiceClass);
     }
 
     private void addSslInterceptor() {
         try{
             // Loading CAs from an InputStream
-            CertificateFactory cf = null;
+            CertificateFactory cf;
             cf = CertificateFactory.getInstance("X.509");
 
             Certificate ca;

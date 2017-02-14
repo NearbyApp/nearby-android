@@ -1,7 +1,8 @@
 package io.nearby.android.ui.myspotted;
 
+import java.util.List;
+
 import io.nearby.android.data.model.Spotted;
-import io.nearby.android.data.model.SpottedListResponse;
 import io.nearby.android.data.remote.NearbyService;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,19 +31,20 @@ public class MySpottedPresenter {
     }
 
     public void loadMySpotted(){
-        Observable<SpottedListResponse> call = mNearbyService.getMySpotteds();
+        Observable<List<Spotted>> call = mNearbyService.getMySpotteds();
 
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<SpottedListResponse>() {
+                .subscribe(new Consumer<List<Spotted>>() {
                     @Override
-                    public void accept(SpottedListResponse spottedListResponse) throws Exception {
-                        mMySpottedView.onMySpottedReceived(spottedListResponse.getSpotted());
+                    public void accept(List<Spotted> spotteds) throws Exception {
+                        mMySpottedView.onMySpottedReceived(spotteds);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         Timber.e(throwable);
+
                     }
                 });
 

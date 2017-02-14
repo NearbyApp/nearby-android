@@ -1,5 +1,7 @@
 package io.nearby.android.ui.map;
 
+import java.util.List;
+
 import io.nearby.android.data.model.Spotted;
 import io.nearby.android.data.model.SpottedListResponse;
 import io.nearby.android.data.model.SpottedResponse;
@@ -24,16 +26,16 @@ public class MapPresenter {
     }
 
     public void getSpotteds(double lat, double lng){
-        Call<SpottedListResponse> call = mNearbyService.getSpotteds(lat, lng, true);
-        call.enqueue(new Callback<SpottedListResponse>() {
+        Call<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
+        call.enqueue(new Callback<List<Spotted>>() {
             @Override
-            public void onResponse(Call<SpottedListResponse> call, Response<SpottedListResponse> response) {
-                SpottedListResponse spottedListResponse = response.body();
-                mMapView.onSpottedsReceived(spottedListResponse.getSpotted());
+            public void onResponse(Call<List<Spotted>> call, Response<List<Spotted>> response) {
+                List<Spotted> spottedListResponse = response.body();
+                mMapView.onSpottedsReceived(spottedListResponse);
             }
 
             @Override
-            public void onFailure(Call<SpottedListResponse> call, Throwable t) {
+            public void onFailure(Call<List<Spotted>> call, Throwable t) {
                 Timber.e(t);
             }
         });

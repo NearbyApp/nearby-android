@@ -8,6 +8,7 @@ import dagger.Module;
 import dagger.Provides;
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.remote.ServiceCreator;
 
 /**
  * Created by Marc on 2017-02-09.
@@ -29,9 +30,12 @@ public class ApplicationModule {
     @Provides
     @Singleton
     NearbyService provideNearbyService(){
-        NearbyService.Builder builder= new NearbyService.Builder(mApplication);
+        ServiceCreator<NearbyService> creator = new ServiceCreator<>(NearbyService.class,NearbyService.ENDPOINT,mApplication,provideSharedPreferencesHelper());
+        return creator.create();
+
+        /**NearbyService.Builder builder= new NearbyService.Builder(mApplication);
         builder.addSharedPreferencesHelper(provideSharedPreferencesHelper());
-        return builder.build();
+        return builder.build();*/
     }
 
     @Provides
