@@ -89,29 +89,13 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        boolean shouldItemBeSelected = false;
-
-        switch(item.getItemId()){
-            case R.id.map:
-                mCurrentNavDrawerItem = item.getItemId();
-                shouldItemBeSelected = true;
-                break;
-            case R.id.my_spotted:
-                mCurrentNavDrawerItem = item.getItemId();
-                shouldItemBeSelected = true;
-                break;
-            case R.id.settings:
-                break;
-            case R.id.help:
-                break;
-            default:
-                break;
+        if(mCurrentNavDrawerItem != item.getItemId()){
+            navigate(item.getItemId());
         }
 
         mDrawerLayout.closeDrawer(GravityCompat.START);
-        navigate(item.getItemId());
 
-        return shouldItemBeSelected;
+        return true;
     }
 
     private void setupActionBarAndNavigationDrawer(){
@@ -132,6 +116,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
     }
 
     private void navigate(int itemId){
+        mCurrentNavDrawerItem = itemId;
+
         switch(itemId){
             case R.id.map:
                 getSupportFragmentManager()

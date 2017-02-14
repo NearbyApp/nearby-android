@@ -5,15 +5,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -21,20 +19,16 @@ import timber.log.Timber;
  * Created by Marc on 2017-02-08.
  */
 
-public class LoginPresenter  {
+public class LoginPresenter extends Presenter {
 
     private final SharedPreferencesHelper mSharedPreferenceHelper;
     private NearbyService mNearbyService;
     private LoginView mLoginView;
 
-    private CompositeDisposable mCompositeDisposable;
-
     public LoginPresenter(LoginView loginView, NearbyService nearbyService, SharedPreferencesHelper sharedPreferencesHelper) {
         mLoginView = loginView;
         mNearbyService = nearbyService;
         mSharedPreferenceHelper = sharedPreferencesHelper;
-
-        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void loginWithFacebook(LoginResult loginResult) {
@@ -108,5 +102,4 @@ public class LoginPresenter  {
 
         mCompositeDisposable.add(disposable);
     }
-
 }

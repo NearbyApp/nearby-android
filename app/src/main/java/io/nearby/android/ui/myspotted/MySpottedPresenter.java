@@ -4,9 +4,9 @@ import java.util.List;
 
 import io.nearby.android.data.model.Spotted;
 import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -16,18 +16,14 @@ import timber.log.Timber;
  * Created by Marc on 2017-02-08.
  */
 
-public class MySpottedPresenter {
+public class MySpottedPresenter extends Presenter{
 
     private MySpottedView mMySpottedView;
     private NearbyService mNearbyService;
 
-    private CompositeDisposable mCompositeDisposable;
-
     public MySpottedPresenter(MySpottedView mySpottedView, NearbyService nearbyService){
         mMySpottedView = mySpottedView;
         mNearbyService = nearbyService;
-
-        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void loadMySpotted(){
@@ -62,6 +58,4 @@ public class MySpottedPresenter {
         //TODO Add a call to get my older spotted
         //mNearbyService.getMySpotteds(id);
     }
-
-
 }

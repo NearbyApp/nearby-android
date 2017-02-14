@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,7 +48,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
     private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
 
-    private MapPresenter mMapPresenter;
+    private MapPresenter mPresenter;
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
 
@@ -72,7 +71,7 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
 
         mComponent.inject(this);
 
-        mMapPresenter = new MapPresenter(this, mNearbyService);
+        mPresenter = new MapPresenter(this, mNearbyService);
     }
 
     @Override
@@ -113,6 +112,12 @@ public class MapFragment extends BaseFragment implements OnMapReadyCallback,
     public void onDestroyView() {
         super.onDestroyView();
         mMapInitCamPos = mGoogleMap.getCameraPosition();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
     }
 
     /**

@@ -1,9 +1,9 @@
 package io.nearby.android.ui.newspotted;
 
 import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -13,18 +13,15 @@ import okhttp3.ResponseBody;
  * Created by Marc on 2017-02-12.
  */
 
-public class NewSpottedPresenter {
+public class NewSpottedPresenter extends Presenter{
 
     private NewSpottedView mNewSpottedView;
     private NearbyService mNearbyService;
 
-    private CompositeDisposable mCompositeDisposable;
 
     public NewSpottedPresenter(NewSpottedView newSpottedView, NearbyService nearbyService) {
         this.mNewSpottedView = newSpottedView;
         this.mNearbyService = nearbyService;
-
-        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void createSpotted(double lat, double lng, String message){

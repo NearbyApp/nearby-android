@@ -111,6 +111,12 @@ public class MySpottedFragment extends BaseFragment implements MySpottedView, Sw
     }
 
     @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
+    }
+
+    @Override
     public void onRefresh() {
         mPresenter.refreshMySpotted();
     }

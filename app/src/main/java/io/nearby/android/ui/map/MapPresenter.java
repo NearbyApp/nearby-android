@@ -4,9 +4,9 @@ import java.util.List;
 
 import io.nearby.android.data.model.Spotted;
 import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -16,18 +16,14 @@ import timber.log.Timber;
  * Created by Marc on 2017-02-12.
  */
 
-public class MapPresenter {
+public class MapPresenter extends Presenter {
 
     private MapView mMapView;
     private NearbyService mNearbyService;
 
-    private CompositeDisposable mCompositeDisposable;
-
     public MapPresenter(MapView mapView, NearbyService nearbyService) {
         mMapView = mapView;
         mNearbyService = nearbyService;
-
-        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void getSpotteds(double lat, double lng){
