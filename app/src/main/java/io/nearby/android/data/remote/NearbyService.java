@@ -12,7 +12,6 @@ import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -22,7 +21,6 @@ import javax.net.ssl.X509TrustManager;
 
 import io.nearby.android.R;
 import io.nearby.android.data.local.SharedPreferencesHelper;
-import io.nearby.android.data.model.Spotted;
 import io.nearby.android.data.model.SpottedListResponse;
 import io.nearby.android.data.model.SpottedResponse;
 import io.reactivex.Observable;
@@ -54,7 +52,7 @@ public interface NearbyService {
     Call<ResponseBody> login();
 
     @GET("/v1/spotteds/me")
-    Call<SpottedListResponse> getMySpotteds();
+    Observable<SpottedListResponse> getMySpotteds();
 
     @FormUrlEncoded
     @GET("/v1/spotteds")
