@@ -34,6 +34,9 @@ public class LauncherActivity extends BaseActivity {
 
         mComponent.inject(this);
 
+        // TODO remove
+        mSharedPrefHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+
         if(mSharedPrefHelper.hasUserAlreadySignedIn()){
             int method = mSharedPrefHelper.getLastSignInMethod();
 

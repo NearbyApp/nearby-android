@@ -5,6 +5,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
 import io.nearby.android.data.local.SharedPreferencesHelper;
 import io.nearby.android.data.remote.NearbyService;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,10 +27,14 @@ public class LoginPresenter  {
     private NearbyService mNearbyService;
     private LoginView mLoginView;
 
+    private CompositeDisposable mCompositeDisposable;
+
     public LoginPresenter(LoginView loginView, NearbyService nearbyService, SharedPreferencesHelper sharedPreferencesHelper) {
         mLoginView = loginView;
         mNearbyService = nearbyService;
         mSharedPreferenceHelper = sharedPreferencesHelper;
+
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void loginWithFacebook(LoginResult loginResult) {
@@ -72,27 +82,31 @@ public class LoginPresenter  {
     }
 
     private void login(){
-        mNearbyService.login().enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                switch (response.code()){
-                    case 201:
-                        //Account created
-                        //TODO Show a tutorial?
-                    case 200:
-                        mLoginView.onLoginSuccessful();
-                        break;
-                    default:
-                        Timber.d("An error occured when loging in.");
-                        break;
-                }
-            }
+        Observable<Response<ResponseBody>> call = mNearbyService.login();
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Response<ResponseBody>>() {
+                    @Override
+                    public void accept(Response<ResponseBody> response) throws Exception {
+                        switch(response.code()){
+                            case 200:
+                                //Normal login
+                                mLoginView.onLoginSuccessful();
+                                break;
+                            case 201:
+                                // Account created
+                                mLoginView.onLoginSuccessful();
+                                break;
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                    }
+                });
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Timber.e(t);
-            }
-        });
+        mCompositeDisposable.add(disposable);
     }
 
 }

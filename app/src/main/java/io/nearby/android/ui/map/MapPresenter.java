@@ -3,12 +3,13 @@ package io.nearby.android.ui.map;
 import java.util.List;
 
 import io.nearby.android.data.model.Spotted;
-import io.nearby.android.data.model.SpottedListResponse;
-import io.nearby.android.data.model.SpottedResponse;
 import io.nearby.android.data.remote.NearbyService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 import timber.log.Timber;
 
 /**
@@ -20,40 +21,52 @@ public class MapPresenter {
     private MapView mMapView;
     private NearbyService mNearbyService;
 
+    private CompositeDisposable mCompositeDisposable;
+
     public MapPresenter(MapView mapView, NearbyService nearbyService) {
         mMapView = mapView;
         mNearbyService = nearbyService;
+
+        mCompositeDisposable = new CompositeDisposable();
     }
 
     public void getSpotteds(double lat, double lng){
-        Call<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
-        call.enqueue(new Callback<List<Spotted>>() {
-            @Override
-            public void onResponse(Call<List<Spotted>> call, Response<List<Spotted>> response) {
-                List<Spotted> spottedListResponse = response.body();
-                mMapView.onSpottedsReceived(spottedListResponse);
-            }
+        boolean locationOnly = true;
 
-            @Override
-            public void onFailure(Call<List<Spotted>> call, Throwable t) {
-                Timber.e(t);
-            }
-        });
+        Observable<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Spotted>>() {
+                    @Override
+                    public void accept(List<Spotted> spotteds) throws Exception {
+                        mMapView.onSpottedsReceived(spotteds);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
     }
 
     public void getSpotted(final Spotted spotted){
-        Call<SpottedResponse> call = mNearbyService.getSpotted(spotted.getId());
-        call.enqueue(new Callback<SpottedResponse>() {
-            @Override
-            public void onResponse(Call<SpottedResponse> call, Response<SpottedResponse> response) {
-                SpottedResponse spottedResponse = response.body();
-                mMapView.onSpottedDetailReceived(spottedResponse.getSpotted());
-            }
+        Observable<Spotted> call = mNearbyService.getSpotted(spotted.getId());
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Spotted>() {
+                    @Override
+                    public void accept(Spotted spotted) throws Exception {
+                        mMapView.onSpottedDetailReceived(spotted);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                    }
+                });
 
-            @Override
-            public void onFailure(Call<SpottedResponse> call, Throwable t) {
-                Timber.e(t);
-            }
-        });
+        mCompositeDisposable.add(disposable);
     }
 }
