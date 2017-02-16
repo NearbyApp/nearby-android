@@ -63,8 +63,8 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
         mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this, this, null);
 
         DaggerNewSpottedComponent.builder()
-                .taskDetailPresenterModule(new NewSpottedPresenterModule(this))
-                .tasksRepositoryComponent(((NearbyApplication) getApplication())
+                .newSpottedPresenterModule(new NewSpottedPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
     }

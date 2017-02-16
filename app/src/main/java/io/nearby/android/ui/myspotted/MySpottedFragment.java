@@ -50,8 +50,8 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         super.onCreate(savedInstanceState);
 
         DaggerMySpottedComponent.builder()
-                .taskDetailPresenterModule(new MySpottedPresenterModule(this))
-                .tasksRepositoryComponent(((NearbyApplication) getActivity().getApplication())
+                .mySpottedPresenterModule(new MySpottedPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
     }

@@ -25,12 +25,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
-import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.MapIconRenderer;
 import io.nearby.android.google.maps.NearbyClusterManager;
@@ -70,8 +67,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
 
         DaggerMapComponent.builder()
-                .taskDetailPresenterModule(new MapPresenterModule(this))
-                .tasksRepositoryComponent(((NearbyApplication) getActivity().getApplication())
+                .mapPresenterModule(new MapPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
     }
@@ -114,12 +111,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onDestroyView() {
         super.onDestroyView();
         mMapInitCamPos = mGoogleMap.getCameraPosition();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
     }
 
     /**

@@ -2,6 +2,8 @@ package io.nearby.android.data.source.remote;
 
 import java.util.List;
 
+import javax.inject.Singleton;
+
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.Remote;
 import io.reactivex.Observable;
@@ -13,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
+@Singleton
 @Remote
 public interface NearbyService {
 

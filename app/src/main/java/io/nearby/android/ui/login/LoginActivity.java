@@ -46,8 +46,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         initializeFacebook();
 
         DaggerLoginComponent.builder()
-                .taskDetailPresenterModule(new LoginPresenterModule(this))
-                .tasksRepositoryComponent(((NearbyApplication) getApplication())
+                .loginPresenterModule(new LoginPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
     }
