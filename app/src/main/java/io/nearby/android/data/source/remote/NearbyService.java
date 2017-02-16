@@ -3,6 +3,7 @@ package io.nearby.android.data.source.remote;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.source.Remote;
 import io.reactivex.Observable;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -12,10 +13,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
-/**
- * Created by Marc on 2017-02-07.
- */
-
+@Remote
 public interface NearbyService {
 
     String ENDPOINT = "https://nbyapi.mo-bergeron.com/";

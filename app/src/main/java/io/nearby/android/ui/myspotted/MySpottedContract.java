@@ -16,6 +16,8 @@ public interface MySpottedContract {
     }
 
     interface Presenter{
-
+        void loadMySpotted();
+        void refreshMySpotted();
+        void loadMyOlderSpotted(Spotted lastSpotted);
     }
 }

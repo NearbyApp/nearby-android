@@ -19,12 +19,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import javax.inject.Inject;
-
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
-import io.nearby.android.data.source.remote.NearbyService;
-import io.nearby.android.ui.newspotted.DaggerNewSpottedComponent;
 import io.nearby.android.google.GoogleApiClientBuilder;
 
 import static dagger.internal.Preconditions.checkNotNull;
@@ -41,7 +37,6 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     private ImageButton mSendButton;
 
     private NewSpottedContract.Presenter mPresenter;
-    @Inject NearbyService mNearbyService;
 
     private boolean mGoogleLocationServiceIsConnected = false;
     private GoogleApiClient mGoogleApiClient;

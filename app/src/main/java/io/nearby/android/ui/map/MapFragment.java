@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.remote.NearbyService;
@@ -34,7 +35,6 @@ import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.MapIconRenderer;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
-import io.nearby.android.ui.base.BaseFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
 
 /**
@@ -44,17 +44,16 @@ import io.nearby.android.ui.newspotted.NewSpottedActivity;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         View.OnClickListener,
-        MapView, GoogleApiClient.ConnectionCallbacks {
+        MapContract.View, GoogleApiClient.ConnectionCallbacks {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
     private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
 
-    private MapPresenter mPresenter;
+    private MapContract.Presenter mPresenter;
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
 
     private GoogleApiClient mGoogleApiClient;
-    @Inject NearbyService mNearbyService;
     private CameraPosition mMapInitCamPos;
 
     public static MapFragment newInstance() {
@@ -70,9 +69,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mComponent.inject(this);
-
-        mPresenter = new MapPresenter(this, mNearbyService);
+        DaggerMapComponent.builder()
+                .taskDetailPresenterModule(new MapPresenterModule(this))
+                .tasksRepositoryComponent(((NearbyApplication) getActivity().getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
     }
 
     @Override
@@ -244,5 +245,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             mClusterManager.addItem(spottedClusterItem);
         }
+    }
+
+    @Override
+    public void setPresenter(MapContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

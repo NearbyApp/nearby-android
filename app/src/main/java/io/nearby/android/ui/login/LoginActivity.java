@@ -19,12 +19,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Arrays;
 
-import javax.inject.Inject;
-
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
-import io.nearby.android.data.source.local.SharedPreferencesHelper;
-import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.MainActivity;
 import timber.log.Timber;
@@ -37,12 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private CallbackManager mCallbackManager;
 
     private LoginContract.Presenter mPresenter;
-
-    @Inject
-    NearbyService nearbyService;
-
-    @Inject
-    SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

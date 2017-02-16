@@ -3,7 +3,6 @@ package io.nearby.android;
 import android.app.Application;
 import android.util.Log;
 
-import io.nearby.android.data.source.DaggerDataManagerComponent;
 import io.nearby.android.data.source.DataManagerComponent;
 import timber.log.Timber;
 

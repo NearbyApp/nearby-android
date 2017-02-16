@@ -9,12 +9,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.R;
+import io.nearby.android.data.source.Local;
 
 
 /**
  * Created by Marc on 2017-02-08.
  */
 @Singleton
+@Local
 public class SharedPreferencesHelper {
 
     private static final String SHARED_PREF_FILE_NAME = "nearby_prefs";
@@ -27,8 +29,8 @@ public class SharedPreferencesHelper {
     private Context mContext;
 
     @Inject
-    public SharedPreferencesHelper(Application application){
-        mContext = application;
+    public SharedPreferencesHelper(Context context){
+        mContext = context;
         mPrefs = mContext.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
     }
 

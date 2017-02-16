@@ -2,10 +2,13 @@ package io.nearby.android.data.source.remote;
 
 import android.support.annotation.NonNull;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.source.Remote;
 import io.nearby.android.data.source.SpottedDataSource;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -20,6 +23,7 @@ import timber.log.Timber;
 import static dagger.internal.Preconditions.checkNotNull;
 
 @Singleton
+@Remote
 public class SpottedRemoteDataSource implements SpottedDataSource {
 
     private NearbyService mNearbyService;
@@ -75,8 +79,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
 
     @Override
     public void createSpotted(Spotted spotted,
-                              Consumer<ResponseBody> onNext,
-                              Consumer<Throwable> onError){
+                              final SpottedCreatedCallback callback){
         Observable<ResponseBody> call = mNearbyService.createSpotted(true,
                 spotted.getLatitude(),
                 spotted.getLongitude(),
@@ -84,20 +87,82 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 null);
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(onNext, onError);
-                /*
                 .subscribe(new Consumer<ResponseBody>() {
                     @Override
                     public void accept(ResponseBody responseBody) throws Exception {
-                        mNewSpottedView.onSpottedCreated();
+                        callback.onSpottedCreated();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        mNewSpottedView.onSpottedNotCreated();
+                        callback.onError();
                     }
                 });
-                */
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void loadMySpotted(final MySpottedLoadedCallback callback) {
+        Observable<List<Spotted>> call = mNearbyService.getMySpotteds();
+
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Spotted>>() {
+                    @Override
+                    public void accept(List<Spotted> spotteds) throws Exception {
+                        callback.onMySpottedLoaded(spotteds);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void loadSpotted(double lat, double lng, boolean locationOnly, final SpottedLoadedCallback callback) {
+        Observable<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Spotted>>() {
+                    @Override
+                    public void accept(List<Spotted> spotteds) throws Exception {
+                        callback.onSpottedLoaded(spotteds);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+
+    }
+
+    @Override
+    public void loadSpottedDetails(Spotted spotted, final SpottedDetailsLoadedCallback callback) {
+        Observable<Spotted> call = mNearbyService.getSpotted(spotted.getId());
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Spotted>() {
+                    @Override
+                    public void accept(Spotted spotted) throws Exception {
+                    callback.onSpottedDetailsLoaded(spotted);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
 
         mCompositeDisposable.add(disposable);
     }

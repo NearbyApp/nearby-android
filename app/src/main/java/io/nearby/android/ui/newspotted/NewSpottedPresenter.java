@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
+import io.nearby.android.data.source.SpottedDataSource;
 import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
@@ -27,7 +28,9 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
     }
 
     @Inject
-    void setupListeners(){ mNewSpottedView.setPresenter(this);}
+    void setupListeners(){
+        mNewSpottedView.setPresenter(this);
+    }
 
     public void createSpotted(double lat, double lng, String message){
         //TODO retrieve anonymity setting in Preferences.
@@ -35,15 +38,16 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         spotted.setAnonymity(true);
 
 
-        mDataManager.createSpotted(spotted,new Consumer<ResponseBody>() {
-            @Override
-            public void accept(ResponseBody responseBody) throws Exception {
-                mNewSpottedView.onSpottedCreated();
-            }},new Consumer<Throwable>() {
-                @Override
-                public void accept(Throwable throwable) throws Exception {
-                    mNewSpottedView.onSpottedNotCreated();
-                }
-            });
+        mDataManager.createSpotted(spotted, new SpottedDataSource.SpottedCreatedCallback() {
+                    @Override
+                    public void onSpottedCreated() {
+                        mNewSpottedView.onSpottedCreated();
+                    }
+
+                    @Override
+                    public void onError() {
+                        mNewSpottedView.onSpottedNotCreated();
+                    }
+                });
     }
 }

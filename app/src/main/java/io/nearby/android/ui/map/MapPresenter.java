@@ -2,7 +2,11 @@ package io.nearby.android.ui.map;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.source.DataManager;
+import io.nearby.android.data.source.SpottedDataSource;
 import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
@@ -16,53 +20,48 @@ import timber.log.Timber;
  * Created by Marc on 2017-02-12.
  */
 
-public class MapPresenter extends Presenter {
+public class MapPresenter implements MapContract.Presenter {
 
-    private MapView mMapView;
-    private NearbyService mNearbyService;
+    private MapContract.View mMapView;
+    private DataManager mDataManager;
 
-    public MapPresenter(MapView mapView, NearbyService nearbyService) {
+    public MapPresenter(MapContract.View mapView, DataManager DataManager) {
         mMapView = mapView;
-        mNearbyService = nearbyService;
+        mDataManager = DataManager;
+    }
+
+    @Inject
+    void setupListeners(){
+        mMapView.setPresenter(this);
     }
 
     public void getSpotteds(double lat, double lng){
         boolean locationOnly = true;
 
-        Observable<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
-        Disposable disposable = call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Spotted>>() {
-                    @Override
-                    public void accept(List<Spotted> spotteds) throws Exception {
-                        mMapView.onSpottedsReceived(spotteds);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                    }
-                });
+        mDataManager.loadSpotted(lat, lng, locationOnly, new SpottedDataSource.SpottedLoadedCallback() {
+            @Override
+            public void onSpottedLoaded(List<Spotted> spotted) {
+                mMapView.onSpottedsReceived(spotted);
+            }
 
-        mCompositeDisposable.add(disposable);
+            @Override
+            public void onError() {
+                // TODO manage error
+            }
+        });
     }
 
-    public void getSpotted(final Spotted spotted){
-        Observable<Spotted> call = mNearbyService.getSpotted(spotted.getId());
-        Disposable disposable = call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Spotted>() {
-                    @Override
-                    public void accept(Spotted spotted) throws Exception {
-                        mMapView.onSpottedDetailReceived(spotted);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                    }
-                });
+    public void getSpotted(Spotted spotted){
+        mDataManager.loadSpottedDetails(spotted, new SpottedDataSource.SpottedDetailsLoadedCallback() {
+            @Override
+            public void onSpottedDetailsLoaded(Spotted spotted) {
+                mMapView.onSpottedDetailReceived(spotted);
+            }
 
-        mCompositeDisposable.add(disposable);
+            @Override
+            public void onError() {
+                // TODO manage error
+            }
+        });
     }
 }

@@ -13,30 +13,26 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
-import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.adapter.SpottedAdapter;
-import io.nearby.android.ui.base.BaseFragment;
 
 /**
  * Created by Marc on 2017-02-02.
  */
 
-public class MySpottedFragment extends Fragment implements MySpottedView, SwipeRefreshLayout.OnRefreshListener{
+public class MySpottedFragment extends Fragment implements MySpottedContract.View, SwipeRefreshLayout.OnRefreshListener{
 
     private static final int VISIBLE_THRESHOLD = 5;
 
-    private MySpottedPresenter mPresenter;
+    private MySpottedContract.Presenter mPresenter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
     private SpottedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
 
-    @Inject NearbyService mNearbyService;
     private boolean mIsLoadingOlderSpotted = false;
     private int mPreviousTotal = 0;
 
@@ -53,9 +49,11 @@ public class MySpottedFragment extends Fragment implements MySpottedView, SwipeR
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mComponent.inject(this);
-
-        mPresenter = new MySpottedPresenter(this,mNearbyService);
+        DaggerMySpottedComponent.builder()
+                .taskDetailPresenterModule(new MySpottedPresenterModule(this))
+                .tasksRepositoryComponent(((NearbyApplication) getActivity().getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
     }
 
     @Nullable
@@ -107,17 +105,6 @@ public class MySpottedFragment extends Fragment implements MySpottedView, SwipeR
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
-    }
-
-    @Override
     public void onRefresh() {
         mPresenter.refreshMySpotted();
     }
@@ -140,5 +127,10 @@ public class MySpottedFragment extends Fragment implements MySpottedView, SwipeR
         }
 
         mAdapter.addItems(spotteds);
+    }
+
+    @Override
+    public void setPresenter(MySpottedContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }

@@ -3,49 +3,36 @@ package io.nearby.android.ui.myspotted;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
-import io.nearby.android.data.source.remote.NearbyService;
-import io.nearby.android.ui.Presenter;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import timber.log.Timber;
+import io.nearby.android.data.source.DataManager;
+import io.nearby.android.data.source.SpottedDataSource;
 
 /**
  * Created by Marc on 2017-02-08.
  */
 
-public class MySpottedPresenter extends Presenter{
+public class MySpottedPresenter implements MySpottedContract.Presenter{
 
-    private MySpottedView mMySpottedView;
-    private NearbyService mNearbyService;
+    private MySpottedContract.View mMySpottedView;
+    private DataManager mDataManager;
 
-    public MySpottedPresenter(MySpottedView mySpottedView, NearbyService nearbyService){
+    public MySpottedPresenter(MySpottedContract.View mySpottedView, DataManager dataManager){
         mMySpottedView = mySpottedView;
-        mNearbyService = nearbyService;
+        mDataManager = dataManager;
     }
 
+    @Override
     public void loadMySpotted(){
-        Observable<List<Spotted>> call = mNearbyService.getMySpotteds();
+        mDataManager.loadMySpotted(new SpottedDataSource.MySpottedLoadedCallback() {
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                mMySpottedView.onMySpottedReceived(mySpotted);
+            }
 
-        Disposable disposable = call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<Spotted>>() {
-                    @Override
-                    public void accept(List<Spotted> spotteds) throws Exception {
-                        mMySpottedView.onMySpottedReceived(spotteds);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-
-                    }
-                });
-
-        mCompositeDisposable.add(disposable);
-
+            @Override
+            public void onError() {
+                //TODO Manage errors
+            }
+        });
     }
 
     public void refreshMySpotted(){

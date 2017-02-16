@@ -9,8 +9,6 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
-import io.reactivex.functions.Consumer;
-import okhttp3.ResponseBody;
 
 /**
  * Created by Marc on 2017-02-16.
@@ -49,11 +47,25 @@ public class DataManager implements SpottedDataSource{
         mRemoteDataSource.googleLogin(userId, token, callback);
     }
 
-
-
     @Override
-    public void createSpotted(@NonNull Spotted spotted, Consumer<ResponseBody> onNext, Consumer<Throwable> onError) {
+    public void createSpotted(@NonNull Spotted spotted, SpottedCreatedCallback callback) {
 
     }
+
+    @Override
+    public void loadMySpotted(MySpottedLoadedCallback callback) {
+
+    }
+
+    @Override
+    public void loadSpotted(double lat, double lng, boolean locationOnly, SpottedLoadedCallback callback) {
+
+    }
+
+    @Override
+    public void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback) {
+
+    }
+
 
 }
