@@ -4,7 +4,7 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import io.nearby.android.ApplicationModule;
-import io.nearby.android.ui.LauncherActivity;
+import io.nearby.android.ui.launcher.LauncherActivity;
 import io.nearby.android.ui.login.LoginActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;

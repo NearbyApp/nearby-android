@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ import io.nearby.android.ui.newspotted.NewSpottedActivity;
  * Created by Marc on 2017-01-27.
  */
 
-public class MapFragment extends BaseFragment implements OnMapReadyCallback,
+public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         View.OnClickListener,
         MapView, GoogleApiClient.ConnectionCallbacks {

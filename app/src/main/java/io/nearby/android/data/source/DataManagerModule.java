@@ -5,6 +5,7 @@ import javax.inject.Singleton;
 import dagger.Binds;
 import dagger.Module;
 
+import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
 
@@ -23,4 +24,9 @@ abstract class DataManagerModule {
     @Binds
     @Remote
     abstract SpottedDataSource provideSpottedRemoteDataSource(SpottedRemoteDataSource spottedRemoteDataSource);
+
+    @Singleton
+    @Binds
+    @Local
+    abstract SharedPreferencesHelper provideSharedPreferencesHelper();
 }

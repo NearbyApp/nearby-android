@@ -29,6 +29,10 @@ public class Spotted {
     @Expose
     private double lat;
 
+    @SerializedName("anonymity")
+    @Expose
+    private boolean anonymity;
+
     private LatLng latLng;
 
 
@@ -37,15 +41,16 @@ public class Spotted {
      */
     public Spotted(){}
 
-    public Spotted(String message) {
-        this.message = message;
+    public Spotted(String message, double latitude, double longitude) {
+        this(message,latitude,longitude,true);
     }
 
-    public Spotted(String message, double latitude, double longitude) {
+    public Spotted(String message, double latitude, double longitude, boolean anonymity){
         this.message = message;
         this.lng = longitude;
         this.lat = latitude;
         this.latLng = new LatLng(latitude,longitude);
+        this.anonymity = anonymity;
     }
 
     public Spotted(String message, LatLng latLng) {
@@ -101,6 +106,14 @@ public class Spotted {
 
     public void setLatitude(double latitude) {
         this.lat = latitude;
+    }
+
+    public boolean getAnonymity() {
+        return anonymity;
+    }
+
+    public void setAnonymity(boolean anonymity) {
+        this.anonymity = anonymity;
     }
 
     public LatLng getLatLng() {

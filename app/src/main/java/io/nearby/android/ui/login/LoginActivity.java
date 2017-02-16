@@ -3,6 +3,7 @@ package io.nearby.android.ui.login;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.facebook.CallbackManager;
@@ -20,21 +21,22 @@ import java.util.Arrays;
 
 import javax.inject.Inject;
 
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.MainActivity;
 import timber.log.Timber;
 
-public class LoginActivity extends BaseActivity implements View.OnClickListener, LoginView, GoogleApiClient.OnConnectionFailedListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginContract.View, GoogleApiClient.OnConnectionFailedListener {
 
     private static final int RC_GOOGLE_LOGIN = 9001;
 
     private GoogleApiClient mGoogleApiClient;
-    private LoginPresenter mPresenter;
     private CallbackManager mCallbackManager;
+
+    private LoginContract.Presenter mPresenter;
 
     @Inject
     NearbyService nearbyService;
@@ -47,15 +49,17 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_activity);
 
-        mComponent.inject(this);
-
-        mPresenter = new LoginPresenter(this, nearbyService, mSharedPreferencesHelper);
-
         findViewById(R.id.facebook_login_button).setOnClickListener(this);
         findViewById(R.id.google_login_button).setOnClickListener(this);
 
         initializeGoogle();
         initializeFacebook();
+
+        DaggerLoginComponent.builder()
+                .taskDetailPresenterModule(new LoginPresenterModule(this))
+                .tasksRepositoryComponent(((NearbyApplication) getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
     }
 
     @Override
@@ -72,12 +76,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
         else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
     }
 
     @Override
@@ -129,5 +127,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
 
     private void initializeGoogle(){
         mGoogleApiClient = GoogleApiClientBuilder.build(this, this);
+    }
+
+    @Override
+    public void setPresenter(LoginContract.Presenter presenter) {
+
     }
 }

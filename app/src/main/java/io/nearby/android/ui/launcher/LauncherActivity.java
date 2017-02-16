@@ -1,8 +1,9 @@
-package io.nearby.android.ui;
+package io.nearby.android.ui.launcher;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 
 import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.Auth;
@@ -15,14 +16,14 @@ import javax.inject.Inject;
 
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.ui.base.BaseActivity;
+import io.nearby.android.ui.MainActivity;
 import io.nearby.android.ui.login.LoginActivity;
 
 /**
  * Created by Marc on 2017-01-22.
  */
 
-public class LauncherActivity extends BaseActivity {
+public class LauncherActivity extends AppCompatActivity {
 
     @Inject
     SharedPreferencesHelper mSharedPrefHelper;
@@ -31,8 +32,6 @@ public class LauncherActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mComponent.inject(this);
 
         if(mSharedPrefHelper.hasUserAlreadySignedIn()){
             int method = mSharedPrefHelper.getLastSignInMethod();

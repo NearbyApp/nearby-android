@@ -5,25 +5,22 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import io.nearby.android.R;
-import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
-import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-01-26.
  */
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";

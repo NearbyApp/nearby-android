@@ -4,8 +4,10 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,23 +21,26 @@ import com.google.android.gms.location.LocationServices;
 
 import javax.inject.Inject;
 
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.source.remote.NearbyService;
+import io.nearby.android.ui.newspotted.DaggerNewSpottedComponent;
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.ui.base.BaseActivity;
+
+import static dagger.internal.Preconditions.checkNotNull;
 
 /**
  * Created by Marc on 2017-02-02.
  */
 
-public class NewSpottedActivity extends BaseActivity implements View.OnClickListener, TextWatcher, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
+public class NewSpottedActivity extends AppCompatActivity implements View.OnClickListener, TextWatcher, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
 
 
     private Toolbar mToolbar;
     private EditText mEditText;
     private ImageButton mSendButton;
 
-    private NewSpottedPresenter mPresenter;
+    private NewSpottedContract.Presenter mPresenter;
     @Inject NearbyService mNearbyService;
 
     private boolean mGoogleLocationServiceIsConnected = false;
@@ -45,10 +50,6 @@ public class NewSpottedActivity extends BaseActivity implements View.OnClickList
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_spotted_activity);
-
-        mComponent.inject(this);
-
-        mPresenter = new NewSpottedPresenter(this,mNearbyService);
 
         findViewById(R.id.upload_picture_button).setOnClickListener(this);
         mSendButton = (ImageButton) findViewById(R.id.send_button);
@@ -65,12 +66,12 @@ public class NewSpottedActivity extends BaseActivity implements View.OnClickList
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this, this, null);
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mPresenter.onDestroy();
+        DaggerNewSpottedComponent.builder()
+                .taskDetailPresenterModule(new NewSpottedPresenterModule(this))
+                .tasksRepositoryComponent(((NearbyApplication) getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
     }
 
     @Override
@@ -137,5 +138,10 @@ public class NewSpottedActivity extends BaseActivity implements View.OnClickList
     @Override
     public void onConnectionSuspended(int i) {
         mGoogleLocationServiceIsConnected = false;
+    }
+
+    @Override
+    public void setPresenter(@NonNull NewSpottedContract.Presenter presenter) {
+        mPresenter = checkNotNull(presenter);
     }
 }

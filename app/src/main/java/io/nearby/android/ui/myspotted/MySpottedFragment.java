@@ -2,6 +2,7 @@ package io.nearby.android.ui.myspotted;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +25,7 @@ import io.nearby.android.ui.base.BaseFragment;
  * Created by Marc on 2017-02-02.
  */
 
-public class MySpottedFragment extends BaseFragment implements MySpottedView, SwipeRefreshLayout.OnRefreshListener{
+public class MySpottedFragment extends Fragment implements MySpottedView, SwipeRefreshLayout.OnRefreshListener{
 
     private static final int VISIBLE_THRESHOLD = 5;
 
@@ -134,7 +135,7 @@ public class MySpottedFragment extends BaseFragment implements MySpottedView, Sw
         List<Spotted> spotteds = new ArrayList<>();
 
         for (int i = 0; i < 10 ; i++){
-            Spotted spotted = new Spotted("I spotted the spotted #" + i);
+            Spotted spotted = new Spotted("I spotted the spotted #" + i,0,0);
             spotteds.add(spotted);
         }
 

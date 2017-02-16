@@ -1,5 +1,10 @@
 package io.nearby.android.ui.newspotted;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import io.nearby.android.data.Spotted;
+import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
@@ -9,41 +14,36 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 
-/**
- * Created by Marc on 2017-02-12.
- */
-
+@Singleton
 public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
-    private NewSpottedView mNewSpottedView;
-    private NearbyService mNearbyService;
+    private NewSpottedContract.View mNewSpottedView;
+    private DataManager mDataManager;
 
-
-    public NewSpottedPresenter(NewSpottedView newSpottedView, NearbyService nearbyService) {
+    @Inject
+    public NewSpottedPresenter(NewSpottedContract.View newSpottedView, DataManager dataManager) {
         this.mNewSpottedView = newSpottedView;
-        this.mNearbyService = nearbyService;
+        this.mDataManager = dataManager;
     }
+
+    @Inject
+    void setupListeners(){ mNewSpottedView.setPresenter(this);}
 
     public void createSpotted(double lat, double lng, String message){
         //TODO retrieve anonymity setting in Preferences.
-        boolean anonymity = true;
+        Spotted spotted = new Spotted(message,lat,lng);
+        spotted.setAnonymity(true);
 
 
-        Observable<ResponseBody> call = mNearbyService.createSpotted(true,lat,lng,message, null);
-        Disposable disposable = call.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResponseBody>() {
-                    @Override
-                    public void accept(ResponseBody responseBody) throws Exception {
-                        mNewSpottedView.onSpottedCreated();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        mNewSpottedView.onSpottedNotCreated();
-                    }
-                });
-
-        mCompositeDisposable.add(disposable);
+        mDataManager.createSpotted(spotted,new Consumer<ResponseBody>() {
+            @Override
+            public void accept(ResponseBody responseBody) throws Exception {
+                mNewSpottedView.onSpottedCreated();
+            }},new Consumer<Throwable>() {
+                @Override
+                public void accept(Throwable throwable) throws Exception {
+                    mNewSpottedView.onSpottedNotCreated();
+                }
+            });
     }
 }
