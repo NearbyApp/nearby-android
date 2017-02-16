@@ -1,4 +1,4 @@
-package io.nearby.android.data.model;
+package io.nearby.android.data;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;

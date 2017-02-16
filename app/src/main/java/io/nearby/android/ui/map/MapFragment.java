@@ -27,8 +27,8 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.nearby.android.R;
-import io.nearby.android.data.model.Spotted;
-import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.Spotted;
+import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.MapIconRenderer;
 import io.nearby.android.google.maps.NearbyClusterManager;

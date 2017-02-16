@@ -6,9 +6,9 @@ import io.reactivex.disposables.CompositeDisposable;
  * Created by Marc on 2017-02-14.
  */
 
-public abstract class Presenter {
+public interface Presenter {
 
-    protected CompositeDisposable mCompositeDisposable;
+    /*protected CompositeDisposable mCompositeDisposable;
 
     public Presenter(){
         mCompositeDisposable = new CompositeDisposable();
@@ -16,5 +16,5 @@ public abstract class Presenter {
 
     public void onDestroy(){
         mCompositeDisposable.dispose();
-    }
+    }*/
 }

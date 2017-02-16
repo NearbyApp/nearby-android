@@ -13,7 +13,7 @@ import com.google.android.gms.common.api.ResultCallback;
 
 import javax.inject.Inject;
 
-import io.nearby.android.data.local.SharedPreferencesHelper;
+import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.login.LoginActivity;

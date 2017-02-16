@@ -8,4 +8,6 @@
     <dimen name="avatar">48dp</dimen>
     <dimen name="icon">24dp</dimen>
     <dimen name="toolbar_height">56dp</dimen>
+
+    <dimen name="standard_touch_target_size">48dp</dimen>
 </resources>

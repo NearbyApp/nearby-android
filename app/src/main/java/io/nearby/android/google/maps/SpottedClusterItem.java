@@ -3,7 +3,7 @@ package io.nearby.android.google.maps;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;
 
-import io.nearby.android.data.model.Spotted;
+import io.nearby.android.data.Spotted;
 
 /**
  * Created by Marc on 2017-01-29.

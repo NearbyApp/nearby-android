@@ -3,7 +3,7 @@ package io.nearby.android.injection.component;
 import javax.inject.Singleton;
 
 import dagger.Component;
-import io.nearby.android.injection.module.ApplicationModule;
+import io.nearby.android.ApplicationModule;
 import io.nearby.android.ui.LauncherActivity;
 import io.nearby.android.ui.login.LoginActivity;
 import io.nearby.android.ui.map.MapFragment;

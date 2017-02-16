@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 
 import io.nearby.android.injection.component.ApplicationComponent;
 import io.nearby.android.injection.component.DaggerApplicationComponent;
-import io.nearby.android.injection.module.ApplicationModule;
+import io.nearby.android.ApplicationModule;
 
 /**
  * Created by Marc on 2017-02-09.

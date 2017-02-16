@@ -21,8 +21,8 @@ import java.util.Arrays;
 import javax.inject.Inject;
 
 import io.nearby.android.R;
-import io.nearby.android.data.local.SharedPreferencesHelper;
-import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.source.local.SharedPreferencesHelper;
+import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.base.BaseActivity;
 import io.nearby.android.ui.MainActivity;

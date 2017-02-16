@@ -20,7 +20,7 @@ import com.google.android.gms.location.LocationServices;
 import javax.inject.Inject;
 
 import io.nearby.android.R;
-import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.base.BaseActivity;
 
@@ -28,7 +28,7 @@ import io.nearby.android.ui.base.BaseActivity;
  * Created by Marc on 2017-02-02.
  */
 
-public class NewSpottedActivity extends BaseActivity implements View.OnClickListener, TextWatcher, NewSpottedView, GoogleApiClient.ConnectionCallbacks {
+public class NewSpottedActivity extends BaseActivity implements View.OnClickListener, TextWatcher, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
 
 
     private Toolbar mToolbar;

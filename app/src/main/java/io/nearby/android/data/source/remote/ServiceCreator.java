@@ -1,4 +1,4 @@
-package io.nearby.android.data.remote;
+package io.nearby.android.data.source.remote;
 
 import android.content.Context;
 
@@ -20,7 +20,7 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import io.nearby.android.R;
-import io.nearby.android.data.local.SharedPreferencesHelper;
+import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;

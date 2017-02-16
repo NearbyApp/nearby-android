@@ -1,6 +1,6 @@
 package io.nearby.android.ui.newspotted;
 
-import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -13,7 +13,7 @@ import okhttp3.ResponseBody;
  * Created by Marc on 2017-02-12.
  */
 
-public class NewSpottedPresenter extends Presenter{
+public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
     private NewSpottedView mNewSpottedView;
     private NearbyService mNearbyService;

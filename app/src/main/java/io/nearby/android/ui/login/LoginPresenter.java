@@ -3,8 +3,8 @@ package io.nearby.android.ui.login;
 import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import io.nearby.android.data.local.SharedPreferencesHelper;
-import io.nearby.android.data.remote.NearbyService;
+import io.nearby.android.data.source.local.SharedPreferencesHelper;
+import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.ui.Presenter;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;

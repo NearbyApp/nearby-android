@@ -3,6 +3,8 @@ package io.nearby.android;
 import android.app.Application;
 import android.util.Log;
 
+import io.nearby.android.data.source.DaggerDataManagerComponent;
+import io.nearby.android.data.source.DataManagerComponent;
 import timber.log.Timber;
 
 /**
@@ -10,6 +12,8 @@ import timber.log.Timber;
  */
 
 public class NearbyApplication extends Application {
+
+    private DataManagerComponent mDataManagerComponent;
 
     @Override
     public void onCreate() {
@@ -21,9 +25,15 @@ public class NearbyApplication extends Application {
 
         //Facebook is automatically done when the manifest contains
         // the facebook app-id in a meta-data tag.
+
+        mDataManagerComponent = DaggerDataManagerComponent.builder()
+                .applicationModule(new ApplicationModule(getApplicationContext()))
+                .build();
     }
 
-
+    public DataManagerComponent getDataManagerComponent(){
+        return mDataManagerComponent;
+    }
 
     private class DebugTree extends Timber.Tree{
 

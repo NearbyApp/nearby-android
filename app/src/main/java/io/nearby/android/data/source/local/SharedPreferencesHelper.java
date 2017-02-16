@@ -1,4 +1,4 @@
-package io.nearby.android.data.local;
+package io.nearby.android.data.source.local;
 
 import android.app.Application;
 import android.content.Context;

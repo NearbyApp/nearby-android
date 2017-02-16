@@ -43,15 +43,11 @@
         <ImageButton
             android:id="@+id/upload_picture_button"
 
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/standard_touch_target_size"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
 
-            android:paddingLeft="@dimen/medium"
-            android:paddingTop="@dimen/small"
-            android:paddingRight="@dimen/small"
-            android:paddingBottom="@dimen/small"
-
+            style="?android:borderlessButtonStyle"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_add_a_photo"/>
 
@@ -64,16 +60,12 @@
         <ImageButton
             android:id="@+id/send_button"
 
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/standard_touch_target_size"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
 
-            android:paddingLeft="@dimen/small"
-            android:paddingTop="@dimen/small"
-            android:paddingRight="@dimen/medium"
-            android:paddingBottom="@dimen/small"
-
-            android:background="?attr/selectableItemBackground"
+            style="?android:borderlessButtonStyle"
+            android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_send_selector"
             />
     </LinearLayout>
