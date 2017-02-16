@@ -2,6 +2,7 @@ package io.nearby.android.data.source.local;
 
 import android.support.annotation.NonNull;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
@@ -18,6 +19,12 @@ import retrofit2.Response;
 @Local
 public class SpottedLocalDataSource implements SpottedDataSource {
 
+    private SharedPreferencesHelper mSharedPreferencesHelper;
+
+    @Inject
+    public SpottedLocalDataSource(SharedPreferencesHelper sharedPreferencesHelper) {
+        mSharedPreferencesHelper = sharedPreferencesHelper;
+    }
 
     @Override
     public void facebookLogin(String userId, String token, LoginCallback callback) {
