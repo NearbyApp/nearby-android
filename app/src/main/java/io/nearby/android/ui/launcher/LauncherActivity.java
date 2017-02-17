@@ -14,16 +14,21 @@ import com.google.android.gms.common.api.ResultCallback;
 
 import javax.inject.Inject;
 
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.ui.MainActivity;
 import io.nearby.android.ui.login.LoginActivity;
+import io.nearby.android.ui.newspotted.DaggerNewSpottedComponent;
+import io.nearby.android.ui.newspotted.NewSpottedPresenterModule;
 
 /**
  * Created by Marc on 2017-01-22.
  */
 
-public class LauncherActivity extends AppCompatActivity {
+public class LauncherActivity extends AppCompatActivity implements LauncherContract.View{
+
+    private LauncherContract.Presenter mPresenter;
 
     @Inject
     SharedPreferencesHelper mSharedPrefHelper;
@@ -32,6 +37,12 @@ public class LauncherActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        DaggerLauncherComponent.builder()
+                .launcherPresenterModule(new LauncherPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
 
         if(mSharedPrefHelper.hasUserAlreadySignedIn()){
             int method = mSharedPrefHelper.getLastSignInMethod();
@@ -125,5 +136,10 @@ public class LauncherActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void setPresenter(LauncherContract.Presenter presenter) {
+        mPresenter = presenter;
     }
 }
