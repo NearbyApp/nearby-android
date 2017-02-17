@@ -19,6 +19,8 @@ import android.widget.Toast;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
+import javax.inject.Inject;
+
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
@@ -36,7 +38,7 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     private EditText mEditText;
     private ImageButton mSendButton;
 
-    private NewSpottedContract.Presenter mPresenter;
+    @Inject NewSpottedPresenter mPresenter;
 
     private boolean mGoogleLocationServiceIsConnected = false;
     private GoogleApiClient mGoogleApiClient;
@@ -137,6 +139,6 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     public void setPresenter(@NonNull NewSpottedContract.Presenter presenter) {
-        mPresenter = checkNotNull(presenter);
+        mPresenter = (NewSpottedPresenter) checkNotNull(presenter);
     }
 }

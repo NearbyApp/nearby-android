@@ -2,6 +2,8 @@ package io.nearby.android.ui.myspotted;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
@@ -12,12 +14,18 @@ import io.nearby.android.data.source.SpottedDataSource;
 
 public class MySpottedPresenter implements MySpottedContract.Presenter{
 
-    private MySpottedContract.View mMySpottedView;
+    private MySpottedContract.View mView;
     private DataManager mDataManager;
 
-    public MySpottedPresenter(MySpottedContract.View mySpottedView, DataManager dataManager){
-        mMySpottedView = mySpottedView;
+    @Inject
+    public MySpottedPresenter(MySpottedContract.View view, DataManager dataManager){
+        mView = view;
         mDataManager = dataManager;
+    }
+
+    @Inject
+    void setupListeners(){
+        mView.setPresenter(this);
     }
 
     @Override
@@ -25,7 +33,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
         mDataManager.loadMySpotted(new SpottedDataSource.MySpottedLoadedCallback() {
             @Override
             public void onMySpottedLoaded(List<Spotted> mySpotted) {
-                mMySpottedView.onMySpottedReceived(mySpotted);
+                mView.onMySpottedReceived(mySpotted);
             }
 
             @Override

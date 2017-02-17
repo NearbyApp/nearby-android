@@ -19,6 +19,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
@@ -32,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private GoogleApiClient mGoogleApiClient;
     private CallbackManager mCallbackManager;
 
-    private LoginContract.Presenter mPresenter;
+    @Inject LoginPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,11 +118,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void initializeGoogle(){
-        mGoogleApiClient = GoogleApiClientBuilder.build(this, this);
+        mGoogleApiClient = new GoogleApiClientBuilder(this)
+                .addSignInApi()
+                .enableAutoManage(this,this)
+                .build();
     }
 
     @Override
     public void setPresenter(LoginContract.Presenter presenter) {
-
+        mPresenter = (LoginPresenter) presenter;
     }
 }

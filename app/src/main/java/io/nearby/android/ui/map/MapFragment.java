@@ -25,6 +25,8 @@ import com.google.android.gms.maps.model.LatLng;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
@@ -46,7 +48,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
     private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
 
-    private MapContract.Presenter mPresenter;
+    @Inject MapPresenter mPresenter;
     private GoogleMap mGoogleMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
 
@@ -206,6 +208,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void setPresenter(MapContract.Presenter presenter) {
+        mPresenter = (MapPresenter) presenter;
+    }
+
     private void addMyLocationFeature() {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -216,8 +223,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mGoogleMap.setMyLocationEnabled(true);
     }
-
-
 
     /**
      * Adds 25 dummy spotted
@@ -236,10 +241,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             mClusterManager.addItem(spottedClusterItem);
         }
-    }
-
-    @Override
-    public void setPresenter(MapContract.Presenter presenter) {
-        mPresenter = presenter;
     }
 }

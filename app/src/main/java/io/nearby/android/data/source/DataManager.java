@@ -10,9 +10,6 @@ import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
 
-/**
- * Created by Marc on 2017-02-16.
- */
 @Singleton
 public class DataManager implements SpottedDataSource{
 
@@ -27,6 +24,11 @@ public class DataManager implements SpottedDataSource{
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
         mSharedPreferencesHelper = sharedPreferencesHelper;
+    }
+
+    @Override
+    public void isUserLoggedIn(UserLoginStatusCallback callback) {
+        mLocalDataSource.isUserLoggedIn(callback);
     }
 
     @Override
@@ -49,7 +51,7 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void createSpotted(@NonNull Spotted spotted, SpottedCreatedCallback callback) {
-
+        
     }
 
     @Override

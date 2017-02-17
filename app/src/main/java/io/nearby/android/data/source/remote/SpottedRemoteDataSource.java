@@ -38,6 +38,11 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     }
 
     @Override
+    public void isUserLoggedIn(UserLoginStatusCallback callback) {
+        callback.userIsNotLoggedIn();
+    }
+
+    @Override
     public void facebookLogin(String userId, String token, LoginCallback callback) {
         login(callback);
     }

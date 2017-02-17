@@ -9,10 +9,11 @@ import io.nearby.android.ui.BaseView;
 public interface LauncherContract {
 
     interface View extends BaseView<Presenter> {
-
+        void onUserNotLoggedIn();
+        void onUserLoggedIn();
     }
 
     interface Presenter{
-
+        void isUserLoggedIn();
     }
 }

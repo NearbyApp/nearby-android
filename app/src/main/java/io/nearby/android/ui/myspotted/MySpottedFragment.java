@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
@@ -26,7 +28,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
 
     private static final int VISIBLE_THRESHOLD = 5;
 
-    private MySpottedContract.Presenter mPresenter;
+    @Inject MySpottedPresenter mPresenter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private RecyclerView mRecyclerView;
@@ -131,6 +133,6 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
 
     @Override
     public void setPresenter(MySpottedContract.Presenter presenter) {
-        mPresenter = presenter;
+        mPresenter = (MySpottedPresenter) presenter;
     }
 }

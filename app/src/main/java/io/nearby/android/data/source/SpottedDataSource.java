@@ -12,6 +12,11 @@ import io.nearby.android.data.Spotted;
 
 public interface SpottedDataSource {
 
+    interface UserLoginStatusCallback{
+        void userIsLoggedIn();
+        void userIsNotLoggedIn();
+    }
+
     interface LoginCallback{
         void onAccountCreated();
         void onLoginSuccess();
@@ -37,6 +42,8 @@ public interface SpottedDataSource {
         void onSpottedLoaded(List<Spotted> spotted);
         void onError();
     }
+
+    void isUserLoggedIn(UserLoginStatusCallback callback);
 
     void facebookLogin(String userId, String token, LoginCallback callback);
 

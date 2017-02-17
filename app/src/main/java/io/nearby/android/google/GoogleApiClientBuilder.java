@@ -16,23 +16,47 @@ import io.nearby.android.R;
 
 public class GoogleApiClientBuilder {
 
-    private GoogleApiClientBuilder(){}
+    private Context mContext;
+    private GoogleApiClient.Builder mGoogleApiBuilder;
 
-    public static GoogleApiClient build(FragmentActivity activity, GoogleApiClient.OnConnectionFailedListener listener){
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(activity.getString(R.string.client_server_id))
-                .requestEmail()
-                .build();
+    public GoogleApiClientBuilder(Context context){
+        mContext = context;
 
-        // Build a GoogleApiClient with access to the Google Sign-In API and the options specified by gso.
-        GoogleApiClient googleApiClient = new GoogleApiClient.Builder(activity)
-                .enableAutoManage(activity , listener)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        return googleApiClient;
+        mGoogleApiBuilder = new GoogleApiClient.Builder(mContext);
     }
 
+    public GoogleApiClientBuilder addSignInApi(){
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(mContext.getString(R.string.client_server_id))
+                .requestEmail()
+                .build();
+        mGoogleApiBuilder.addApi(Auth.GOOGLE_SIGN_IN_API, gso);
+
+        return this;
+    }
+
+    public GoogleApiClientBuilder addLocationServicesApi(){
+        mGoogleApiBuilder.addApi(LocationServices.API);
+        return this;
+    }
+
+    public GoogleApiClientBuilder addOnConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener){
+        mGoogleApiBuilder.addOnConnectionFailedListener(listener);
+        return this;
+    }
+
+    public GoogleApiClientBuilder enableAutoManage(FragmentActivity activity,
+                                       GoogleApiClient.OnConnectionFailedListener listener){
+        mGoogleApiBuilder.enableAutoManage(activity, listener);
+
+        return this;
+    }
+
+    public GoogleApiClient build(){
+        return mGoogleApiBuilder.build();
+    }
+
+    //TODO remove
     public static GoogleApiClient buildLocationApiclient(FragmentActivity activity,
                                                          GoogleApiClient.ConnectionCallbacks connectionCallbacks,
                                                          GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener){

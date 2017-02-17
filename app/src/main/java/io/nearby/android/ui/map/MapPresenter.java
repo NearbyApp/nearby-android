@@ -25,6 +25,7 @@ public class MapPresenter implements MapContract.Presenter {
     private MapContract.View mMapView;
     private DataManager mDataManager;
 
+    @Inject
     public MapPresenter(MapContract.View mapView, DataManager DataManager) {
         mMapView = mapView;
         mDataManager = DataManager;

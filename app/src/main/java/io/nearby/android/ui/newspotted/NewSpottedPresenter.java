@@ -6,30 +6,21 @@ import javax.inject.Singleton;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
-import io.nearby.android.data.source.remote.NearbyService;
-import io.nearby.android.ui.Presenter;
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
 
-@Singleton
 public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
-    private NewSpottedContract.View mNewSpottedView;
+    private NewSpottedContract.View mView;
     private DataManager mDataManager;
 
     @Inject
-    public NewSpottedPresenter(NewSpottedContract.View newSpottedView, DataManager dataManager) {
-        this.mNewSpottedView = newSpottedView;
+    public NewSpottedPresenter(NewSpottedContract.View view, DataManager dataManager) {
+        this.mView = view;
         this.mDataManager = dataManager;
     }
 
     @Inject
     void setupListeners(){
-        mNewSpottedView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
     public void createSpotted(double lat, double lng, String message){
@@ -41,12 +32,12 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         mDataManager.createSpotted(spotted, new SpottedDataSource.SpottedCreatedCallback() {
                     @Override
                     public void onSpottedCreated() {
-                        mNewSpottedView.onSpottedCreated();
+                        mView.onSpottedCreated();
                     }
 
                     @Override
                     public void onError() {
-                        mNewSpottedView.onSpottedNotCreated();
+                        mView.onSpottedNotCreated();
                     }
                 });
     }
