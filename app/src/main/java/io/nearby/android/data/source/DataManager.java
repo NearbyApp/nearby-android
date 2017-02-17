@@ -9,6 +9,7 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
+import timber.log.Timber;
 
 @Singleton
 public class DataManager implements SpottedDataSource{
@@ -51,22 +52,27 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void createSpotted(@NonNull Spotted spotted, SpottedCreatedCallback callback) {
-        
+        mRemoteDataSource.createSpotted(spotted,callback);
     }
 
     @Override
     public void loadMySpotted(MySpottedLoadedCallback callback) {
-
+        mRemoteDataSource.loadMySpotted(callback);
     }
 
     @Override
-    public void loadSpotted(double lat, double lng, boolean locationOnly, SpottedLoadedCallback callback) {
-
+    public void loadSpotted(double minLat,double maxLat,
+                            double minLng, double maxLng,
+                            boolean locationOnly,
+                            SpottedLoadedCallback callback) {
+        mRemoteDataSource.loadSpotted(minLat, maxLat,
+                minLng, maxLng,
+                locationOnly, callback);
     }
 
     @Override
     public void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback) {
-
+        mRemoteDataSource.loadSpottedDetails(spotted, callback);
     }
 
 

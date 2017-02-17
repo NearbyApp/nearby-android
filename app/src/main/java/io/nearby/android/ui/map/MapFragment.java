@@ -18,9 +18,12 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +46,15 @@ import io.nearby.android.ui.newspotted.NewSpottedActivity;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         View.OnClickListener,
-        MapContract.View, GoogleApiClient.ConnectionCallbacks {
+        MapContract.View, GoogleApiClient.ConnectionCallbacks, GoogleMap.OnCameraIdleListener {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
     private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
 
     @Inject MapPresenter mPresenter;
     private GoogleMap mGoogleMap;
-    private NearbyClusterManager<SpottedClusterItem> mClusterManager;
+    private ClusterManager<SpottedClusterItem> mClusterManager;
+    private List<Spotted> mSpotteds;
 
     private GoogleApiClient mGoogleApiClient;
     private CameraPosition mMapInitCamPos;
@@ -67,6 +71,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mSpotteds = new ArrayList<>();
 
         DaggerMapComponent.builder()
                 .mapPresenterModule(new MapPresenterModule(this))
@@ -96,6 +102,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mMapInitCamPos = mGoogleMap.getCameraPosition();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
@@ -107,12 +119,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 }
                 break;
         }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        mMapInitCamPos = mGoogleMap.getCameraPosition();
     }
 
     /**
@@ -128,22 +134,33 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        mClusterManager = new NearbyClusterManager<>(getContext(), mGoogleMap);
+        mClusterManager = new ClusterManager<>(getContext(), mGoogleMap);
 
         //Setting a custom renderer to shot unique spotted with custom marker.
         MapIconRenderer<SpottedClusterItem> renderer = new MapIconRenderer<>(getContext(),mGoogleMap,mClusterManager);
         mClusterManager.setRenderer(renderer);
 
         mGoogleMap.setOnMyLocationButtonClickListener(this);
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
+        mGoogleMap.setOnCameraIdleListener(this);
         mGoogleMap.setOnMarkerClickListener(mClusterManager);
-        addDummyClusteredSpotted();
 
         addMyLocationFeature();
 
         if(mMapInitCamPos != null){
             mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMapInitCamPos));
         }
+    }
+
+    @Override
+    public void onCameraIdle() {
+        mClusterManager.onCameraIdle();
+        Projection projection = mGoogleMap.getProjection();
+        VisibleRegion visibleRegion = projection.getVisibleRegion();
+
+        LatLng northeast = visibleRegion.latLngBounds.northeast;
+        LatLng southWest = visibleRegion.latLngBounds.southwest;
+
+        mPresenter.getSpotteds(southWest.latitude,northeast.latitude,southWest.longitude,northeast.longitude);
     }
 
     /**
@@ -168,11 +185,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onSpottedsReceived(List<Spotted> spotteds) {
-        List<SpottedClusterItem> clusterItems = new ArrayList<>();
         for (Spotted spotted : spotteds) {
-            clusterItems.add(new SpottedClusterItem(spotted));
+            if(!mSpotteds.contains(spotted)){
+                mSpotteds.add(spotted);
+                mClusterManager.addItem(new SpottedClusterItem(spotted));
+            }
         }
-        mClusterManager.addItems(clusterItems);
+
+        mClusterManager.cluster();
     }
 
     @Override

@@ -14,6 +14,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 @Singleton
 @Remote
@@ -27,11 +28,12 @@ public interface NearbyService {
     @GET("/v1/spotteds/me")
     Observable<List<Spotted>> getMySpotteds();
 
-    @FormUrlEncoded
     @GET("/v1/spotteds")
-    Observable<List<Spotted>> getSpotteds(@Field("latitude") double lat,
-                                          @Field("longitude") double lng,
-                                          @Field("locationOnly") boolean locationOnly);
+    Observable<List<Spotted>> getSpotteds(@Query("minLat") double minLat,
+                                          @Query("maxLat") double maxLat,
+                                          @Query("minLong") double minLng,
+                                          @Query("maxLong") double maxLng,
+                                          @Query("locationOnly") boolean locationOnly);
 
     @FormUrlEncoded
     @POST("/v1/spotted")
@@ -41,8 +43,7 @@ public interface NearbyService {
                                            @Field("message") String message,
                                            @Field("picture") String pictureUrl);
 
-    @FormUrlEncoded
     @GET("/v1/spotted/{spottedId}")
-    Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
+    Observable<Spotted> getSpotted(@Query("spottedId") String spottedId);
 
 }

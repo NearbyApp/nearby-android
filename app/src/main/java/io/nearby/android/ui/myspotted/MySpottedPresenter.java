@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-02-08.

@@ -36,10 +36,15 @@ public class MapPresenter implements MapContract.Presenter {
         mMapView.setPresenter(this);
     }
 
-    public void getSpotteds(double lat, double lng){
+    @Override
+    public void getSpotteds(double minLat, double maxLat,
+                            double minLng, double maxLng){
         boolean locationOnly = true;
 
-        mDataManager.loadSpotted(lat, lng, locationOnly, new SpottedDataSource.SpottedLoadedCallback() {
+        mDataManager.loadSpotted(minLat, maxLat,
+                minLng, maxLng,
+                locationOnly,
+                new SpottedDataSource.SpottedLoadedCallback() {
             @Override
             public void onSpottedLoaded(List<Spotted> spotted) {
                 mMapView.onSpottedsReceived(spotted);
@@ -52,7 +57,7 @@ public class MapPresenter implements MapContract.Presenter {
         });
     }
 
-    public void getSpotted(Spotted spotted){
+    public void getSpottedDetails(Spotted spotted){
         mDataManager.loadSpottedDetails(spotted, new SpottedDataSource.SpottedDetailsLoadedCallback() {
             @Override
             public void onSpottedDetailsLoaded(Spotted spotted) {

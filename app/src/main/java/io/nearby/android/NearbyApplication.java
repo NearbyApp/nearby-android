@@ -37,16 +37,26 @@ public class NearbyApplication extends Application {
 
     private class DebugTree extends Timber.Tree{
 
+        private final static String TAG = "NearbyApplicationDebug";
+
         @Override
         protected void log(int priority, String tag, String message, Throwable t) {
             switch(priority){
                 case Log.ERROR:
-                    Log.e(tag,message,t);
+                    Log.e(TAG,message,t);
+                    break;
                 case Log.WARN:
+                    Log.w(TAG,message);
+                    break;
                 case Log.DEBUG:
+                    Log.d(TAG,message);
+                    break;
                 case Log.INFO:
+                    Log.i(TAG,message);
+                    break;
                 case Log.VERBOSE:
-                    Log.println(priority,tag,message);
+                    Log.v(TAG,message);
+                    break;
             }
         }
     }

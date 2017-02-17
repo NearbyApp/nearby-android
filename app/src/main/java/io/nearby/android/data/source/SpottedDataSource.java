@@ -53,7 +53,7 @@ public interface SpottedDataSource {
 
     void loadMySpotted(MySpottedLoadedCallback callback);
 
-    void loadSpotted(double lat, double lng, boolean locationOnly, SpottedLoadedCallback callback);
+    void loadSpotted(double minLat,double maxLat,double minLng, double maxLng, boolean locationOnly, SpottedLoadedCallback callback);
 
     void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback);
 }

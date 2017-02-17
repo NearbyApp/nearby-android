@@ -17,7 +17,8 @@ public interface MapContract {
     }
 
     interface Presenter{
-        void getSpotteds(double lat, double lng);
-        void getSpotted(Spotted spotted);
+        void getSpotteds(double minLat, double maxLat,
+                         double minLng, double maxLng);
+        void getSpottedDetails(Spotted spotted);
     }
 }

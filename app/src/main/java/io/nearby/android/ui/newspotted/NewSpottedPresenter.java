@@ -25,9 +25,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
     public void createSpotted(double lat, double lng, String message){
         //TODO retrieve anonymity setting in Preferences.
-        Spotted spotted = new Spotted(message,lat,lng);
-        spotted.setAnonymity(true);
-
+        Spotted spotted = new Spotted(message,lat,lng, true);
 
         mDataManager.createSpotted(spotted, new SpottedDataSource.SpottedCreatedCallback() {
                     @Override

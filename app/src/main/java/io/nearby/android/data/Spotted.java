@@ -4,13 +4,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Marc on 2017-01-29.
  */
 
 public class Spotted {
 
-    @SerializedName("spottedId")
+    @SerializedName("_id")
     @Expose
     private String id;
 
@@ -18,16 +21,13 @@ public class Spotted {
     @Expose
     private String userId;
 
+    @SerializedName("message")
     @Expose
     private String message;
 
-    @SerializedName("longitude")
+    @SerializedName("location")
     @Expose
-    private double lng;
-
-    @SerializedName("latitude")
-    @Expose
-    private double lat;
+    private Location location;
 
     @SerializedName("anonymity")
     @Expose
@@ -47,16 +47,14 @@ public class Spotted {
 
     public Spotted(String message, double latitude, double longitude, boolean anonymity){
         this.message = message;
-        this.lng = longitude;
-        this.lat = latitude;
+        this.location = new Location(latitude, longitude);
         this.latLng = new LatLng(latitude,longitude);
         this.anonymity = anonymity;
     }
 
     public Spotted(String message, LatLng latLng) {
         this.message = message;
-        this.lat = latLng.latitude;
-        this.lng= latLng.longitude;
+        this.location = new Location(latLng.latitude, latLng.longitude);
         this.latLng = latLng;
     }
 
@@ -93,39 +91,71 @@ public class Spotted {
     }
 
     public double getLongitude() {
-        return lng;
-    }
-
-    public void setLongitude(double longitude) {
-        this.lng = longitude;
+        return location.getLongitude();
     }
 
     public double getLatitude() {
-        return lat;
-    }
-
-    public void setLatitude(double latitude) {
-        this.lat = latitude;
+        return location.getLatitude();
     }
 
     public boolean getAnonymity() {
         return anonymity;
     }
 
-    public void setAnonymity(boolean anonymity) {
-        this.anonymity = anonymity;
-    }
-
     public LatLng getLatLng() {
         if(latLng == null){
-            setLatLng(new LatLng(lat,lng));
+            setLatLng(new LatLng(getLatitude(),getLongitude()));
         }
 
         return latLng;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Spotted){
+            Spotted spotted = (Spotted)obj;
+            return spotted.getId().equals(id);
+        }
+
+        return super.equals(obj);
     }
 
     private void setLatLng(LatLng latLng) {
         this.latLng = latLng;
     }
 
+    /**
+     * Location class
+     */
+    private class Location{
+        private static final int LATITUDE_INDEX = 0;
+        private static final int LONGITUDE_INDEX = 1;
+
+        @SerializedName("coordinates")
+        @Expose
+        private List<Double> coordinates;
+
+        public Location() {
+        }
+
+        public Location(double lat, double lng){
+            coordinates = new ArrayList<>();
+            setCoordinates(lat, lng);
+        }
+
+        public double getLatitude(){
+            return coordinates.get(LATITUDE_INDEX);
+        }
+
+        public double getLongitude(){
+            return coordinates.get(LONGITUDE_INDEX);
+        }
+
+        public void setCoordinates(double lat, double lng){
+            coordinates.clear();
+            coordinates.add(lat);
+            coordinates.add(lng);
+        }
+
+    }
 }

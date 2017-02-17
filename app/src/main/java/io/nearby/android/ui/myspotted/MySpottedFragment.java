@@ -19,6 +19,7 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.adapter.SpottedAdapter;
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-02-02.
@@ -101,9 +102,13 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
             }
         });
 
-        mPresenter.loadMySpotted();
-
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mPresenter.loadMySpotted();
     }
 
     @Override

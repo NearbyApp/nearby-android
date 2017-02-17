@@ -85,7 +85,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     @Override
     public void createSpotted(Spotted spotted,
                               final SpottedCreatedCallback callback){
-        Observable<ResponseBody> call = mNearbyService.createSpotted(true,
+        Observable<ResponseBody> call = mNearbyService.createSpotted(false,
                 spotted.getLatitude(),
                 spotted.getLongitude(),
                 spotted.getMessage(),
@@ -130,8 +130,11 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     }
 
     @Override
-    public void loadSpotted(double lat, double lng, boolean locationOnly, final SpottedLoadedCallback callback) {
-        Observable<List<Spotted>> call = mNearbyService.getSpotteds(lat, lng, true);
+    public void loadSpotted(double minLat, double maxLat,
+                            double minLng, double maxLng,
+                            boolean locationOnly,
+                            final SpottedLoadedCallback callback) {
+        Observable<List<Spotted>> call = mNearbyService.getSpotteds(minLat, maxLat, minLng, maxLng, true);
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Spotted>>() {
@@ -148,7 +151,6 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 });
 
         mCompositeDisposable.add(disposable);
-
     }
 
     @Override
