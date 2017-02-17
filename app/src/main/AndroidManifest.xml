@@ -4,11 +4,14 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.camera"
-        android:required="true" />
+    <!-- The write permission implicitly allows reading. -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
 
     <application
         android:name=".NearbyApplication"
@@ -48,13 +51,17 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.MainActivity"></activity>
+        <activity android:name=".ui.MainActivity" />
 
         <activity android:name=".ui.newspotted.NewSpottedActivity"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait">
 
         </activity>
+
+        <activity android:name=".ui.help.HelpActivity"
+            android:parentActivityName=".ui.MainActivity"/>
 
         <!-- To enable Chrome custom tabs for Facebook login -->
         <activity
@@ -69,6 +76,16 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.example.android.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
     </application>
 
 </manifest>

@@ -10,7 +10,7 @@ import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import io.nearby.android.R;
-import io.nearby.android.util.BitmapUtil;
+import io.nearby.android.util.ImageUtil;
 
 /**
  * Created by Marc on 2017-01-29.
@@ -28,6 +28,6 @@ public class MapIconRenderer<SpottedClusterItem extends ClusterItem> extends Def
     @Override
     protected void onBeforeClusterItemRendered(SpottedClusterItem item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(BitmapUtil.vectorDrawableToBitmap(mContext, R.drawable.circle)));
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageUtil.vectorDrawableToBitmap(mContext, R.drawable.circle)));
     }
 }

@@ -1,5 +1,7 @@
 package io.nearby.android.ui.newspotted;
 
+import android.support.annotation.Nullable;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -23,9 +25,8 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         mView.setPresenter(this);
     }
 
-    public void createSpotted(double lat, double lng, String message){
-        //TODO retrieve anonymity setting in Preferences.
-        Spotted spotted = new Spotted(message,lat,lng, true);
+    public void createSpotted(double lat, double lng, String message,@Nullable String filePath){
+        Spotted spotted = new Spotted(message,lat,lng);
 
         mDataManager.createSpotted(spotted, new SpottedDataSource.SpottedCreatedCallback() {
                     @Override

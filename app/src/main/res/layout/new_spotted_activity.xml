@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,19 +11,49 @@
 
     <include layout="@layout/generic_toolbar" />
 
-    <EditText
-        android:id="@+id/spotted_text"
 
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        >
 
-        android:hint="@string/new_spotted_hint"
-        android:padding="@dimen/medium"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
 
-        android:gravity="top|start"
-        android:background="@android:color/transparent"
-        />
+            android:padding="@dimen/medium"
+            >
+
+            <EditText
+                android:id="@+id/spotted_text"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginBottom="@dimen/medium"
+
+                android:hint="@string/new_spotted_hint"
+
+                android:gravity="top|start"
+                android:background="@android:color/transparent"
+                />
+
+            <ImageView
+                android:id="@+id/spotted_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:adjustViewBounds="true"
+
+                tools:src="@mipmap/ic_launcher"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"

@@ -14,6 +14,6 @@ public interface NewSpottedContract {
     }
 
     interface Presenter{
-        void createSpotted(double lat, double lng, String message);
+        void createSpotted(double lat, double lng, String message, String filePath);
     }
 }

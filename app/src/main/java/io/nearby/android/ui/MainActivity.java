@@ -1,5 +1,6 @@
 package io.nearby.android.ui;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import io.nearby.android.R;
+import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
 
@@ -132,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.settings:
                 break;
             case R.id.help:
+                Intent intent = new Intent(this,HelpActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
