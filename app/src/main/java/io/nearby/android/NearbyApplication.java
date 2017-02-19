@@ -7,10 +7,6 @@ import io.nearby.android.data.source.DaggerDataManagerComponent;
 import io.nearby.android.data.source.DataManagerComponent;
 import timber.log.Timber;
 
-/**
- * Created by Marc on 2017-01-20.
- */
-
 public class NearbyApplication extends Application {
 
     private DataManagerComponent mDataManagerComponent;
