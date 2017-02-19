@@ -46,7 +46,9 @@ import io.nearby.android.ui.newspotted.NewSpottedActivity;
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         GoogleMap.OnMyLocationButtonClickListener,
         View.OnClickListener,
-        MapContract.View, GoogleApiClient.ConnectionCallbacks, GoogleMap.OnCameraIdleListener {
+        MapContract.View,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleMap.OnCameraIdleListener {
 
     private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
     private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
@@ -74,6 +76,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
         mSpotteds = new ArrayList<>();
 
+        setRetainInstance(true);
+
         DaggerMapComponent.builder()
                 .mapPresenterModule(new MapPresenterModule(this))
                 .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
@@ -94,9 +98,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this.getActivity(), this, null);
         }
 
-        SupportMapFragment mapFragment = SupportMapFragment.newInstance();
+        SupportMapFragment mapFragment =
+                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.support_map_fragment);
         mapFragment.getMapAsync(this);
-        getChildFragmentManager().beginTransaction().add(R.id.support_map_fragment, mapFragment).commit();
 
         return view;
     }

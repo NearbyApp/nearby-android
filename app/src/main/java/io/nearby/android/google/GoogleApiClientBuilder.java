@@ -40,6 +40,11 @@ public class GoogleApiClientBuilder {
         return this;
     }
 
+    public GoogleApiClientBuilder addConnectionCallbacks(GoogleApiClient.ConnectionCallbacks callbacks){
+        mGoogleApiBuilder.addConnectionCallbacks(callbacks);
+        return this;
+    }
+
     public GoogleApiClientBuilder addOnConnectionFailedListener(GoogleApiClient.OnConnectionFailedListener listener){
         mGoogleApiBuilder.addOnConnectionFailedListener(listener);
         return this;

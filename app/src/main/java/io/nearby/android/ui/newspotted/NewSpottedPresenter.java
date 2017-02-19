@@ -2,6 +2,8 @@ package io.nearby.android.ui.newspotted;
 
 import android.support.annotation.Nullable;
 
+import java.io.File;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -28,7 +30,13 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
     public void createSpotted(double lat, double lng, String message,@Nullable String filePath){
         Spotted spotted = new Spotted(message,lat,lng);
 
-        mDataManager.createSpotted(spotted, new SpottedDataSource.SpottedCreatedCallback() {
+        File file = null;
+
+        if(filePath != null){
+            file = new File(filePath);
+        }
+
+        mDataManager.createSpotted(spotted, file, new SpottedDataSource.SpottedCreatedCallback() {
                     @Override
                     public void onSpottedCreated() {
                         mView.onSpottedCreated();

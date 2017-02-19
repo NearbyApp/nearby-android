@@ -1,6 +1,9 @@
 package io.nearby.android.data.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import java.io.File;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,8 +54,8 @@ public class DataManager implements SpottedDataSource{
     }
 
     @Override
-    public void createSpotted(@NonNull Spotted spotted, SpottedCreatedCallback callback) {
-        mRemoteDataSource.createSpotted(spotted,callback);
+    public void createSpotted(@NonNull Spotted spotted, @Nullable File image, SpottedCreatedCallback callback) {
+        mRemoteDataSource.createSpotted(spotted, image,callback);
     }
 
     @Override

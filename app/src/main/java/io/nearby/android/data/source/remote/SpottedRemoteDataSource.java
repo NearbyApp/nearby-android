@@ -1,7 +1,9 @@
 package io.nearby.android.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.io.File;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -16,6 +18,9 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import timber.log.Timber;
@@ -84,12 +89,32 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
 
     @Override
     public void createSpotted(Spotted spotted,
+                              @Nullable File image,
                               final SpottedCreatedCallback callback){
-        Observable<ResponseBody> call = mNearbyService.createSpotted(false,
-                spotted.getLatitude(),
-                spotted.getLongitude(),
-                spotted.getMessage(),
-                null);
+
+        RequestBody latitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLatitude()));
+        RequestBody longitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLongitude()));
+        RequestBody message = RequestBody.create(MultipartBody.FORM, spotted.getMessage());
+        RequestBody anonymity = RequestBody.create(MultipartBody.FORM, Boolean.toString(false));
+
+        Observable<ResponseBody> call;
+        if(image != null){
+            RequestBody requestImage = RequestBody.create(MediaType.parse("image/*"),image);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("picture",image.getName(),requestImage);
+
+            call = mNearbyService.createSpotted(anonymity,
+                    latitude,
+                    longitude,
+                    message,
+                    body);
+        }
+        else {
+            call = mNearbyService.createSpotted(anonymity,
+                    latitude,
+                    longitude,
+                    message);
+        }
+
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResponseBody>() {

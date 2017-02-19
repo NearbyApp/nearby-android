@@ -1,7 +1,9 @@
 package io.nearby.android.data.source;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import java.io.File;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
@@ -49,7 +51,7 @@ public interface SpottedDataSource {
 
     void googleLogin(String userId, String token, LoginCallback callback);
 
-    void createSpotted(@NonNull Spotted spotted, SpottedCreatedCallback callback);
+    void createSpotted(@NonNull Spotted spotted, @Nullable File image , SpottedCreatedCallback callback);
 
     void loadMySpotted(MySpottedLoadedCallback callback);
 

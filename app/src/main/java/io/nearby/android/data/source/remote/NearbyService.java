@@ -7,12 +7,16 @@ import javax.inject.Singleton;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.Remote;
 import io.reactivex.Observable;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,13 +39,21 @@ public interface NearbyService {
                                           @Query("maxLong") double maxLng,
                                           @Query("locationOnly") boolean locationOnly);
 
-    @FormUrlEncoded
+    @Multipart
     @POST("/v1/spotted")
-    Observable<ResponseBody> createSpotted(@Field("anonymity") boolean anonymity,
-                                           @Field("latitude") double lat,
-                                           @Field("longitude") double lng,
-                                           @Field("message") String message,
-                                           @Field("picture") String pictureUrl);
+    Observable<ResponseBody> createSpotted(@Part("anonymity") RequestBody anonymity,
+                                           @Part("latitude") RequestBody lat,
+                                           @Part("longitude") RequestBody lng,
+                                           @Part("message") RequestBody message,
+                                           @Part MultipartBody.Part pictureFile);
+
+    @Multipart
+    @POST("/v1/spotted")
+    Observable<ResponseBody> createSpotted(@Part("anonymity") RequestBody anonymity,
+                                           @Part("latitude") RequestBody lat,
+                                           @Part("longitude") RequestBody lng,
+                                           @Part("message") RequestBody message);
+
 
     @GET("/v1/spotted/{spottedId}")
     Observable<Spotted> getSpotted(@Query("spottedId") String spottedId);
