@@ -12,7 +12,7 @@ import io.nearby.android.data.Spotted;
 public class SpottedClusterItem extends Spotted implements ClusterItem {
 
     public SpottedClusterItem(Spotted spotted){
-        super(spotted.getMessage(), spotted.getLatitude(), spotted.getLongitude());
+        super(spotted.getId(), spotted.getMessage(), spotted.getLatitude(), spotted.getLongitude());
     }
 
     @Override

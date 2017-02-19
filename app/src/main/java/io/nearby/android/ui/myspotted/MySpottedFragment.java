@@ -148,7 +148,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         List<Spotted> spotteds = new ArrayList<>();
 
         for (int i = 0; i < 10 ; i++){
-            Spotted spotted = new Spotted("I spotted the spotted #" + i,0,0);
+            Spotted spotted = new Spotted(Integer.toString(i),"I spotted the spotted #" + i,0,0);
             spotteds.add(spotted);
         }
 

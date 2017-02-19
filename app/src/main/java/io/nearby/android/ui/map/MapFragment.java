@@ -1,6 +1,5 @@
 package io.nearby.android.ui.map;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -9,10 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,28 +38,36 @@ import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-01-27.
  */
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
-        GoogleMap.OnMyLocationButtonClickListener,
-        View.OnClickListener,
         MapContract.View,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleMap.OnCameraIdleListener {
+        GoogleMap.OnCameraIdleListener,
+        GoogleApiClient.OnConnectionFailedListener,
+        ClusterManager.OnClusterItemClickListener<SpottedClusterItem> {
 
-    private final int FINE_LOCATION_PERMISSION_REQUEST = 9002;
-    private final String PARAMS_MAP_CAMERA_POSITION = "PARAMS_MAP_CAMERA_POSITION";
+    private static final int DEFAULT_ZOOM = 15;
+    private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9002;
+    private static final LatLng DEFAULT_LOCATION = new LatLng(45.5015537,-73.5674999);
 
-    @Inject MapPresenter mPresenter;
-    private GoogleMap mGoogleMap;
-    private NearbyClusterManager<SpottedClusterItem> mClusterManager;
-    private List<Spotted> mSpotteds;
+    // Keys for storing activity state.
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
 
     private GoogleApiClient mGoogleApiClient;
-    private CameraPosition mMapInitCamPos;
+    private GoogleMap mMap;
+    private NearbyClusterManager<SpottedClusterItem> mClusterManager;
+
+    private boolean mLocationPermissionGranted;
+    private Location mLastKnownLocation;
+    private CameraPosition mCameraPosition;
+
+    @Inject MapPresenter mPresenter;
 
     public static MapFragment newInstance() {
 
@@ -69,42 +79,50 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void setPresenter(MapContract.Presenter presenter) {
+        mPresenter = (MapPresenter) presenter;
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mSpotteds = new ArrayList<>();
-
-        setRetainInstance(true);
 
         DaggerMapComponent.builder()
                 .mapPresenterModule(new MapPresenterModule(this))
                 .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
+
+        // Retrieve location and camera position from saved instance state.
+        if (savedInstanceState != null) {
+            mLastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION);
+            mCameraPosition = savedInstanceState.getParcelable(KEY_CAMERA_POSITION);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
-
-        view.findViewById(R.id.fab).setOnClickListener(this);
-
-        if(savedInstanceState != null){
-            mMapInitCamPos = savedInstanceState.getParcelable(PARAMS_MAP_CAMERA_POSITION);
-        }
-        else if(mGoogleApiClient == null) {
-            //enableAutoManage can't be used because it would be binded with the MainActivity.
-            mGoogleApiClient = new GoogleApiClientBuilder(getContext())
-                    .addLocationServicesApi()
-                    .addConnectionCallbacks(this)
-                    .build();
-        }
-
-        SupportMapFragment mapFragment =
-                (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.support_map_fragment);
-        mapFragment.getMapAsync(this);
-
+        view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
+                startActivity(intent);
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //enableAutoManage can't be used because it would be binded with the MainActivity.
+        mGoogleApiClient = new GoogleApiClientBuilder(getContext())
+                .addLocationServicesApi()
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
     }
 
     @Override
@@ -114,9 +132,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mMapInitCamPos = mGoogleMap.getCameraPosition();
+    public void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
     }
 
     @Override
@@ -124,55 +145,69 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         super.onStop();
         mGoogleApiClient.disconnect();
     }
-    
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
 
         switch(requestCode){
-            case FINE_LOCATION_PERMISSION_REQUEST:
-                if(permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)&&
-                        grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    addMyLocationFeature();
-
-                    if(mMapInitCamPos != null){
-                        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMapInitCamPos));
-                    }
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
                 }
-                break;
         }
+
+        updateLocationUI();
     }
 
     /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add mMarkers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
+     * Builds the map when Google play service is connected
      */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mGoogleMap = googleMap;
+    public void onConnected(@Nullable Bundle bundle) {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.support_map_fragment);
+        mapFragment.getMapAsync(this);
+    }
 
-        mClusterManager = new NearbyClusterManager<>(getContext(), mGoogleMap);
+    @Override
+    public void onConnectionSuspended(int i) {
+        Timber.d("Play services connection suspended");
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult result) {
+        Timber.d("Play services connection failed: ConnectionResult.getErrorCode() = " + result.getErrorCode());
+    }
+
+    /**
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add mMarkers or lines, add listeners or move the camera.
+     */
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mMap = map;
+
+        //Setting up the cluster manager
+        mClusterManager = new NearbyClusterManager<>(getContext(), mMap);
         mClusterManager.setOnCameraIdleListener(this);
+        mClusterManager.setOnClusterItemClickListener(this);
 
-        mGoogleMap.setOnMyLocationButtonClickListener(this);
-        mGoogleMap.setOnCameraIdleListener(mClusterManager);
-        mGoogleMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnCameraIdleListener(mClusterManager);
 
-        addMyLocationFeature();
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
 
-        if(mMapInitCamPos != null){
-            mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMapInitCamPos));
-        }
+        // Get the current location of the device and set the position of the map.
+        getDeviceLocation();
     }
 
     @Override
     public void onCameraIdle() {
-        Projection projection = mGoogleMap.getProjection();
+        Projection projection = mMap.getProjection();
         VisibleRegion visibleRegion = projection.getVisibleRegion();
 
         LatLng northeast = visibleRegion.latLngBounds.northeast;
@@ -181,34 +216,16 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mPresenter.getSpotteds(southWest.latitude,northeast.latitude,southWest.longitude,northeast.longitude);
     }
 
-    /**
-     * @return true if the listener has consumed the event (i.e., the default behavior should not
-     * occur); false otherwise (i.e., the default behavior should occur). The default behavior is
-     * for the camera move such that it is centered on the user location.
-     */
     @Override
-    public boolean onMyLocationButtonClick() {
+    public boolean onClusterItemClick(SpottedClusterItem spottedClusterItem) {
         return false;
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.fab:
-                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
-                startActivity(intent);
-                break;
-        }
     }
 
     @Override
     public void onSpottedsReceived(List<Spotted> spotteds) {
         for (Spotted spotted : spotteds) {
-            if(!mSpotteds.contains(spotted)){
-                mSpotteds.add(spotted);
-                SpottedClusterItem item = new SpottedClusterItem(spotted);
-                mClusterManager.addItem(item);
-            }
+            SpottedClusterItem item = new SpottedClusterItem(spotted);
+            mClusterManager.addItem(item);
         }
 
         mClusterManager.cluster();
@@ -219,48 +236,60 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        if (ActivityCompat.checkSelfPermission(this.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+    private void updateLocationUI() {
+        if(mMap == null){
             return;
         }
 
-        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-        double lat = lastLocation.getLatitude();
-        double lng = lastLocation.getLongitude();
-
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(lat,lng))
-                .zoom(17)
-                .build();
-
-        if(mGoogleMap != null){
-            mGoogleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        /*
+         * Request location permission, so that we can get the location of the
+        * device. The result of the permission request is handled by a callback,
+        * onRequestPermissionsResult.
+        */
+        if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
-        else if(mMapInitCamPos == null){
-            mMapInitCamPos = cameraPosition;
+
+        if (mLocationPermissionGranted) {
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        } else {
+            mMap.setMyLocationEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+            mLastKnownLocation = null;
         }
     }
 
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void setPresenter(MapContract.Presenter presenter) {
-        mPresenter = (MapPresenter) presenter;
-    }
-
-    private void addMyLocationFeature() {
-        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION_REQUEST);
-            return;
+    private void getDeviceLocation(){
+        if (ContextCompat.checkSelfPermission(getContext(),android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-        mGoogleMap.setMyLocationEnabled(true);
+        /*
+         * Before getting the device location, you must check location
+         * permission, as described earlier in the tutorial. Then:
+         * Get the best and most recent location of the device, which may be
+         * null in rare cases when a location is not available.
+         */
+        if (mLocationPermissionGranted) {
+            mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
+
+        // Set the map's camera position to the current location of the device.
+        if (mCameraPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        } else if (mLastKnownLocation != null) {
+            LatLng currentLatLng = new LatLng(mLastKnownLocation.getLatitude(),mLastKnownLocation.getLongitude());
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, DEFAULT_ZOOM));
+        } else {
+            Timber.d("Current location is null. Using defaults.");
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
+        }
     }
 
     /**
@@ -275,7 +304,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             double offset = i / 180d;
             lat = lat + offset;
             lng = lng + offset;
-            Spotted spotted = new Spotted("Y ce passe quelque chose",new LatLng(lat,lng));
+            Spotted spotted = new Spotted(Integer.toString(i),"Y ce passe quelque chose",lat, lng);
             SpottedClusterItem spottedClusterItem = new SpottedClusterItem(spotted);
 
             mClusterManager.addItem(spottedClusterItem);

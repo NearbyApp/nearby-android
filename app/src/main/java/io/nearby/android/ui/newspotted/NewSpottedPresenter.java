@@ -28,7 +28,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
     }
 
     public void createSpotted(double lat, double lng, String message,@Nullable String filePath){
-        Spotted spotted = new Spotted(message,lat,lng);
+        Spotted spotted = new Spotted("0",message,lat,lng);
 
         File file = null;
 

@@ -12,21 +12,18 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import io.nearby.android.R;
 import io.nearby.android.util.ImageUtil;
 
-/**
- * Created by Marc on 2017-01-29.
- */
 
-public class MapIconRenderer<SpottedClusterItem extends ClusterItem> extends DefaultClusterRenderer<SpottedClusterItem>  {
+public class MapIconRenderer<T extends ClusterItem> extends DefaultClusterRenderer<T>  {
 
     private Context mContext;
 
-    public MapIconRenderer(Context context, GoogleMap map, ClusterManager<SpottedClusterItem> clusterManager) {
+    public MapIconRenderer(Context context, GoogleMap map, ClusterManager<T> clusterManager) {
         super(context, map, clusterManager);
         mContext = context;
     }
 
     @Override
-    protected void onBeforeClusterItemRendered(SpottedClusterItem item, MarkerOptions markerOptions) {
+    protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
         super.onBeforeClusterItemRendered(item, markerOptions);
         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageUtil.vectorDrawableToBitmap(mContext, R.drawable.circle)));
     }

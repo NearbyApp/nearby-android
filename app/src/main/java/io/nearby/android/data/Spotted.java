@@ -48,21 +48,16 @@ public class Spotted {
      */
     public Spotted(){}
 
-    public Spotted(String message, double latitude, double longitude) {
-        this(message,latitude,longitude,true);
+    public Spotted(String id, String message, double latitude, double longitude) {
+        this(id,message,latitude,longitude,true);
     }
 
-    public Spotted(String message, double latitude, double longitude, boolean anonymity){
+    public Spotted(String id, String message, double latitude, double longitude, boolean anonymity){
+        this.id = id;
         this.message = message;
         this.location = new Location(latitude, longitude);
         this.latLng = new LatLng(latitude,longitude);
         this.anonymity = anonymity;
-    }
-
-    public Spotted(String message, LatLng latLng) {
-        this.message = message;
-        this.location = new Location(latLng.latitude, latLng.longitude);
-        this.latLng = latLng;
     }
 
     public boolean hasImage() {
