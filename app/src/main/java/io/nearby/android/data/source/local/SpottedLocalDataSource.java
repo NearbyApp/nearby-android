@@ -144,6 +144,11 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     }
 
     @Override
+    public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
+
+    }
+
+    @Override
     public void loadSpotted(double minLat, double maxLat, double minLng, double maxLng, boolean locationOnly, SpottedLoadedCallback callback) {
 
     }

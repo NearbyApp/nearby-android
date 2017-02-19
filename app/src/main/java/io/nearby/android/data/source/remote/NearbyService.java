@@ -32,6 +32,12 @@ public interface NearbyService {
     @GET("/v1/spotteds/me")
     Observable<List<Spotted>> getMySpotteds();
 
+    @GET("/v1/spotteds/me")
+    Observable<List<Spotted>> getMyOlderSpotteds(@Query("skip") int skip);
+
+    @GET("/v1/spotteds/me")
+    Observable<List<Spotted>> getMyNewerSpotteds(@Query("since") int since);
+
     @GET("/v1/spotteds")
     Observable<List<Spotted>> getSpotteds(@Query("minLat") double minLat,
                                           @Query("maxLat") double maxLat,

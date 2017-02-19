@@ -13,11 +13,12 @@ public interface MySpottedContract {
 
     interface View extends BaseView<Presenter>{
         void onMySpottedReceived(List<Spotted> spottedList);
+        void onMyOlderSpottedReceived(List<Spotted> spottedList);
     }
 
     interface Presenter{
         void loadMySpotted();
         void refreshMySpotted();
-        void loadMyOlderSpotted(Spotted lastSpotted);
+        void loadMyOlderSpotted(int spottedCount);
     }
 }

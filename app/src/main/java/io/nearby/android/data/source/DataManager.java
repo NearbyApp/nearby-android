@@ -78,5 +78,8 @@ public class DataManager implements SpottedDataSource{
         mRemoteDataSource.loadSpottedDetails(spotted, callback);
     }
 
-
+    @Override
+    public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
+        mRemoteDataSource.loadMyOlderSpotted(spottedCount, callback);
+    }
 }

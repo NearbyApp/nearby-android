@@ -40,6 +40,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     private LinearLayoutManager mLayoutManager;
 
     private boolean mIsLoadingOlderSpotted = false;
+    private boolean mHasOlderSpotted = false;
     private int mPreviousTotal = 0;
 
     public static MySpottedFragment newInstance() {
@@ -86,7 +87,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                if(dy > 0) //check for scroll down
+                if(dy > 0 && mHasOlderSpotted) //check for scroll down
                 {
                     int visibleItemCount = MySpottedFragment.this.mRecyclerView.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
@@ -100,10 +101,10 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
                     }
                     if (!mIsLoadingOlderSpotted &&
                             (totalItemCount - visibleItemCount) <= (firstVisibleItem + VISIBLE_THRESHOLD)) {
-
-                        mPresenter.loadMyOlderSpotted(mAdapter.getLastSpotted());
-
+                        mPreviousTotal = totalItemCount;
                         mIsLoadingOlderSpotted = true;
+
+                        mPresenter.loadMyOlderSpotted(mAdapter.getItemCount());
                     }
                 }
             }
@@ -131,8 +132,16 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         //TODO A merging would probably be better
         mAdapter.addItems(spottedList);
         mAdapter.notifyDataSetChanged();
+    }
 
-        mSwipeRefreshLayout.setRefreshing(false);
+    @Override
+    public void onMyOlderSpottedReceived(List<Spotted> spottedList) {
+        if(spottedList.size() == 0){
+            mHasOlderSpotted = false;
+        }
+
+        mAdapter.addItems(spottedList);
+        mAdapter.notifyDataSetChanged();
     }
 
     private void addDummySpotted(){

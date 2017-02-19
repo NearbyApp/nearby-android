@@ -48,10 +48,18 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
 
     }
 
-    public void loadMyOlderSpotted(Spotted lastSpotted){
-        String id = lastSpotted.getId();
+    public void loadMyOlderSpotted(int spottedCount){
+        mDataManager.loadMyOlderSpotted(spottedCount, new SpottedDataSource.MySpottedLoadedCallback(){
 
-        //TODO Add a call to get my older spotted
-        //mNearbyService.getMySpotteds(id);
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                mView.onMyOlderSpottedReceived(mySpotted);
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 }
