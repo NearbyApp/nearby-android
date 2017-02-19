@@ -34,6 +34,10 @@ public class Spotted {
     @Expose
     private boolean anonymity;
 
+    @SerializedName("pictureURL")
+    @Expose
+    private String pictureUrl;
+
     private LatLng latLng;
 
 
@@ -109,6 +113,14 @@ public class Spotted {
         }
 
         return latLng;
+    }
+
+    public String getPictureUrl() {
+        return pictureUrl;
+    }
+
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
     }
 
     @Override

@@ -1,10 +1,19 @@
 package io.nearby.android.ui.adapter;
 
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,89 +24,63 @@ import io.nearby.android.data.Spotted;
 /**
  * Created by Marc on 2017-02-02.
  */
-public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapter {
+public class SpottedAdapter extends ArrayAdapter<Spotted> {
 
     private List<Spotted> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class SpottedMessageViewHolder extends RecyclerView.ViewHolder {
+    public static class SpottedViewHolder extends RecyclerView.ViewHolder {
         TextView mMessageTextView;
+        ImageView mImageView;
 
-        public SpottedMessageViewHolder(View v) {
+        public SpottedViewHolder(View v) {
             super(v);
             //TODO Call findViewById to set view value
-            mMessageTextView = (TextView) itemView.findViewById(R.id.info_text);
+
         }
     }
 
-    public static class SpottedImageViewHolder extends RecyclerView.ViewHolder {
-        public SpottedImageViewHolder(View v) {
-            super(v);
-            //TODO Call findViewById to set view value
-        }
-    }
-
-    public SpottedAdapter(){
+    public SpottedAdapter(Context context) {
+        super(context, R.layout.spotted_card);
         mDataset = new ArrayList<>();
     }
 
-    public SpottedAdapter(List<Spotted> dataset){
-        mDataset = dataset;
+    @NonNull
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        Spotted spotted = getItem(position);
+
+        if(convertView == null){
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.spotted_card, parent, false);
+        }
+
+        TextView messageTextView = (TextView) convertView.findViewById(R.id.spotted_message);
+        ImageView imageView = (ImageView) convertView.findViewById(R.id.spotted_image);
+
+        messageTextView.setText(spotted.getMessage());
+        if(imageView.getDrawable() == null){
+            Glide.with(getContext()).load(spotted.getPictureUrl()).into(imageView);
+        }
+
+        return convertView;
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder viewHolder = null;
-        View view = LayoutInflater.from(parent.getContext()).inflate(viewType, parent, false);
+    public int getPosition(Spotted item) {
+        return mDataset.indexOf(item);
+    }
 
-        switch(viewType){
-            case R.layout.spotted_message_card:
-                viewHolder = new SpottedMessageViewHolder(view);
-                break;
-            case R.layout.spotted_image_card:
-                viewHolder = new SpottedImageViewHolder(view);
-                break;
-        }
-
-        return viewHolder;
+    @Nullable
+    @Override
+    public Spotted getItem(int position) {
+        return mDataset.get(position);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Spotted spotted = mDataset.get(position);
-
-        switch (holder.getItemViewType()){
-            case R.layout.spotted_message_card:
-                SpottedMessageViewHolder spottedMessageViewHolder = (SpottedMessageViewHolder) holder;
-                // TODO setValue
-                spottedMessageViewHolder.mMessageTextView.setText(spotted.getMessage());
-                break;
-            case R.layout.spotted_image_card:
-                SpottedImageViewHolder spottedImageViewHolder = (SpottedImageViewHolder) holder;
-                // TODO setValue
-                break;
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        int viewType;
-
-        Spotted spotted = mDataset.get(position);
-        if(spotted.hasImage()){
-            viewType = R.layout.spotted_image_card;
-        }
-        else {
-            viewType = R.layout.spotted_message_card;
-        }
-
-        return viewType;
-    }
-
-    @Override
-    public int getItemCount() {
+    public int getCount() {
         return mDataset.size();
     }
 

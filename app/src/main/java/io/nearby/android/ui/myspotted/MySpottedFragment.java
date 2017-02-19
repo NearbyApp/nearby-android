@@ -4,11 +4,10 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,6 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.adapter.SpottedAdapter;
-import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-02-02.
@@ -32,9 +30,8 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     @Inject MySpottedPresenter mPresenter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private RecyclerView mRecyclerView;
+    private ListView mListView;
     private SpottedAdapter mAdapter;
-    private LinearLayoutManager mLayoutManager;
 
     private boolean mIsLoadingOlderSpotted = false;
     private int mPreviousTotal = 0;
@@ -68,20 +65,20 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
-        mLayoutManager = new LinearLayoutManager(getActivity());
-        mRecyclerView.setLayoutManager(mLayoutManager);
+        mListView = (ListView) view.findViewById(R.id.list_view);
 
-        mAdapter = new SpottedAdapter();
-        mRecyclerView.setAdapter(mAdapter);
+        mAdapter = new SpottedAdapter(getContext());
+        mListView.setAdapter(mAdapter);
 
         // http://stackoverflow.com/questions/26543131/how-to-implement-endless-list-with-recyclerview
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        //TODO
+        //mListView.setOnScrollListener();
+        /*mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0) //check for scroll down
                 {
-                    int visibleItemCount = mRecyclerView.getChildCount();
+                    int visibleItemCount = mListView.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
                     int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -100,7 +97,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
                     }
                 }
             }
-        });
+        });*/
 
         return view;
     }
@@ -113,7 +110,10 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
 
     @Override
     public void onRefresh() {
-        mPresenter.refreshMySpotted();
+        //TODO refresh
+        //mPresenter.refreshMySpotted();
+        //TODO remove this hack
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

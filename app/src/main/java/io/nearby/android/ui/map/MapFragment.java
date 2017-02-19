@@ -23,6 +23,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.android.gms.nearby.Nearby;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Inject MapPresenter mPresenter;
     private GoogleMap mGoogleMap;
-    private ClusterManager<SpottedClusterItem> mClusterManager;
+    private NearbyClusterManager<SpottedClusterItem> mClusterManager;
     private List<Spotted> mSpotteds;
 
     private GoogleApiClient mGoogleApiClient;
@@ -120,6 +121,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 if(permissions[0].equals(Manifest.permission.ACCESS_FINE_LOCATION)&&
                         grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     addMyLocationFeature();
+
+                    if(mMapInitCamPos != null){
+                        mGoogleMap.moveCamera(CameraUpdateFactory.newCameraPosition(mMapInitCamPos));
+                    }
                 }
                 break;
         }
@@ -138,7 +143,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         mGoogleMap = googleMap;
 
-        mClusterManager = new ClusterManager<>(getContext(), mGoogleMap);
+        mClusterManager = new NearbyClusterManager<>(getContext(), mGoogleMap);
 
         //Setting a custom renderer to shot unique spotted with custom marker.
         MapIconRenderer<SpottedClusterItem> renderer = new MapIconRenderer<>(getContext(),mGoogleMap,mClusterManager);
@@ -196,7 +201,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             }
         }
 
-        mClusterManager.cluster();
+        mClusterManager.onCameraIdle();
     }
 
     @Override
