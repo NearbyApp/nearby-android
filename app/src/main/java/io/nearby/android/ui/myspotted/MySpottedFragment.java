@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +22,7 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.adapter.SpottedAdapter;
+
 
 /**
  * Created by Marc on 2017-02-02.
@@ -30,8 +35,9 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     @Inject MySpottedPresenter mPresenter;
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private SpottedAdapter mAdapter;
+    private LinearLayoutManager mLayoutManager;
 
     private boolean mIsLoadingOlderSpotted = false;
     private int mPreviousTotal = 0;
@@ -65,20 +71,24 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-        mListView = (ListView) view.findViewById(R.id.list_view);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.list_view);
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-        mAdapter = new SpottedAdapter(getContext());
-        mListView.setAdapter(mAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRecyclerView.getContext(), mLayoutManager.getOrientation());
+        dividerItemDecoration.setDrawable(getResources().getDrawable(R.drawable.divider));
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        mAdapter = new SpottedAdapter(Glide.with(this));
+        mRecyclerView.setAdapter(mAdapter);
 
         // http://stackoverflow.com/questions/26543131/how-to-implement-endless-list-with-recyclerview
-        //TODO
-        //mListView.setOnScrollListener();
-        /*mListView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if(dy > 0) //check for scroll down
                 {
-                    int visibleItemCount = mListView.getChildCount();
+                    int visibleItemCount = MySpottedFragment.this.mRecyclerView.getChildCount();
                     int totalItemCount = mLayoutManager.getItemCount();
                     int firstVisibleItem = mLayoutManager.findFirstVisibleItemPosition();
 
@@ -97,7 +107,7 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
                     }
                 }
             }
-        });*/
+        });
 
         return view;
     }
