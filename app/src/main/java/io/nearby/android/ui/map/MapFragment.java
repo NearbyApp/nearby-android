@@ -33,7 +33,6 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.google.GoogleApiClientBuilder;
-import io.nearby.android.google.maps.MapIconRenderer;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
@@ -94,7 +93,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             mMapInitCamPos = savedInstanceState.getParcelable(PARAMS_MAP_CAMERA_POSITION);
         }
         else if(mGoogleApiClient == null) {
-            mGoogleApiClient = GoogleApiClientBuilder.buildLocationApiclient(this.getActivity(), this, null);
+            //enableAutoManage can't be used because it would be binded with the MainActivity.
+            mGoogleApiClient = new GoogleApiClientBuilder(getContext())
+                    .addLocationServicesApi()
+                    .addConnectionCallbacks(this)
+                    .build();
         }
 
         SupportMapFragment mapFragment =
@@ -105,11 +108,23 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        mGoogleApiClient.connect();
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
         mMapInitCamPos = mGoogleMap.getCameraPosition();
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        mGoogleApiClient.disconnect();
+    }
+    
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
