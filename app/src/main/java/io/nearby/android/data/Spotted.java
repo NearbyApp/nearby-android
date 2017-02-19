@@ -8,6 +8,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * Created by Marc on 2017-01-29.
  */
@@ -127,7 +129,9 @@ public class Spotted {
     public boolean equals(Object obj) {
         if(obj instanceof Spotted){
             Spotted spotted = (Spotted)obj;
-            return spotted.getId().equals(id);
+            if(spotted.getId() != null){
+                return spotted.getId().equals(id);
+            }
         }
 
         return super.equals(obj);
@@ -141,8 +145,8 @@ public class Spotted {
      * Location class
      */
     private class Location{
-        private static final int LATITUDE_INDEX = 0;
-        private static final int LONGITUDE_INDEX = 1;
+        private static final int LONGITUDE_INDEX = 0;
+        private static final int LATITUDE_INDEX = 1;
 
         @SerializedName("coordinates")
         @Expose

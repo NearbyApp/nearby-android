@@ -23,17 +23,34 @@ public class NearbyClusterManager<SpottedClusterItem extends ClusterItem> extend
     public NearbyClusterManager(Context context, GoogleMap map) {
         super(context, map);
         this.mMap = map;
+
+        init(context,map);
     }
 
     public NearbyClusterManager(Context context, GoogleMap map, MarkerManager markerManager) {
         super(context, map, markerManager);
         this.mMap = map;
+
+        init(context,map);
+    }
+
+    private void init(Context context, GoogleMap map){
+        //Setting a custom renderer to shot unique spotted with custom marker.
+        MapIconRenderer<SpottedClusterItem> renderer = new MapIconRenderer<>(context, map, this);
+        this.setRenderer(renderer);
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
         //TODO show the clicked spotted
         return true;
+    }
+
+    @Override
+    public void onCameraIdle() {
+        super.onCameraIdle();
+
+        mListener.onCameraIdle();
     }
 
     public void setOnCameraIdleListener(GoogleMap.OnCameraIdleListener listener){
