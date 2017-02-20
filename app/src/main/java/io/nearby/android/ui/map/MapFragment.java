@@ -26,7 +26,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.ClusterManager;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,11 +37,8 @@ import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
+import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import timber.log.Timber;
-
-/**
- * Created by Marc on 2017-01-27.
- */
 
 public class MapFragment extends Fragment implements OnMapReadyCallback,
         MapContract.View,
@@ -197,6 +193,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager.setOnClusterItemClickListener(this);
 
         mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
@@ -218,7 +215,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onClusterItemClick(SpottedClusterItem spottedClusterItem) {
-        return false;
+        Intent intent = new Intent(getActivity(), SpottedDetailActivity.class);
+        intent.putExtra(SpottedDetailActivity.EXTRAS_SPOTTED_ID,spottedClusterItem.getId());
+        getActivity().startActivity(intent);
+
+        return true;
     }
 
     @Override
@@ -229,11 +230,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         }
 
         mClusterManager.cluster();
-    }
-
-    @Override
-    public void onSpottedDetailReceived(Spotted spotted) {
-
     }
 
     private void updateLocationUI() {

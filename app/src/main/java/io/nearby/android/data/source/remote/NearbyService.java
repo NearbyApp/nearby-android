@@ -62,6 +62,6 @@ public interface NearbyService {
 
 
     @GET("/v1/spotted/{spottedId}")
-    Observable<Spotted> getSpotted(@Query("spottedId") String spottedId);
+    Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
 
 }

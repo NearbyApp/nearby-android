@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/generic_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/small">
+                <ImageView
+                    android:id="@+id/spotted_profile_picture"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+
+                    android:padding="@dimen/small"
+
+                    app:srcCompat="@drawable/ic_person"
+                    />
+                <TextView
+                    android:id="@+id/spotted_full_name"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="@string/anonymous"
+                    />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/spotted_picture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:scaleType="fitCenter"
+
+                tools:src="@drawable/ic_logo"
+                tools:tint="@color/colorPrimary"
+                />
+
+            <TextView
+                android:id="@+id/spotted_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:padding="@dimen/medium"
+
+                tools:text="This is my message"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+
+
+</LinearLayout>

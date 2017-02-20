@@ -131,9 +131,9 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
         mSendButton.setClickable(false);
         mSendButton.setEnabled(false);
 
-        mSpottedImageImageView = (ImageView) findViewById(R.id.spotted_image);
+        mSpottedImageImageView = (ImageView) findViewById(R.id.spotted_picture);
 
-        mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_text);
+        mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_message);
         mSpottedMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

@@ -74,8 +74,8 @@ public class DataManager implements SpottedDataSource{
     }
 
     @Override
-    public void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback) {
-        mRemoteDataSource.loadSpottedDetails(spotted, callback);
+    public void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback) {
+        mRemoteDataSource.loadSpottedDetails(spottedId, callback);
     }
 
     @Override

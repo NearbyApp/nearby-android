@@ -201,8 +201,8 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     }
 
     @Override
-    public void loadSpottedDetails(Spotted spotted, final SpottedDetailsLoadedCallback callback) {
-        Observable<Spotted> call = mNearbyService.getSpotted(spotted.getId());
+    public void loadSpottedDetails(String spottedId, final SpottedDetailsLoadedCallback callback) {
+        Observable<Spotted> call = mNearbyService.getSpotted(spottedId);
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Spotted>() {

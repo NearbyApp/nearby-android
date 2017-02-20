@@ -154,7 +154,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     }
 
     @Override
-    public void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback) {
+    public void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback) {
 
     }
 }

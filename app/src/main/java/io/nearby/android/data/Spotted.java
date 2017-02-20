@@ -40,6 +40,14 @@ public class Spotted {
     @Expose
     private String pictureUrl;
 
+    @SerializedName("fullName")
+    @Expose
+    private String fullName;
+
+    @SerializedName("profilePictureURL")
+    @Expose
+    private String profilePictureUrl;
+
     private LatLng latLng;
 
 
@@ -72,24 +80,12 @@ public class Spotted {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public double getLongitude() {
@@ -116,8 +112,12 @@ public class Spotted {
         return pictureUrl;
     }
 
-    public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+    public String getProfilePictureUrl() {
+        return profilePictureUrl;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
     @Override

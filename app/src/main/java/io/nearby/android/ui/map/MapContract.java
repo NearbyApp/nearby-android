@@ -13,12 +13,10 @@ public interface MapContract {
 
     interface View extends BaseView<Presenter>{
         void onSpottedsReceived(List<Spotted> spotteds);
-        void onSpottedDetailReceived(Spotted spotted);
     }
 
     interface Presenter{
         void getSpotteds(double minLat, double maxLat,
                          double minLng, double maxLng);
-        void getSpottedDetails(Spotted spotted);
     }
 }

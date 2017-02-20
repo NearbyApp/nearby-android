@@ -3,13 +3,17 @@ package io.nearby.android.google.maps;
 import android.content.Context;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.Marker;
 import com.google.maps.android.MarkerManager;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-01-31.
@@ -68,6 +72,11 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
 
     public void setOnCameraIdleListener(GoogleMap.OnCameraIdleListener listener){
         mListener = listener;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        return super.onMarkerClick(marker);
     }
 
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener){

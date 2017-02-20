@@ -27,7 +27,7 @@
             >
 
             <EditText
-                android:id="@+id/spotted_text"
+                android:id="@+id/spotted_message"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -41,7 +41,7 @@
                 />
 
             <ImageView
-                android:id="@+id/spotted_image"
+                android:id="@+id/spotted_picture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 

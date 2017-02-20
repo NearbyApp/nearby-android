@@ -59,5 +59,5 @@ public interface SpottedDataSource {
 
     void loadSpotted(double minLat,double maxLat,double minLng, double maxLng, boolean locationOnly, SpottedLoadedCallback callback);
 
-    void loadSpottedDetails(Spotted spotted, SpottedDetailsLoadedCallback callback);
+    void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback);
 }

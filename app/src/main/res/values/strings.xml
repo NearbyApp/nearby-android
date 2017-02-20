@@ -18,6 +18,9 @@
     <string name="send">Send</string>
     <string name="new_spotted_not_created">Your spotted could not be created. Please try sending it again.</string>
 
+    <!-- Spotted detail Activity -->
+    <string name="anonymous">Anonymous</string>
+
     <!-- Drawer menu items -->
     <string name="map">Map</string>
     <string name="my_spotted">My spotted</string>

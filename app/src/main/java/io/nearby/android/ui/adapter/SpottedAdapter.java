@@ -1,6 +1,5 @@
 package io.nearby.android.ui.adapter;
 
-import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
@@ -37,7 +34,7 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
         public SpottedViewHolder(View v) {
             super(v);
             messageTextView = (TextView) v.findViewById(R.id.spotted_message);
-            pictureImageView = (ImageView) v.findViewById(R.id.spotted_image);
+            pictureImageView = (ImageView) v.findViewById(R.id.spotted_picture);
         }
     }
 
