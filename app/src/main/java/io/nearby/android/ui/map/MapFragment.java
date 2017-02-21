@@ -195,6 +195,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
 
+        //Disable Map Toolbar:
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
 

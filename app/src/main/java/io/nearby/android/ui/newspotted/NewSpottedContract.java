@@ -14,6 +14,9 @@ public interface NewSpottedContract {
     }
 
     interface Presenter{
-        void createSpotted(double lat, double lng, String message, String filePath);
+        void createSpotted(double lat, double lng, String message, boolean anonymity, String filePath);
+
+        boolean getDefaultAnonymity();
+        void updateDefaultAnonymity(boolean anonymity);
     }
 }

@@ -157,4 +157,14 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     public void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback) {
 
     }
+
+    @Override
+    public boolean getDefaultAnonymity() {
+        return mSharedPreferencesHelper.getDefaultAnonymity();
+    }
+
+    @Override
+    public void setDefaultAnonymity(boolean anonymity) {
+        mSharedPreferencesHelper.setDefaultAnonymity(anonymity);
+    }
 }

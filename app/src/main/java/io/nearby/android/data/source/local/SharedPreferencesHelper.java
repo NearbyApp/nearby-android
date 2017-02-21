@@ -134,4 +134,24 @@ public class SharedPreferencesHelper {
         setUserId(R.string.pref_google_user_id,userId);
     }
 
+    /**
+     * Gets the default anonymity or the the last anonymity setting used.
+     * The default returned value is true.
+     * @return true if the user is anonymous.
+     */
+    public boolean getDefaultAnonymity() {
+        boolean anonymity = true;
+
+        if(mPrefs.contains(mContext.getString(R.string.pref_anonymity))){
+            anonymity = mPrefs.getBoolean(mContext.getString(R.string.pref_anonymity),true);
+        }
+
+        return anonymity;
+    }
+
+    public void setDefaultAnonymity(boolean anonymity){
+        SharedPreferences.Editor editor = mPrefs.edit();
+        editor.putBoolean(mContext.getString(R.string.pref_anonymity), anonymity);
+        editor.commit();
+    }
 }

@@ -95,7 +95,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
         RequestBody latitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLatitude()));
         RequestBody longitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLongitude()));
         RequestBody message = RequestBody.create(MultipartBody.FORM, spotted.getMessage());
-        RequestBody anonymity = RequestBody.create(MultipartBody.FORM, Boolean.toString(false));
+        RequestBody anonymity = RequestBody.create(MultipartBody.FORM, Boolean.toString(spotted.getAnonymity()));
 
         Observable<ResponseBody> call;
         if(image != null){
@@ -219,5 +219,15 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 });
 
         mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public boolean getDefaultAnonymity() {
+        return false;
+    }
+
+    @Override
+    public void setDefaultAnonymity(boolean anonymity) {
+
     }
 }

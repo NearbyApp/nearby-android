@@ -82,4 +82,14 @@ public class DataManager implements SpottedDataSource{
     public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
         mRemoteDataSource.loadMyOlderSpotted(spottedCount, callback);
     }
+
+    @Override
+    public boolean getDefaultAnonymity() {
+        return mLocalDataSource.getDefaultAnonymity();
+    }
+
+    @Override
+    public void setDefaultAnonymity(boolean anonymity) {
+        mLocalDataSource.setDefaultAnonymity(anonymity);
+    }
 }

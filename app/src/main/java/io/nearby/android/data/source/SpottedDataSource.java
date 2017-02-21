@@ -15,36 +15,36 @@ import io.nearby.android.data.Spotted;
 public interface SpottedDataSource {
 
     interface UserLoginStatusCallback{
+
         void userIsLoggedIn();
         void userIsNotLoggedIn();
     }
-
     interface LoginCallback{
+
         void onAccountCreated();
         void onLoginSuccess();
         void onError();
     }
-
     interface SpottedCreatedCallback{
+
         void onSpottedCreated();
         void onError();
     }
-
     interface MySpottedLoadedCallback{
+
         void onMySpottedLoaded(List<Spotted> mySpotted);
         void onError();
     }
-
     interface SpottedDetailsLoadedCallback {
+
         void onSpottedDetailsLoaded(Spotted spotted);
         void onError();
     }
-
     interface SpottedLoadedCallback {
+
         void onSpottedLoaded(List<Spotted> spotted);
         void onError();
     }
-
     void isUserLoggedIn(UserLoginStatusCallback callback);
 
     void facebookLogin(String userId, String token, LoginCallback callback);
@@ -60,4 +60,13 @@ public interface SpottedDataSource {
     void loadSpotted(double minLat,double maxLat,double minLng, double maxLng, boolean locationOnly, SpottedLoadedCallback callback);
 
     void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback);
+
+    /**
+     * Gets the default anonymity or the the last anonymity setting used.
+     * The default returned value is true.
+     * @return true if the user is anonymous.
+     */
+    boolean getDefaultAnonymity();
+
+    void setDefaultAnonymity(boolean anonymity);
 }

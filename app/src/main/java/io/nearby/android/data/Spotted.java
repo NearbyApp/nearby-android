@@ -16,6 +16,8 @@ import timber.log.Timber;
 
 public class Spotted {
 
+    public static final String DEFAULT_ID = "0";
+
     @SerializedName("_id")
     @Expose
     private String id;
@@ -165,8 +167,10 @@ public class Spotted {
 
         public void setCoordinates(double lat, double lng){
             coordinates.clear();
-            coordinates.add(lat);
+
+            // The order here is really important
             coordinates.add(lng);
+            coordinates.add(lat);
         }
 
     }

@@ -7,6 +7,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+
+    tools:context=".ui.newspotted.NewSpottedActivity"
     >
 
     <include layout="@layout/generic_toolbar" />
@@ -81,6 +83,17 @@
             style="?android:borderlessButtonStyle"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/ic_add_a_photo"/>
+
+        <ImageButton
+            android:id="@+id/anonymity_button"
+
+            android:layout_width="@dimen/standard_touch_target_size"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+
+            style="?android:borderlessButtonStyle"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="@drawable/ic_visibility_off"/>
 
         <FrameLayout
             android:layout_width="0dp"

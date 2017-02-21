@@ -27,8 +27,17 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         mView.setPresenter(this);
     }
 
-    public void createSpotted(double lat, double lng, String message,@Nullable String filePath){
-        Spotted spotted = new Spotted("0",message,lat,lng);
+    @Override
+    public void createSpotted(double lat,
+                              double lng,
+                              String message,
+                              boolean anonymity,
+                              @Nullable String filePath){
+        Spotted spotted = new Spotted(Spotted.DEFAULT_ID,
+                message,
+                lat,
+                lng,
+                anonymity);
 
         File file = null;
 
@@ -36,7 +45,9 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
             file = new File(filePath);
         }
 
-        mDataManager.createSpotted(spotted, file, new SpottedDataSource.SpottedCreatedCallback() {
+        mDataManager.createSpotted(spotted,
+                file,
+                new SpottedDataSource.SpottedCreatedCallback() {
                     @Override
                     public void onSpottedCreated() {
                         mView.onSpottedCreated();
@@ -47,5 +58,15 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                         mView.onSpottedNotCreated();
                     }
                 });
+    }
+
+    @Override
+    public boolean getDefaultAnonymity() {
+        return mDataManager.getDefaultAnonymity();
+    }
+
+    @Override
+    public void updateDefaultAnonymity(boolean anonymity) {
+        mDataManager.setDefaultAnonymity(anonymity);
     }
 }

@@ -45,7 +45,7 @@ public class ServiceCreator<T> {
     private SharedPreferencesHelper mSharedPreferenceHelper;
     private Class<T> mServiceClass;
 
-    public ServiceCreator(Class serviceClass, String endPoint, Context context, SharedPreferencesHelper sharedPreferencesHelper){
+    public ServiceCreator(Class<T> serviceClass, String endPoint, Context context, SharedPreferencesHelper sharedPreferencesHelper){
         mOkHttpClientBuilder = new OkHttpClient.Builder();
         mServiceClass = serviceClass;
         mEndPoint = endPoint;

@@ -16,7 +16,10 @@
 
     <!-- New spotted Activity -->
     <string name="send">Send</string>
+    <string name="new_spotted_hint">What did you spot?</string>
     <string name="new_spotted_not_created">Your spotted could not be created. Please try sending it again.</string>
+    <string name="new_spotted_anonymity_dialog_anonymous">Your spotted will now be shared anonymously.</string>
+    <string name="new_spotted_anonymity_dialog_public">Your spotted will now be shared publicly.</string>
 
     <!-- Spotted detail Activity -->
     <string name="anonymous">Anonymous</string>
@@ -33,11 +36,13 @@
     <string name="pref_facebook_token" translatable="false">pref_facebook_token</string>
     <string name="pref_facebook_user_id" translatable="false">pref_facebook_user_id</string>
     <string name="pref_google_user_id" translatable="false">pref_google_user_id</string>
+    <string name="pref_anonymity">pref_anonymity</string>
 
     <!-- Misc -->
     <string name="nav_drawer_open">Drawer open</string>
     <string name="nav_drawer_close">Drawer closed</string>
-    <string name="new_spotted_hint">What did you spot?</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

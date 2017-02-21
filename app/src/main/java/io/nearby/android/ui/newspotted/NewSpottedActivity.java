@@ -1,6 +1,7 @@
 package io.nearby.android.ui.newspotted;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -37,10 +39,6 @@ import io.nearby.android.util.ImageUtil;
 
 import static dagger.internal.Preconditions.checkNotNull;
 
-/**
- * Created by Marc on 2017-02-02.
- */
-
 public class NewSpottedActivity extends AppCompatActivity implements View.OnClickListener, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 9003;
@@ -48,6 +46,7 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     private Toolbar mToolbar;
     private EditText mSpottedMessageEditText;
     private ImageView mSpottedImageImageView;
+    private ImageButton mSpottedAnonymityButton;
     private ImageButton mSendButton;
 
     @Inject NewSpottedPresenter mPresenter;
@@ -55,6 +54,7 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     private boolean mGoogleLocationServiceIsConnected = false;
     private GoogleApiClient mGoogleApiClient;
     private String mCurrentPhotoPath;
+    private boolean mAnonymity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,6 +74,9 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
                 .dataManagerComponent(((NearbyApplication) getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
+
+        mAnonymity = mPresenter.getDefaultAnonymity();
+        updateAnonymityIcon();
     }
 
     @Override
@@ -94,6 +97,9 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
                 break;
             case R.id.upload_picture_button:
                 onUploadPictureButtonClicked();
+                break;
+            case R.id.anonymity_button:
+                onAnonymityButtonClicked();
                 break;
         }
     }
@@ -132,6 +138,8 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
         mSendButton.setEnabled(false);
 
         mSpottedImageImageView = (ImageView) findViewById(R.id.spotted_picture);
+        mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);
+        mSpottedAnonymityButton.setOnClickListener(this);
 
         mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_message);
         mSpottedMessageEditText.addTextChangedListener(new TextWatcher() {
@@ -178,7 +186,11 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
             double lng = lastLocation.getLongitude();
 
 
-            mPresenter.createSpotted(lat,lng,text,mCurrentPhotoPath);
+            mPresenter.createSpotted(lat,
+                    lng,
+                    text,
+                    mAnonymity,
+                    mCurrentPhotoPath);
         }
     }
 
@@ -203,6 +215,45 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
+        }
+    }
+
+    private void onAnonymityButtonClicked() {
+        boolean tempAnonymity = !mAnonymity;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mAnonymity = !mAnonymity;
+                        mPresenter.updateDefaultAnonymity(mAnonymity);
+                        updateAnonymityIcon();
+                    }
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //DO nothing
+                    }
+                });
+
+        if (tempAnonymity) {
+            builder.setMessage(R.string.new_spotted_anonymity_dialog_anonymous)
+                    .setTitle("Anonymous");
+        } else {
+            builder.setMessage(R.string.new_spotted_anonymity_dialog_public)
+                    .setTitle("Public");
+        }
+
+        builder.create().show();
+    }
+
+
+    private void updateAnonymityIcon(){
+        if(mAnonymity){
+            mSpottedAnonymityButton.setImageResource(R.drawable.ic_visibility_off);
+        }
+        else {
+            mSpottedAnonymityButton.setImageResource(R.drawable.ic_visibility);
         }
     }
 }
