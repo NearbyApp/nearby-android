@@ -3,6 +3,7 @@ package io.nearby.android.data.source.local;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.StringRes;
 
 import javax.inject.Inject;
@@ -19,8 +20,6 @@ import io.nearby.android.data.source.Local;
 @Local
 public class SharedPreferencesHelper {
 
-    private static final String SHARED_PREF_FILE_NAME = "nearby_prefs";
-
     public static final int LAST_SIGN_IN_METHOD_NONE = 0;
     public static final int LAST_SIGN_IN_METHOD_GOOGLE = 1;
     public static final int LAST_SIGN_IN_METHOD_FACEBOOK = 2;
@@ -31,7 +30,7 @@ public class SharedPreferencesHelper {
     @Inject
     public SharedPreferencesHelper(Context context){
         mContext = context;
-        mPrefs = mContext.getSharedPreferences(SHARED_PREF_FILE_NAME, Context.MODE_PRIVATE);
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
     public boolean hasUserAlreadySignedIn(){

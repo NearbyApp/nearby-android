@@ -65,6 +65,9 @@
         <activity android:name=".ui.spotteddetail.SpottedDetailActivity"
             android:parentActivityName=".ui.MainActivity" />
 
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:parentActivityName=".ui.MainActivity" />
+
         <!-- To enable Chrome custom tabs for Facebook login -->
         <activity
             android:name="com.facebook.CustomTabActivity"

@@ -18,6 +18,7 @@ import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
+import io.nearby.android.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -113,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void navigate(int itemId){
         mCurrentNavDrawerItem = itemId;
 
+        Intent intent;
+
         switch(itemId){
             case R.id.map:
                 getSupportFragmentManager()
@@ -128,9 +131,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         .commit();
                 break;
             case R.id.settings:
+                intent = new Intent(this, SettingsActivity.class);
+                startActivity(intent);
                 break;
             case R.id.help:
-                Intent intent = new Intent(this,HelpActivity.class);
+                intent = new Intent(this,HelpActivity.class);
                 startActivity(intent);
                 break;
             default:

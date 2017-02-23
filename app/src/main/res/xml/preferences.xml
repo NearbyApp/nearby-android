@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="General">
+
+        <SwitchPreference
+            android:key="@string/pref_anonymity"
+            android:title="@string/anonymous"
+            android:defaultValue="true"
+            android:summaryOn="All your spotted will be anonymously shared."
+            android:summaryOff="All your spotted will be publicly shared."
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Social">
+        <Preference
+            android:key="pref_connect_facebook"
+            android:title="Connect to Facebook"/>
+        <Preference
+            android:key="pref_connect_google"
+            android:title="Connect to Google"
+            />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Account">
+
+        <Preference
+            android:key="pref_log_out"
+            android:title="Log out" />
+
+        <Preference
+            android:key="pref_deactivate_account"
+            android:title="Desactivate account"
+            android:summary="Your spotteds won't be visible to other users anymore. You may active your account by login in Nearby."
+            />
+    </PreferenceCategory>
+
+</PreferenceScreen>

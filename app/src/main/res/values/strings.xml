@@ -36,7 +36,7 @@
     <string name="pref_facebook_token" translatable="false">pref_facebook_token</string>
     <string name="pref_facebook_user_id" translatable="false">pref_facebook_user_id</string>
     <string name="pref_google_user_id" translatable="false">pref_google_user_id</string>
-    <string name="pref_anonymity">pref_anonymity</string>
+    <string name="pref_anonymity" translatable="false">pref_anonymity</string>
 
     <!-- Misc -->
     <string name="nav_drawer_open">Drawer open</string>
