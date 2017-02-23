@@ -36,7 +36,7 @@ public class Spotted {
 
     @SerializedName("anonymity")
     @Expose
-    private boolean anonymity;
+    private boolean anonymous;
 
     @SerializedName("pictureURL")
     @Expose
@@ -53,21 +53,18 @@ public class Spotted {
     private LatLng latLng;
 
 
-    /*
-     * Constructors
-     */
     public Spotted(){}
 
     public Spotted(String id, String message, double latitude, double longitude) {
         this(id,message,latitude,longitude,true);
     }
 
-    public Spotted(String id, String message, double latitude, double longitude, boolean anonymity){
+    public Spotted(String id, String message, double latitude, double longitude, boolean anonymous){
         this.id = id;
         this.message = message;
         this.location = new Location(latitude, longitude);
         this.latLng = new LatLng(latitude,longitude);
-        this.anonymity = anonymity;
+        this.anonymous = anonymous;
     }
 
     public boolean hasImage() {
@@ -98,8 +95,8 @@ public class Spotted {
         return location.getLatitude();
     }
 
-    public boolean getAnonymity() {
-        return anonymity;
+    public boolean isAnonymous() {
+        return anonymous;
     }
 
     public LatLng getLatLng() {
@@ -149,6 +146,7 @@ public class Spotted {
         @Expose
         private List<Double> coordinates;
 
+        @SuppressWarnings("unused")
         public Location() {
         }
 

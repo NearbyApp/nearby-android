@@ -4,10 +4,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 
 import javax.inject.Inject;
 
@@ -20,9 +24,10 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
     public static final String EXTRAS_SPOTTED_ID = "extras_spotted_id";
 
     private TextView mMessageTextView;
-    private ImageView mPictureImageView;
+    private ImageView mSpottedPictureImageView;
     private TextView mFullNameTextView;
     private ImageView mProfilePictureImageView;
+    private View mProgressBarContainer;
 
     @Inject
     SpottedDetailPresenter mPresenter;
@@ -60,13 +65,35 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
     public void onSpottedDetailsReceived(Spotted spotted) {
         mMessageTextView.setText(spotted.getMessage());
 
-        if(spotted.getPictureUrl() != null){
-            Glide.with(this).load(spotted.getPictureUrl()).into(mPictureImageView);
+        if(!spotted.isAnonymous()){
+            mFullNameTextView.setText(spotted.getFullName());
+
+            Glide.with(this)
+                    .load(spotted.getProfilePictureUrl())
+                    .fallback(R.drawable.ic_person)
+                    .into(mProfilePictureImageView);
         }
 
-        if(spotted.getUserId() != null){
-            mFullNameTextView.setText(spotted.getFullName());
-            Glide.with(this).load(spotted.getProfilePictureUrl()).into(mProfilePictureImageView);
+        if(spotted.getPictureUrl() != null){
+            Glide.with(this)
+                    .load(spotted.getPictureUrl())
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            updateUI();
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            updateUI();
+                            return false;
+                        }
+                    })
+                    .into(mSpottedPictureImageView);
+        }
+        else {
+            updateUI();
         }
     }
 
@@ -76,9 +103,15 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mProgressBarContainer = findViewById(R.id.progress_bar_container);
+
         mMessageTextView = (TextView) findViewById(R.id.spotted_message);
-        mPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
+        mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
         mFullNameTextView = (TextView) findViewById(R.id.spotted_full_name);
         mProfilePictureImageView = (ImageView) findViewById(R.id.spotted_profile_picture);
+    }
+
+    private void updateUI(){
+        mProgressBarContainer.setVisibility(View.GONE);
     }
 }
