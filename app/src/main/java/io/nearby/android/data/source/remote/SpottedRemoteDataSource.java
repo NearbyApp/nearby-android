@@ -95,7 +95,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
         RequestBody latitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLatitude()));
         RequestBody longitude = RequestBody.create(MultipartBody.FORM, Double.toString(spotted.getLongitude()));
         RequestBody message = RequestBody.create(MultipartBody.FORM, spotted.getMessage());
-        RequestBody anonymity = RequestBody.create(MultipartBody.FORM, Boolean.toString(spotted.getAnonymity()));
+        RequestBody anonymity = RequestBody.create(MultipartBody.FORM, Boolean.toString(spotted.isAnonymous()));
 
         Observable<ResponseBody> call;
         if(image != null){
