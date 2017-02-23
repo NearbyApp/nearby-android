@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -43,7 +44,6 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
 
     private static final int REQUEST_IMAGE_CAPTURE = 9003;
 
-    private Toolbar mToolbar;
     private EditText mSpottedMessageEditText;
     private ImageView mSpottedImageImageView;
     private ImageButton mSpottedAnonymityButton;
@@ -87,6 +87,15 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
             Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoPath,targetWidth);
             mSpottedImageImageView.setImageBitmap(bitmap);
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.support.v7.appcompat.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -144,14 +153,10 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
         mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_message);
         mSpottedMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) { }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -166,9 +171,8 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
-        setSupportActionBar(mToolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

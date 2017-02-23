@@ -88,6 +88,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         // Retrieve location and camera position from saved instance state.
         if (savedInstanceState != null) {
@@ -207,6 +212,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onCameraIdle() {
+        mCameraPosition = mMap.getCameraPosition();
+
         Projection projection = mMap.getProjection();
         VisibleRegion visibleRegion = projection.getVisibleRegion();
 

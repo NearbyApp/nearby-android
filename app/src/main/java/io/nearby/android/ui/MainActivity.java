@@ -17,16 +17,12 @@ import io.nearby.android.R;
 import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
-
-/**
- * Created by Marc on 2017-01-26.
- */
+import io.nearby.android.ui.newspotted.NewSpottedActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";
-    private static final String MAP_FRAGMENT_TAG = "MAP_FRAGMENT_TAG";
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -54,8 +50,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
         outState.putInt(NAV_DRAWER_INDEX, mCurrentNavDrawerItem);
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -107,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar,R.string.nav_drawer_open, R.string.nav_drawer_close);
 
         // Adding a drawer listener
-        this.mDrawerLayout.addDrawerListener(mDrawerToggle);
+        mDrawerLayout.addDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
         mNavigationView.setCheckedItem(mCurrentNavDrawerItem);
@@ -121,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.map:
                 getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.container, MapFragment.newInstance(), MAP_FRAGMENT_TAG)
+                        .replace(R.id.container, MapFragment.newInstance())
                         .commit();
                 break;
             case R.id.my_spotted:
