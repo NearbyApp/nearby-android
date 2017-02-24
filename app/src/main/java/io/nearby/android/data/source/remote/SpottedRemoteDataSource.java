@@ -228,6 +228,53 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
 
     @Override
     public void setDefaultAnonymity(boolean anonymity) {
+        //Do nothing
+    }
 
+    @Override
+    public void getUserInfo(final UserInfoLoadedCallback callback) {
+        Observable<ResponseBody> call = mNearbyService.getUser();
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
+                    @Override
+                    public void accept(ResponseBody responseBody) throws Exception {
+                        callback.onUserInfoLoaded(null);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void signOut(Callback callback) {
+        //Do nothing
+    }
+
+    @Override
+    public void deactivateAccount(final Callback callback) {
+        Observable<ResponseBody> call = mNearbyService.deactivateAccount();
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
+                    @Override
+                    public void accept(ResponseBody responseBody) throws Exception {
+                        callback.onSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
     }
 }

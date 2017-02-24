@@ -64,4 +64,19 @@ public interface NearbyService {
     @GET("/v1/spotted/{spottedId}")
     Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
 
+    @GET("/v1/user/me")
+    Observable<ResponseBody> getUser();
+
+    @FormUrlEncoded
+    @POST("/v1/link/facebook")
+    Observable<ResponseBody> linkFacebookAccount(@Field("facebookId") String facebookId,
+                                                 @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("/v1/link/google")
+    Observable<ResponseBody> linkGoogleAccount(@Field("googleId") String googleId,
+                                               @Field("token") String token);
+
+    @POST("/v1/disable")
+    Observable<ResponseBody> deactivateAccount();
 }

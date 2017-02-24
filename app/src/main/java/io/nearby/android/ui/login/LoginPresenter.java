@@ -53,8 +53,10 @@ public class LoginPresenter implements LoginContract.Presenter {
         request.executeAsync();
         */
 
-        mDataManager.facebookLogin(loginResult.getAccessToken().getUserId(),
-                loginResult.getAccessToken().getToken(),
+        String token = loginResult.getAccessToken().getToken();
+        String userId = loginResult.getAccessToken().getUserId();
+
+        mDataManager.facebookLogin(userId,token,
                 new SpottedDataSource.LoginCallback() {
                     @Override
                     public void onAccountCreated() {

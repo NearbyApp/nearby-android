@@ -4,11 +4,14 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 
 import java.io.File;
 
@@ -18,6 +21,7 @@ import javax.inject.Singleton;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.Local;
 import io.nearby.android.data.source.SpottedDataSource;
+import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-02-16.
@@ -166,5 +170,65 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     @Override
     public void setDefaultAnonymity(boolean anonymity) {
         mSharedPreferencesHelper.setDefaultAnonymity(anonymity);
+    }
+
+    @Override
+    public void getUserInfo(UserInfoLoadedCallback callback) {
+        // Do nothing
+    }
+
+    @Override
+    public void signOut(final Callback callback) {
+
+        mGoogleApiClient.connect();
+
+        Timber.d("Log out2");
+
+        Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(@NonNull Status status) {
+                mGoogleApiClient.disconnect();
+
+                if (status.isSuccess()) {
+                    Timber.d("Log out is success");
+                    LoginManager.getInstance().logOut();
+
+                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+                    mSharedPreferencesHelper.setFacebookToken(null);
+                    mSharedPreferencesHelper.setGoogleToken(null);
+                } else {
+                    callback.onError();
+                    Timber.d("Log out is error");
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public void deactivateAccount(final Callback callback) {
+        mGoogleApiClient.blockingConnect();
+        Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
+            @Override
+            public void onResult(Status status) {
+                mGoogleApiClient.disconnect();
+
+                if(status.isSuccess()){
+                    LoginManager.getInstance().logOut();
+
+                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+                    mSharedPreferencesHelper.setFacebookToken(null);
+                    mSharedPreferencesHelper.setGoogleToken(null);
+
+                    callback.onSuccess();
+                }
+                else {
+                    callback.onError();
+                }
+            }
+        });
+
+
+
     }
 }

@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.User;
 
 /**
  * Created by Marc on 2017-02-16.
@@ -14,37 +15,48 @@ import io.nearby.android.data.Spotted;
 
 public interface SpottedDataSource {
 
-    interface UserLoginStatusCallback{
+    interface Callback{
+        void onSuccess();
+        void onError();
+    }
 
+    interface UserLoginStatusCallback{
         void userIsLoggedIn();
         void userIsNotLoggedIn();
     }
-    interface LoginCallback{
 
+    interface LoginCallback{
         void onAccountCreated();
         void onLoginSuccess();
         void onError();
     }
-    interface SpottedCreatedCallback{
 
+    interface SpottedCreatedCallback{
         void onSpottedCreated();
         void onError();
     }
-    interface MySpottedLoadedCallback{
 
+    interface MySpottedLoadedCallback{
         void onMySpottedLoaded(List<Spotted> mySpotted);
         void onError();
     }
-    interface SpottedDetailsLoadedCallback {
 
+    interface SpottedDetailsLoadedCallback {
         void onSpottedDetailsLoaded(Spotted spotted);
         void onError();
     }
-    interface SpottedLoadedCallback {
 
+    interface SpottedLoadedCallback {
         void onSpottedLoaded(List<Spotted> spotted);
         void onError();
     }
+
+    interface UserInfoLoadedCallback{
+        void onUserInfoLoaded(User user);
+        void onError();
+    }
+
+
     void isUserLoggedIn(UserLoginStatusCallback callback);
 
     void facebookLogin(String userId, String token, LoginCallback callback);
@@ -69,4 +81,10 @@ public interface SpottedDataSource {
     boolean getDefaultAnonymity();
 
     void setDefaultAnonymity(boolean anonymity);
+
+    void getUserInfo(UserInfoLoadedCallback callback);
+
+    void signOut(Callback callback);
+
+    void deactivateAccount(Callback callback);
 }

@@ -3,9 +3,6 @@ package io.nearby.android.ui.newspotted;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by Marc on 2017-02-16.
- */
 @Module
 public class NewSpottedPresenterModule {
 

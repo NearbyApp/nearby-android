@@ -16,10 +16,13 @@
         android:title="Social">
         <Preference
             android:key="pref_connect_facebook"
-            android:title="Connect to Facebook"/>
+            android:title="Connect to Facebook"
+            android:enabled="false"
+            />
         <Preference
             android:key="pref_connect_google"
             android:title="Connect to Google"
+            android:enabled="false"
             />
     </PreferenceCategory>
 

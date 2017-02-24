@@ -92,4 +92,29 @@ public class DataManager implements SpottedDataSource{
     public void setDefaultAnonymity(boolean anonymity) {
         mLocalDataSource.setDefaultAnonymity(anonymity);
     }
+
+    @Override
+    public void getUserInfo(UserInfoLoadedCallback callback) {
+        mRemoteDataSource.getUserInfo(callback);
+    }
+
+    @Override
+    public void signOut(Callback callback) {
+        mLocalDataSource.signOut(callback);
+    }
+
+    @Override
+    public void deactivateAccount(final Callback callback) {
+        mRemoteDataSource.deactivateAccount(new Callback() {
+            @Override
+            public void onSuccess() {
+                mLocalDataSource.deactivateAccount(callback);
+            }
+
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
+    }
 }
