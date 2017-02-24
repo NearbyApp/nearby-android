@@ -4,7 +4,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -23,9 +22,6 @@ import io.nearby.android.data.source.Local;
 import io.nearby.android.data.source.SpottedDataSource;
 import timber.log.Timber;
 
-/**
- * Created by Marc on 2017-02-16.
- */
 @Singleton
 @Local
 public class SpottedLocalDataSource implements SpottedDataSource {
@@ -38,6 +34,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                                   GoogleApiClient googleApiClient) {
         mSharedPreferencesHelper = sharedPreferencesHelper;
         mGoogleApiClient = googleApiClient;
+        mGoogleApiClient.connect();
     }
 
     @Override
@@ -97,11 +94,9 @@ public class SpottedLocalDataSource implements SpottedDataSource {
      * If it fails, the client is not logded in.
      */
     private void googleAuthentification(final UserLoginStatusCallback callback){
-        mGoogleApiClient.connect();
         OptionalPendingResult<GoogleSignInResult> resultOptionalPendingResult = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
         if(resultOptionalPendingResult.isDone()){
             handleGoogleResult(resultOptionalPendingResult.get(), callback);
-            mGoogleApiClient.disconnect();
         }
         else {
             // If the user has not previously signed in on this device or the sign-in has expired,
@@ -110,7 +105,6 @@ public class SpottedLocalDataSource implements SpottedDataSource {
             resultOptionalPendingResult.setResultCallback(new ResultCallback<GoogleSignInResult>() {
                 @Override
                 public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
-                    mGoogleApiClient.disconnect();
                     handleGoogleResult(googleSignInResult, callback);
                 }
             });
@@ -179,16 +173,9 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void signOut(final Callback callback) {
-
-        mGoogleApiClient.connect();
-
-        Timber.d("Log out2");
-
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                mGoogleApiClient.disconnect();
-
                 if (status.isSuccess()) {
                     Timber.d("Log out is success");
                     LoginManager.getInstance().logOut();
@@ -196,6 +183,8 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                     mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
                     mSharedPreferencesHelper.setFacebookToken(null);
                     mSharedPreferencesHelper.setGoogleToken(null);
+
+                    callback.onSuccess();
                 } else {
                     callback.onError();
                     Timber.d("Log out is error");
@@ -207,12 +196,9 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void deactivateAccount(final Callback callback) {
-        mGoogleApiClient.blockingConnect();
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(Status status) {
-                mGoogleApiClient.disconnect();
-
                 if(status.isSuccess()){
                     LoginManager.getInstance().logOut();
 
