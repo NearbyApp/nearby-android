@@ -24,6 +24,15 @@
     <!-- Spotted detail Activity -->
     <string name="anonymous">Anonymous</string>
 
+    <!-- Settings Activity -->
+    <string name="logout">Logout</string>
+    <string name="logout_message">Are you sure you want to sign out?</string>
+    <string name="deactivate_account">Deactivate account</string>
+    <string name="connect_to_google">Connect to Google</string>
+    <string name="connect_to_facebook">Connect to Facebook</string>
+    <string name="pref_anonymity_on">All your spotted will be anonymously shared.</string>
+    <string name="pref_anonymity_off">All your spotted will be publicly shared.</string>
+
     <!-- Drawer menu items -->
     <string name="map">Map</string>
     <string name="my_spotted">My spotted</string>

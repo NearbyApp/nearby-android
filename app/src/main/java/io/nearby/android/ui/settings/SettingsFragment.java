@@ -1,5 +1,7 @@
 package io.nearby.android.ui.settings;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -28,7 +30,7 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
 
     private final static String PREF_CONNECT_FACEBOOK   = "pref_connect_facebook";
     private final static String PREF_CONNECT_GOOGLE     = "pref_connect_google";
-    private final static String PREF_LOG_OUT            = "pref_log_out";
+    private final static String PREF_LOGOUT             = "pref_logout";
     private final static String PREF_DEACTIVATE_ACCOUNT = "pref_deactivate_account";
 
     private static final int RC_GOOGLE_LOGIN = 9001;
@@ -51,6 +53,8 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
 
         addPreferencesFromResource(R.xml.preferences);
 
+        getPreferenceScreen().getContext().setTheme(R.style.PreferenceScreenStyle);
+
         mGoogleApiClient = new GoogleApiClientBuilder(getActivity())
                 .addSignInApi()
                 .build();
@@ -72,6 +76,8 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                 Timber.d("Facebook Login result error");
             }
         });
+
+        mPresenter.getUserInfo();
     }
 
     @Override
@@ -99,9 +105,23 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
                 startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
                 break;
-            case PREF_LOG_OUT:
-                //TODO Add dialog
-                mPresenter.logout();
+            case PREF_LOGOUT:
+                new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.logout)
+                        .setMessage(R.string.logout_message)
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mPresenter.logout();
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // Do nothing
+                            }
+                        })
+                        .create().show();
                 break;
             case PREF_DEACTIVATE_ACCOUNT:
                 //TODO Add dialog
@@ -136,7 +156,14 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
 
     @Override
     public void onUserInfoReceived(User user) {
-
+        if(user != null){
+            if(!user.hasGoogleAccount()){
+                getPreferenceScreen().findPreference(PREF_CONNECT_GOOGLE).setEnabled(true);
+            }
+            if(!user.hasFacebookAccount()){
+                getPreferenceScreen().findPreference(PREF_CONNECT_FACEBOOK).setEnabled(true);
+            }
+        }
     }
 
     @Override

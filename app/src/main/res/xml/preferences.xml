@@ -7,8 +7,8 @@
             android:key="@string/pref_anonymity"
             android:title="@string/anonymous"
             android:defaultValue="true"
-            android:summaryOn="All your spotted will be anonymously shared."
-            android:summaryOff="All your spotted will be publicly shared."
+            android:summaryOn="@string/pref_anonymity_on"
+            android:summaryOff="@string/pref_anonymity_off"
             />
     </PreferenceCategory>
 
@@ -16,12 +16,12 @@
         android:title="Social">
         <Preference
             android:key="pref_connect_facebook"
-            android:title="Connect to Facebook"
+            android:title="@string/connect_to_facebook"
             android:enabled="false"
             />
         <Preference
             android:key="pref_connect_google"
-            android:title="Connect to Google"
+            android:title="@string/connect_to_google"
             android:enabled="false"
             />
     </PreferenceCategory>
@@ -30,12 +30,12 @@
         android:title="Account">
 
         <Preference
-            android:key="pref_log_out"
-            android:title="Log out" />
+            android:key="pref_logout"
+            android:title="@string/logout" />
 
         <Preference
             android:key="pref_deactivate_account"
-            android:title="Desactivate account"
+            android:title="@string/deactivate_account"
             android:summary="Your spotteds won't be visible to other users anymore. You may active your account by login in Nearby."
             />
     </PreferenceCategory>

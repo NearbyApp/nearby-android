@@ -9,5 +9,9 @@
         <item name="android:textColorSecondary">@color/colorSecondaryText</item>
     </style>
 
+    <style name="PreferenceScreenStyle" parent="AppTheme">
+        <item name="android:textColorPrimary">@color/primary_color_preferences_screen</item>
+    </style>
+
 </resources>
 

@@ -9,7 +9,7 @@ import io.nearby.android.R;
 
 public class HelpActivity extends AppCompatActivity{
 
-    private static final String HELP_URL = "https://nearbyapp.github.io/";
+    private static final String HELP_URL = "https://nearbyapp.github.io/#support";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

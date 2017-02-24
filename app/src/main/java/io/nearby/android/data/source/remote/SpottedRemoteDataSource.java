@@ -10,6 +10,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.User;
 import io.nearby.android.data.source.Remote;
 import io.nearby.android.data.source.SpottedDataSource;
 import io.reactivex.Observable;
@@ -233,13 +234,13 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
 
     @Override
     public void getUserInfo(final UserInfoLoadedCallback callback) {
-        Observable<ResponseBody> call = mNearbyService.getUser();
+        Observable<User> call = mNearbyService.getUser();
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResponseBody>() {
+                .subscribe(new Consumer<User>() {
                     @Override
-                    public void accept(ResponseBody responseBody) throws Exception {
-                        callback.onUserInfoLoaded(null);
+                    public void accept(User user) throws Exception {
+                        callback.onUserInfoLoaded(user);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

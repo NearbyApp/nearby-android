@@ -5,6 +5,7 @@ import java.util.List;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
+import io.nearby.android.data.User;
 import io.nearby.android.data.source.Remote;
 import io.reactivex.Observable;
 import okhttp3.MultipartBody;
@@ -65,7 +66,7 @@ public interface NearbyService {
     Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
 
     @GET("/v1/user/me")
-    Observable<ResponseBody> getUser();
+    Observable<User> getUser();
 
     @FormUrlEncoded
     @POST("/v1/link/facebook")

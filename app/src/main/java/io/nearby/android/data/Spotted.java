@@ -135,6 +135,20 @@ public class Spotted {
         this.latLng = latLng;
     }
 
+    @Override
+    public String toString() {
+        return "Spotted{" +
+                "id='" + id + '\'' +
+                ", userId='" + userId + '\'' +
+                ", message='" + message + '\'' +
+                ", location=" + location +
+                ", anonymous=" + anonymous +
+                ", pictureUrl='" + pictureUrl + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", profilePictureUrl='" + profilePictureUrl + '\'' +
+                '}';
+    }
+
     /**
      * Location class
      */

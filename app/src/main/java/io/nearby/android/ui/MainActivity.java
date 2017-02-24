@@ -112,18 +112,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void navigate(int itemId){
-        mCurrentNavDrawerItem = itemId;
-
         Intent intent;
 
         switch(itemId){
             case R.id.map:
+                mCurrentNavDrawerItem = itemId;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.container, MapFragment.newInstance())
                         .commit();
                 break;
             case R.id.my_spotted:
+                mCurrentNavDrawerItem = itemId;
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.container, MySpottedFragment.newInstance())
