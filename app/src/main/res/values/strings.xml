@@ -32,6 +32,13 @@
     <string name="connect_to_facebook">Connect to Facebook</string>
     <string name="pref_anonymity_on">All your spotted will be anonymously shared.</string>
     <string name="pref_anonymity_off">All your spotted will be publicly shared.</string>
+    <string name="link">Link</string>
+    <string name="link_facebook_account">Facebook account</string>
+    <string name="link_google_account">Google account</string>
+    <string name="link_facebook_account_message">Link your facebook account to your current account.</string>
+    <string name="link_google_account_message">Link your Google account to your current account.</string>
+    <string name="deactivate">Deactivate</string>
+    <string name="deactivate_account_message">Deactivating your account will prevent other user from seeing your spotted. Your spotted won\'t be deleted.</string>
 
     <!-- Drawer menu items -->
     <string name="map">Map</string>

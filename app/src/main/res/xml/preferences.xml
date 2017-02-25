@@ -15,12 +15,12 @@
     <PreferenceCategory
         android:title="Social">
         <Preference
-            android:key="pref_connect_facebook"
+            android:key="pref_link_facebook"
             android:title="@string/connect_to_facebook"
             android:enabled="false"
             />
         <Preference
-            android:key="pref_connect_google"
+            android:key="pref_link_google"
             android:title="@string/connect_to_google"
             android:enabled="false"
             />

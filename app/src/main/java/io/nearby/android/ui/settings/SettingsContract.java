@@ -11,6 +11,9 @@ public interface SettingsContract {
     interface View extends BaseView<Presenter>{
         void onUserInfoReceived(User user);
 
+        void onGoogleAccountLinked();
+        void onFacebookAccountLinked();
+
         void onSignOutCompleted();
         void onAccountDeactivated();
     }

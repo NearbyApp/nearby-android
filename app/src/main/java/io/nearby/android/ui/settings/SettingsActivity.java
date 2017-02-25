@@ -3,14 +3,12 @@ package io.nearby.android.ui.settings;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import javax.inject.Inject;
 
 import io.nearby.android.NearbyApplication;
-
-/**
- * Created by Marc on 2017-02-21.
- */
+import io.nearby.android.R;
 
 public class SettingsActivity extends AppCompatActivity{
 
@@ -19,6 +17,7 @@ public class SettingsActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings_activity);
 
         SettingsFragment settingsFragment = SettingsFragment.newInstance();
 
@@ -29,7 +28,17 @@ public class SettingsActivity extends AppCompatActivity{
                 .inject(this);
 
         getFragmentManager().beginTransaction()
-                .replace(android.R.id.content, settingsFragment)
+                .replace(R.id.content, settingsFragment)
                 .commit();
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    @Override
+    public boolean onNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

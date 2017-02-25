@@ -28,10 +28,10 @@ import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragment implements SettingsContract.View {
 
-    private final static String PREF_CONNECT_FACEBOOK   = "pref_connect_facebook";
-    private final static String PREF_CONNECT_GOOGLE     = "pref_connect_google";
-    private final static String PREF_LOGOUT             = "pref_logout";
-    private final static String PREF_DEACTIVATE_ACCOUNT = "pref_deactivate_account";
+    private final static String PREF_LINK_FACEBOOK_ACCOUNT  = "pref_link_facebook";
+    private final static String PREF_LINK_GOOGLE_ACCOUNT    = "pref_link_google";
+    private final static String PREF_LOGOUT                 = "pref_logout";
+    private final static String PREF_DEACTIVATE_ACCOUNT     = "pref_deactivate_account";
 
     private static final int RC_GOOGLE_LOGIN = 9001;
 
@@ -96,36 +96,17 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
 
         switch (preference.getKey()){
-            case PREF_CONNECT_FACEBOOK:
-                //TODO Add dialog
-                LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "email"));
+            case PREF_LINK_FACEBOOK_ACCOUNT:
+                linkFacebookAccount();
                 break;
-            case PREF_CONNECT_GOOGLE:
-                //TODO Add dialog
-                Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-                startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
+            case PREF_LINK_GOOGLE_ACCOUNT:
+                linkGoogleAccount();
                 break;
             case PREF_LOGOUT:
-                new AlertDialog.Builder(getActivity())
-                        .setTitle(R.string.logout)
-                        .setMessage(R.string.logout_message)
-                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mPresenter.logout();
-                            }
-                        })
-                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                // Do nothing
-                            }
-                        })
-                        .create().show();
+                logout();
                 break;
             case PREF_DEACTIVATE_ACCOUNT:
-                //TODO Add dialog
-                mPresenter.deactivateAccount();
+                deactivate();
                 break;
 
         }
@@ -158,12 +139,22 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     public void onUserInfoReceived(User user) {
         if(user != null){
             if(!user.hasGoogleAccount()){
-                getPreferenceScreen().findPreference(PREF_CONNECT_GOOGLE).setEnabled(true);
+                getPreferenceScreen().findPreference(PREF_LINK_GOOGLE_ACCOUNT).setEnabled(true);
             }
             if(!user.hasFacebookAccount()){
-                getPreferenceScreen().findPreference(PREF_CONNECT_FACEBOOK).setEnabled(true);
+                getPreferenceScreen().findPreference(PREF_LINK_FACEBOOK_ACCOUNT).setEnabled(true);
             }
         }
+    }
+
+    @Override
+    public void onGoogleAccountLinked() {
+        getPreferenceScreen().findPreference(PREF_LINK_GOOGLE_ACCOUNT).setEnabled(false);
+    }
+
+    @Override
+    public void onFacebookAccountLinked() {
+        getPreferenceScreen().findPreference(PREF_LINK_FACEBOOK_ACCOUNT).setEnabled(false);
     }
 
     @Override
@@ -181,5 +172,82 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         getActivity().finish();
+    }
+
+    private void logout(){
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.logout)
+                .setMessage(R.string.logout_message)
+                .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.logout();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .create().show();
+    }
+
+    private void linkFacebookAccount(){
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.link_facebook_account)
+                .setMessage(R.string.link_facebook_account_message)
+                .setPositiveButton(R.string.link, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        LoginManager.getInstance().logInWithReadPermissions(SettingsFragment.this, Arrays.asList("public_profile", "email"));
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .create().show();
+    }
+
+    private void linkGoogleAccount(){
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.link_google_account)
+                .setMessage(R.string.link_google_account_message)
+                .setPositiveButton(R.string.link, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
+                        startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .create().show();
+    }
+
+    private void deactivate(){
+        new AlertDialog.Builder(getActivity())
+                .setTitle(R.string.deactivate_account)
+                .setMessage(R.string.deactivate_account_message)
+                .setPositiveButton(R.string.deactivate, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.deactivateAccount();
+                    }
+                })
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do nothing
+                    }
+                })
+                .create().show();
     }
 }
