@@ -3,6 +3,8 @@ package io.nearby.android.data.source.remote;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
+
 import java.io.File;
 import java.util.List;
 
@@ -242,6 +244,115 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                     public void accept(User user) throws Exception {
                         callback.onUserInfoLoaded(user);
                     }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void linkFacebookAccount(final String userId, final String token, final FacebookLinkAccountCallback callback) {
+        Observable<ResponseBody> call = mNearbyService.linkFacebookAccount(userId, token);
+        Observable<ResponseBody> responseBodyObservable = call;
+        responseBodyObservable.subscribeOn(Schedulers.io());
+        responseBodyObservable.observeOn(AndroidSchedulers.mainThread());
+        Disposable disposable = responseBodyObservable.subscribe(new Consumer<ResponseBody>() {
+            @Override
+            public void accept(ResponseBody responseBody) throws Exception {
+                callback.onSuccess();
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                boolean exceptionHandled = false;
+
+                if (throwable instanceof HttpException) {
+                    HttpException exception = (HttpException) throwable;
+                    if (exception.code() == 403) {
+                        exceptionHandled = true;
+                        callback.onFacebookAccountAlreadyExist(userId, token);
+                    }
+                }
+
+                if (!exceptionHandled) {
+                    Timber.e(throwable);
+                    callback.onError();
+                }
+            }
+        });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void linkGoogleAccount(final String userId, final String token, final GoogleLinkAccountCallback callback) {
+        Observable<ResponseBody> call = mNearbyService.linkGoogleAccount(userId, token);
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
+                    @Override
+                    public void accept(ResponseBody responseBody) throws Exception {
+                        callback.onSuccess();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        boolean exceptionHandled = false;
+
+                        if(throwable instanceof HttpException){
+                            HttpException exception = (HttpException) throwable;
+                            if(exception.code() == 403){
+                                exceptionHandled = true;
+                                callback.onGoogleAccountAlreadyExist(userId, token);
+                            }
+                        }
+
+                        if(!exceptionHandled) {
+                            Timber.e(throwable);
+                            callback.onError();
+                        }
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void mergeFacebookAccount(String userId, String token, final Callback callback) {
+        Observable<ResponseBody> call = mNearbyService.mergeFacebookAccount(userId, token);
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
+                       @Override
+                       public void accept(ResponseBody responseBody) throws Exception {
+                           callback.onSuccess();
+                       }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void mergeGoogleAccount(String userId, String token, final Callback callback) {
+        Observable<ResponseBody> call = mNearbyService.mergeGoogleAccount(userId, token);
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
+                       @Override
+                       public void accept(ResponseBody responseBody) throws Exception {
+                           callback.onSuccess();
+                       }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {

@@ -167,6 +167,46 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
         navigateToLauncherActivity();
     }
 
+    @Override
+    public void onGoogleAccountAlreadyExist(final String userId, final String token) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Merge account")
+                .setMessage("This Google account already exists. Would you like to merge it with your current Facebook account?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.mergeGoogleAccount(userId, token);
+                    }
+                })
+                .setNegativeButton(R.string.no, null)
+                .create().show();
+    }
+
+    @Override
+    public void onFacebookAccountAlreadyExist(final String userId, final String token) {
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Merge account")
+                .setMessage("This Facebook account already exists. Would you like to merge it with your current Google account?")
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        mPresenter.mergeFacebookAccount(userId, token);
+                    }
+                })
+                .setNegativeButton(R.string.no, null)
+                .create().show();
+    }
+
+    @Override
+    public void onGoogleAccountMerged() {
+        getPreferenceScreen().findPreference(PREF_LINK_GOOGLE_ACCOUNT).setEnabled(false);
+    }
+
+    @Override
+    public void onFacebookAccountMerged() {
+        getPreferenceScreen().findPreference(PREF_LINK_FACEBOOK_ACCOUNT).setEnabled(false);
+    }
+
     private void navigateToLauncherActivity(){
         Intent intent = new Intent(getActivity(), LauncherActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -184,12 +224,7 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                         mPresenter.logout();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                })
+                .setNegativeButton(R.string.cancel, null)
                 .create().show();
     }
 
@@ -223,12 +258,7 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                         startActivityForResult(signInIntent, RC_GOOGLE_LOGIN);
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                })
+                .setNegativeButton(R.string.cancel, null)
                 .create().show();
     }
 
@@ -242,12 +272,7 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                         mPresenter.deactivateAccount();
                     }
                 })
-                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Do nothing
-                    }
-                })
+                .setNegativeButton(R.string.cancel, null)
                 .create().show();
     }
 }

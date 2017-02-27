@@ -70,13 +70,23 @@ public interface NearbyService {
 
     @FormUrlEncoded
     @POST("/v1/link/facebook")
-    Observable<ResponseBody> linkFacebookAccount(@Field("facebookId") String facebookId,
+    Observable<ResponseBody> linkFacebookAccount(@Field("facebookId") String userId,
                                                  @Field("token") String token);
 
     @FormUrlEncoded
     @POST("/v1/link/google")
     Observable<ResponseBody> linkGoogleAccount(@Field("googleId") String googleId,
                                                @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("/v1/merge/facebook")
+    Observable<ResponseBody> mergeFacebookAccount(@Field("facebookId") String userId,
+                                                  @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("/v1/merge/google")
+    Observable<ResponseBody> mergeGoogleAccount(@Field("googleId") String userId,
+                                                @Field("token") String token);
 
     @POST("/v1/disable")
     Observable<ResponseBody> deactivateAccount();

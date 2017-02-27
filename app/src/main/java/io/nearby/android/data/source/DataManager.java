@@ -99,6 +99,26 @@ public class DataManager implements SpottedDataSource{
     }
 
     @Override
+    public void linkFacebookAccount(String userId, String token, FacebookLinkAccountCallback callback) {
+        mRemoteDataSource.linkFacebookAccount(userId, token, callback);
+    }
+
+    @Override
+    public void linkGoogleAccount(String userId, String token, GoogleLinkAccountCallback callback) {
+        mRemoteDataSource.linkGoogleAccount(userId, token, callback);
+    }
+
+    @Override
+    public void mergeFacebookAccount(String userId, String token, Callback callback) {
+        mRemoteDataSource.mergeFacebookAccount(userId, token, callback);
+    }
+
+    @Override
+    public void mergeGoogleAccount(String userId, String token, Callback callback) {
+        mRemoteDataSource.mergeGoogleAccount(userId, token, callback);
+    }
+
+    @Override
     public void signOut(Callback callback) {
         mLocalDataSource.signOut(callback);
     }

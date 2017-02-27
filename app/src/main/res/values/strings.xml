@@ -59,6 +59,8 @@
     <string name="nav_drawer_close">Drawer closed</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
 
 
 </resources>

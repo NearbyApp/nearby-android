@@ -16,6 +16,12 @@ public interface SettingsContract {
 
         void onSignOutCompleted();
         void onAccountDeactivated();
+
+        void onGoogleAccountAlreadyExist(String userId, String token);
+        void onFacebookAccountAlreadyExist(String userId, String token);
+
+        void onGoogleAccountMerged();
+        void onFacebookAccountMerged();
     }
 
     interface Presenter{
@@ -26,5 +32,9 @@ public interface SettingsContract {
 
         void logout();
         void deactivateAccount();
+
+        void mergeFacebookAccount(String userId, String token);
+
+        void mergeGoogleAccount(String userId, String token);
     }
 }

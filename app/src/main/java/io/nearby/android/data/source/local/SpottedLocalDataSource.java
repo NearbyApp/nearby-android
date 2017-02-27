@@ -172,6 +172,26 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     }
 
     @Override
+    public void linkFacebookAccount(String userId, String token, FacebookLinkAccountCallback callback) {
+        // Do nothing
+    }
+
+    @Override
+    public void linkGoogleAccount(String userId, String token, GoogleLinkAccountCallback callback) {
+        // Do nothing
+    }
+
+    @Override
+    public void mergeFacebookAccount(String userId, String token, Callback callback) {
+        // Do nothing
+    }
+
+    @Override
+    public void mergeGoogleAccount(String userId, String token, Callback callback) {
+        // Do nothing
+    }
+
+    @Override
     public void signOut(final Callback callback) {
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override

@@ -43,7 +43,22 @@ public class SettingsPresenter implements SettingsContract.Presenter {
         String userId = loginResult.getAccessToken().getUserId();
         String token = loginResult.getAccessToken().getToken();
 
-        //mDataManager.linkFacebookAccount(userId, token);
+        mDataManager.linkFacebookAccount(userId, token, new SpottedDataSource.FacebookLinkAccountCallback() {
+            @Override
+            public void onFacebookAccountAlreadyExist(String userId, String token) {
+                mView.onFacebookAccountAlreadyExist(userId, token);
+            }
+
+            @Override
+            public void onSuccess() {
+                mView.onFacebookAccountLinked();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
@@ -51,7 +66,22 @@ public class SettingsPresenter implements SettingsContract.Presenter {
         String userId = account.getId();
         String token = account.getIdToken();
 
-        //mDataManager.linkGoogleAccount(userId, token);
+        mDataManager.linkGoogleAccount(userId, token, new SpottedDataSource.GoogleLinkAccountCallback() {
+            @Override
+            public void onGoogleAccountAlreadyExist(String userId, String token) {
+                mView.onGoogleAccountAlreadyExist(userId, token);
+            }
+
+            @Override
+            public void onSuccess() {
+                mView.onGoogleAccountLinked();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
     }
 
     @Override
@@ -75,6 +105,36 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onSuccess() {
                 mView.onAccountDeactivated();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void mergeFacebookAccount(String userId, String token) {
+        mDataManager.mergeFacebookAccount(userId, token, new SpottedDataSource.Callback(){
+            @Override
+            public void onSuccess() {
+                mView.onFacebookAccountMerged();
+            }
+
+            @Override
+            public void onError() {
+
+            }
+        });
+    }
+
+    @Override
+    public void mergeGoogleAccount(String userId, String token) {
+        mDataManager.mergeGoogleAccount(userId, token, new SpottedDataSource.Callback(){
+            @Override
+            public void onSuccess() {
+                mView.onGoogleAccountMerged();
             }
 
             @Override

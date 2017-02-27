@@ -9,57 +9,60 @@ import java.util.List;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.User;
 
-/**
- * Created by Marc on 2017-02-16.
- */
-
 public interface SpottedDataSource {
 
     interface Callback{
+
         void onSuccess();
+
         void onError();
     }
-
     interface UserLoginStatusCallback{
         void userIsLoggedIn();
+
         void userIsNotLoggedIn();
     }
-
     interface LoginCallback{
         void onAccountCreated();
+
         void onLoginSuccess();
         void onError();
     }
-
     interface SpottedCreatedCallback{
         void onSpottedCreated();
+
         void onError();
     }
-
     interface MySpottedLoadedCallback{
         void onMySpottedLoaded(List<Spotted> mySpotted);
+
         void onError();
     }
-
     interface SpottedDetailsLoadedCallback {
         void onSpottedDetailsLoaded(Spotted spotted);
+
         void onError();
     }
-
     interface SpottedLoadedCallback {
         void onSpottedLoaded(List<Spotted> spotted);
+
         void onError();
     }
-
     interface UserInfoLoadedCallback{
         void onUserInfoLoaded(User user);
+
         void onError();
     }
-
-
+    interface FacebookLinkAccountCallback extends Callback {
+        void onFacebookAccountAlreadyExist(String userId, String token);
+    }
+    interface GoogleLinkAccountCallback extends Callback {
+        void onGoogleAccountAlreadyExist(String userId, String token);
+    }
     void isUserLoggedIn(UserLoginStatusCallback callback);
 
     void facebookLogin(String userId, String token, LoginCallback callback);
+
 
     void googleLogin(String userId, String token, LoginCallback callback);
 
@@ -83,6 +86,14 @@ public interface SpottedDataSource {
     void setDefaultAnonymity(boolean anonymity);
 
     void getUserInfo(UserInfoLoadedCallback callback);
+
+    void linkFacebookAccount(String userId, String token, FacebookLinkAccountCallback callback);
+
+    void linkGoogleAccount(String userId, String token, GoogleLinkAccountCallback callback);
+
+    void mergeFacebookAccount(String userId, String token, Callback callback);
+
+    void mergeGoogleAccount(String userId, String token, Callback callback);
 
     void signOut(Callback callback);
 
