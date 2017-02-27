@@ -1,5 +1,6 @@
 package io.nearby.android.ui.myspotted;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,10 +47,23 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
         });
     }
 
-    public void refreshMySpotted(){
+    @Override
+    public void refreshMySpotted(Date myOlderSpotted){
+        mDataManager.getMyNewerSpotteds(myOlderSpotted, new SpottedDataSource.MySpottedLoadedCallback(){
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                mView.onMyNewerSpottedReceived(mySpotted);
+                mView.stopRefreshing();
+            }
 
+            @Override
+            public void onError() {
+                mView.stopRefreshing();
+            }
+        });
     }
 
+    @Override
     public void loadMyOlderSpotted(int spottedCount){
         mDataManager.loadMyOlderSpotted(spottedCount, new SpottedDataSource.MySpottedLoadedCallback(){
 

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
@@ -16,42 +17,43 @@ public interface SpottedDataSource {
         void onSuccess();
 
         void onError();
+
     }
     interface UserLoginStatusCallback{
         void userIsLoggedIn();
-
         void userIsNotLoggedIn();
+
     }
     interface LoginCallback{
         void onAccountCreated();
-
         void onLoginSuccess();
+
         void onError();
     }
     interface SpottedCreatedCallback{
         void onSpottedCreated();
-
         void onError();
+
     }
     interface MySpottedLoadedCallback{
         void onMySpottedLoaded(List<Spotted> mySpotted);
-
         void onError();
+
     }
     interface SpottedDetailsLoadedCallback {
         void onSpottedDetailsLoaded(Spotted spotted);
-
         void onError();
+
     }
     interface SpottedLoadedCallback {
         void onSpottedLoaded(List<Spotted> spotted);
-
         void onError();
+
     }
     interface UserInfoLoadedCallback{
         void onUserInfoLoaded(User user);
-
         void onError();
+
     }
     interface FacebookLinkAccountCallback extends Callback {
         void onFacebookAccountAlreadyExist(String userId, String token);
@@ -60,17 +62,18 @@ public interface SpottedDataSource {
         void onGoogleAccountAlreadyExist(String userId, String token);
     }
     void isUserLoggedIn(UserLoginStatusCallback callback);
-
     void facebookLogin(String userId, String token, LoginCallback callback);
 
-
     void googleLogin(String userId, String token, LoginCallback callback);
+
 
     void createSpotted(@NonNull Spotted spotted, @Nullable File image , SpottedCreatedCallback callback);
 
     void loadMySpotted(MySpottedLoadedCallback callback);
 
     void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback);
+
+    void getMyNewerSpotteds(Date myOlderSpotted, MySpottedLoadedCallback callback);
 
     void loadSpotted(double minLat,double maxLat,double minLng, double maxLng, boolean locationOnly, SpottedLoadedCallback callback);
 

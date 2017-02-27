@@ -13,6 +13,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 
 import java.io.File;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -143,6 +144,11 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
+
+    }
+
+    @Override
+    public void getMyNewerSpotteds(Date myOlderSpotted, MySpottedLoadedCallback callback) {
 
     }
 

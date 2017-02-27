@@ -1,5 +1,6 @@
 package io.nearby.android.ui.myspotted;
 
+import java.util.Date;
 import java.util.List;
 
 import io.nearby.android.data.Spotted;
@@ -17,11 +18,15 @@ public interface MySpottedContract {
 
         void showLoadingProgressBar();
         void hideLoadingProgressBar();
+
+        void onMyNewerSpottedReceived(List<Spotted> mySpotted);
+
+        void stopRefreshing();
     }
 
     interface Presenter{
         void loadMySpotted();
-        void refreshMySpotted();
+        void refreshMySpotted(Date mostRecentSpotted);
         void loadMyOlderSpotted(int spottedCount);
     }
 }

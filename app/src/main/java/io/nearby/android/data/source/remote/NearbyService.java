@@ -1,5 +1,6 @@
 package io.nearby.android.data.source.remote;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -27,9 +28,6 @@ public interface NearbyService {
 
     String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
 
-    @POST("/v1/login")
-    Observable<Response<ResponseBody>> login();
-
     @GET("/v1/spotteds/me")
     Observable<List<Spotted>> getMySpotteds();
 
@@ -37,7 +35,7 @@ public interface NearbyService {
     Observable<List<Spotted>> getMyOlderSpotteds(@Query("skip") int skip);
 
     @GET("/v1/spotteds/me")
-    Observable<List<Spotted>> getMyNewerSpotteds(@Query("since") int since);
+    Observable<List<Spotted>> getMyNewerSpotteds(@Query("since") String since);
 
     @GET("/v1/spotteds")
     Observable<List<Spotted>> getSpotteds(@Query("minLat") double minLat,
@@ -45,6 +43,15 @@ public interface NearbyService {
                                           @Query("minLong") double minLng,
                                           @Query("maxLong") double maxLng,
                                           @Query("locationOnly") boolean locationOnly);
+
+    @GET("/v1/spotted/{spottedId}")
+    Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
+
+    @GET("/v1/user/me")
+    Observable<User> getUser();
+
+    @POST("/v1/login")
+    Observable<Response<ResponseBody>> login();
 
     @Multipart
     @POST("/v1/spotted")
@@ -54,19 +61,13 @@ public interface NearbyService {
                                            @Part("message") RequestBody message,
                                            @Part MultipartBody.Part pictureFile);
 
+
     @Multipart
     @POST("/v1/spotted")
     Observable<ResponseBody> createSpotted(@Part("anonymity") RequestBody anonymity,
                                            @Part("latitude") RequestBody lat,
                                            @Part("longitude") RequestBody lng,
                                            @Part("message") RequestBody message);
-
-
-    @GET("/v1/spotted/{spottedId}")
-    Observable<Spotted> getSpotted(@Path("spottedId") String spottedId);
-
-    @GET("/v1/user/me")
-    Observable<User> getUser();
 
     @FormUrlEncoded
     @POST("/v1/link/facebook")

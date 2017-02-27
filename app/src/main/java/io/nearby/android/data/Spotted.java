@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -37,6 +38,10 @@ public class Spotted {
     @SerializedName("anonymity")
     @Expose
     private boolean anonymous;
+
+    @SerializedName("creationDate")
+    @Expose
+    private Date creationDate;
 
     @SerializedName("pictureURL")
     @Expose
@@ -97,6 +102,10 @@ public class Spotted {
 
     public boolean isAnonymous() {
         return anonymous;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
     }
 
     public LatLng getLatLng() {

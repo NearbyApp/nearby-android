@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -136,10 +137,11 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
 
     @Override
     public void onRefresh() {
-        //TODO refresh
-        //mPresenter.refreshMySpotted();
-        //TODO remove this hack
-        mSwipeRefreshLayout.setRefreshing(false);
+        Date creationDate = mAdapter.getItem(0).getCreationDate();
+
+        if(creationDate != null){
+            mPresenter.refreshMySpotted(creationDate);
+        }
     }
 
     @Override
@@ -174,6 +176,16 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     @Override
     public void hideLoadingProgressBar() {
         mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onMyNewerSpottedReceived(List<Spotted> mySpotted) {
+        mAdapter.insertAll(mySpotted);
+    }
+
+    @Override
+    public void stopRefreshing() {
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

@@ -6,6 +6,9 @@ import android.support.annotation.Nullable;
 import com.jakewharton.retrofit2.adapter.rxjava2.HttpException;
 
 import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -161,6 +164,28 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     public void loadMyOlderSpotted(int spottedCount, final MySpottedLoadedCallback callback) {
         Observable<List<Spotted>> call = mNearbyService.getMyOlderSpotteds(spottedCount);
 
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Spotted>>() {
+                    @Override
+                    public void accept(List<Spotted> spotteds) throws Exception {
+                        callback.onMySpottedLoaded(spotteds);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Timber.e(throwable);
+                        callback.onError();
+                    }
+                });
+
+        mCompositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void getMyNewerSpotteds(Date myOlderSpotted, final MySpottedLoadedCallback callback) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Observable<List<Spotted>> call = mNearbyService.getMyNewerSpotteds(dateFormat.format(myOlderSpotted));
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Spotted>>() {

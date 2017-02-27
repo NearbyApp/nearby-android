@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.util.Date;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -81,6 +82,11 @@ public class DataManager implements SpottedDataSource{
     @Override
     public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
         mRemoteDataSource.loadMyOlderSpotted(spottedCount, callback);
+    }
+
+    @Override
+    public void getMyNewerSpotteds(Date myOlderSpotted, MySpottedLoadedCallback callback) {
+        mRemoteDataSource.getMyNewerSpotteds(myOlderSpotted, callback);
     }
 
     @Override

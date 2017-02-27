@@ -83,13 +83,27 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
         return mDataset.size();
     }
 
+    public Spotted getItem(int position){
+        Spotted spotted = null;
+        if(position >= 0 && position < mDataset.size()){
+            spotted = mDataset.get(position);
+        }
+        return spotted;
+    }
+
     public void addItem(Spotted spotted) {
-        mDataset.add(spotted);
-        notifyDataSetChanged();
+        if(!mDataset.contains(spotted)){
+            mDataset.add(spotted);
+            notifyDataSetChanged();
+        }
     }
 
     public void addItems(List<Spotted> spotteds) {
-        mDataset.addAll(spotteds);
+        for (Spotted spotted : spotteds){
+            if(!mDataset.contains(spotted)) {
+                mDataset.add(spotted);
+            }
+        }
         notifyDataSetChanged();
     }
 
@@ -98,15 +112,20 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
     }
 
     public void insert(Spotted spotted) {
-        mDataset.add(0, spotted);
+        if(!mDataset.contains(spotted)){
+            mDataset.add(0, spotted);
+            notifyDataSetChanged();
+        }
     }
 
-    public Spotted getLastSpotted(){
-        Spotted lastSpotted = null;
-        if(mDataset.size() > 0){
-            lastSpotted = mDataset.get(mDataset.size() - 1 );
+    public void insertAll(List<Spotted> spotteds){
+        for (int i = spotteds.size()-1; i > 0; i--) {
+            Spotted spotted = spotteds.get(i);
+            if(!mDataset.contains(spotted)){
+                mDataset.add(0, spotted);
+            }
         }
 
-        return lastSpotted;
+        notifyDataSetChanged();
     }
 }
