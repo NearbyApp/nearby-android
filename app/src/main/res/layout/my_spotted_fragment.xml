@@ -26,17 +26,25 @@
             />
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <!-- TODO Complete the no spotted message -->
-    <!--
     <TextView
+        android:id="@+id/empty"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
 
         android:visibility="gone"
-        android:text="test"
+        android:text="You have no spotted."
 
         tools:visibility="visible"
         />
-    -->
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 </FrameLayout>

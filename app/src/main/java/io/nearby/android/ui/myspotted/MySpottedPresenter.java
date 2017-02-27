@@ -31,9 +31,11 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
 
     @Override
     public void loadMySpotted(){
+        mView.showLoadingProgressBar();
         mDataManager.loadMySpotted(new SpottedDataSource.MySpottedLoadedCallback() {
             @Override
             public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                mView.hideLoadingProgressBar();
                 mView.onMySpottedReceived(mySpotted);
             }
 

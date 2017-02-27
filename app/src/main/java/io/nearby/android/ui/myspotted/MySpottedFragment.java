@@ -1,5 +1,6 @@
 package io.nearby.android.ui.myspotted;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,8 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,15 +26,13 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.adapter.SpottedAdapter;
-
-
-/**
- * Created by Marc on 2017-02-02.
- */
+import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
+import io.reactivex.functions.Consumer;
 
 public class MySpottedFragment extends Fragment implements MySpottedContract.View, SwipeRefreshLayout.OnRefreshListener{
 
     private static final int VISIBLE_THRESHOLD = 5;
+    private static final int LAYOUT = R.layout.my_spotted_fragment;
 
     @Inject MySpottedPresenter mPresenter;
 
@@ -38,9 +40,11 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     private RecyclerView mRecyclerView;
     private SpottedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private TextView mEmptyListTextView;
+    private ProgressBar mProgressBar;
 
     private boolean mIsLoadingOlderSpotted = false;
-    private boolean mHasOlderSpotted = false;
+    private boolean mHasOlderSpotted = true;
     private int mPreviousTotal = 0;
 
     public static MySpottedFragment newInstance() {
@@ -66,7 +70,10 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.my_spotted_fragment, container, false);
+        View view = inflater.inflate(LAYOUT, container, false);
+
+        mEmptyListTextView = (TextView) view.findViewById(R.id.empty);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -81,6 +88,14 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         mRecyclerView.addItemDecoration(dividerItemDecoration);
 
         mAdapter = new SpottedAdapter(Glide.with(this));
+        mAdapter.setItemClickListener(new Consumer<Spotted>() {
+            @Override
+            public void accept(Spotted spotted) throws Exception {
+                Intent intent = new Intent(MySpottedFragment.this.getActivity(), SpottedDetailActivity.class);
+                intent.putExtra(SpottedDetailActivity.EXTRAS_SPOTTED_ID,spotted.getId());
+                startActivity(intent);
+            }
+        });
         mRecyclerView.setAdapter(mAdapter);
 
         // http://stackoverflow.com/questions/26543131/how-to-implement-endless-list-with-recyclerview
@@ -130,8 +145,15 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
     @Override
     public void onMySpottedReceived(List<Spotted> spottedList) {
         //TODO A merging would probably be better
-        mAdapter.addItems(spottedList);
-        mAdapter.notifyDataSetChanged();
+
+        if(spottedList.size() == 0 && mAdapter.getItemCount() == 0){
+            showEmptyListMessage();
+        }
+        else {
+            hideEmptyListMessage();
+            mAdapter.addItems(spottedList);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -144,6 +166,29 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void showLoadingProgressBar() {
+        mProgressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideLoadingProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setPresenter(MySpottedContract.Presenter presenter) {
+        mPresenter = (MySpottedPresenter) presenter;
+    }
+
+    private void showEmptyListMessage() {
+        mEmptyListTextView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideEmptyListMessage() {
+        mEmptyListTextView.setVisibility(View.GONE);
+    }
+
     private void addDummySpotted(){
         List<Spotted> spotteds = new ArrayList<>();
 
@@ -153,10 +198,5 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
         }
 
         mAdapter.addItems(spotteds);
-    }
-
-    @Override
-    public void setPresenter(MySpottedContract.Presenter presenter) {
-        mPresenter = (MySpottedPresenter) presenter;
     }
 }

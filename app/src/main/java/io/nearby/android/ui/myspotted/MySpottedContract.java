@@ -14,6 +14,9 @@ public interface MySpottedContract {
     interface View extends BaseView<Presenter>{
         void onMySpottedReceived(List<Spotted> spottedList);
         void onMyOlderSpottedReceived(List<Spotted> spottedList);
+
+        void showLoadingProgressBar();
+        void hideLoadingProgressBar();
     }
 
     interface Presenter{

@@ -15,6 +15,9 @@ import java.util.List;
 
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.reactivex.Observable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.PublishSubject;
 
 /**
  * Created by Marc on 2017-02-02.
@@ -23,6 +26,8 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
 
     private List<Spotted> mDataset;
     private RequestManager mGlide;
+
+    private final PublishSubject<Spotted> onClickSubject = PublishSubject.create();
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -53,7 +58,7 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Spotted spotted = mDataset.get(position);
+        final Spotted spotted = mDataset.get(position);
         SpottedViewHolder spottedViewHolder = (SpottedViewHolder) holder;
 
         spottedViewHolder.messageTextView.setText(spotted.getMessage());
@@ -64,6 +69,13 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
             mGlide.load(spotted.getPictureUrl())
                     .into(spottedViewHolder.pictureImageView);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onClickSubject.onNext(spotted);
+            }
+        });
     }
 
     @Override
@@ -79,6 +91,10 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
     public void addItems(List<Spotted> spotteds) {
         mDataset.addAll(spotteds);
         notifyDataSetChanged();
+    }
+
+    public void setItemClickListener(Consumer<Spotted> onNext){
+        onClickSubject.subscribe(onNext);
     }
 
     public void insert(Spotted spotted) {
