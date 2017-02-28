@@ -12,55 +12,59 @@ import io.nearby.android.data.User;
 
 public interface SpottedDataSource {
 
-    interface Callback{
+    interface ErrorCallback{
+        void onError();
+        void onUserDeactivated();
+        void onUserUnauthorized();
+    }
 
+    interface Callback extends ErrorCallback{
         void onSuccess();
 
-        void onError();
-
     }
-    interface UserLoginStatusCallback{
+
+    interface UserLoginStatusCallback extends ErrorCallback{
         void userIsLoggedIn();
         void userIsNotLoggedIn();
-
     }
-    interface LoginCallback{
+
+    interface SpottedCreatedCallback extends ErrorCallback{
+        void onSpottedCreated();
+    }
+
+    interface MySpottedLoadedCallback extends ErrorCallback{
+        void onMySpottedLoaded(List<Spotted> mySpotted);
+    }
+
+    interface UserInfoLoadedCallback extends ErrorCallback{
+        void onUserInfoLoaded(User user);
+    }
+
+    interface FacebookLinkAccountCallback extends Callback {
+        void onFacebookAccountAlreadyExist(String userId, String token);
+    }
+
+    interface GoogleLinkAccountCallback extends Callback {
+        void onGoogleAccountAlreadyExist(String userId, String token);
+    }
+
+    interface SpottedDetailsLoadedCallback{
+        void onSpottedDetailsLoaded(Spotted spotted);
+        void onError();
+    }
+
+    interface SpottedLoadedCallback {
+        void onSpottedLoaded(List<Spotted> spotted);
+        void onError();
+    }
+
+    interface LoginCallback {
         void onAccountCreated();
         void onLoginSuccess();
 
         void onError();
     }
-    interface SpottedCreatedCallback{
-        void onSpottedCreated();
-        void onError();
 
-    }
-    interface MySpottedLoadedCallback{
-        void onMySpottedLoaded(List<Spotted> mySpotted);
-        void onError();
-
-    }
-    interface SpottedDetailsLoadedCallback {
-        void onSpottedDetailsLoaded(Spotted spotted);
-        void onError();
-
-    }
-    interface SpottedLoadedCallback {
-        void onSpottedLoaded(List<Spotted> spotted);
-        void onError();
-
-    }
-    interface UserInfoLoadedCallback{
-        void onUserInfoLoaded(User user);
-        void onError();
-
-    }
-    interface FacebookLinkAccountCallback extends Callback {
-        void onFacebookAccountAlreadyExist(String userId, String token);
-    }
-    interface GoogleLinkAccountCallback extends Callback {
-        void onGoogleAccountAlreadyExist(String userId, String token);
-    }
     void isUserLoggedIn(UserLoginStatusCallback callback);
     void facebookLogin(String userId, String token, LoginCallback callback);
 

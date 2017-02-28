@@ -13,7 +13,6 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
-import timber.log.Timber;
 
 @Singleton
 public class DataManager implements SpottedDataSource{
@@ -140,6 +139,16 @@ public class DataManager implements SpottedDataSource{
             @Override
             public void onError() {
                 callback.onError();
+            }
+
+            @Override
+            public void onUserDeactivated() {
+                callback.onUserDeactivated();
+            }
+
+            @Override
+            public void onUserUnauthorized() {
+                callback.onUserUnauthorized();
             }
         });
     }
