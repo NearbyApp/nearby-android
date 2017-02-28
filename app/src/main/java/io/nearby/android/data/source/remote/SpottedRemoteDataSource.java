@@ -283,10 +283,9 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     @Override
     public void linkFacebookAccount(final String userId, final String token, final FacebookLinkAccountCallback callback) {
         Observable<ResponseBody> call = mNearbyService.linkFacebookAccount(userId, token);
-        Observable<ResponseBody> responseBodyObservable = call;
-        responseBodyObservable.subscribeOn(Schedulers.io());
-        responseBodyObservable.observeOn(AndroidSchedulers.mainThread());
-        Disposable disposable = responseBodyObservable.subscribe(new Consumer<ResponseBody>() {
+        Disposable disposable = call.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseBody>() {
             @Override
             public void accept(ResponseBody responseBody) throws Exception {
                 callback.onSuccess();
