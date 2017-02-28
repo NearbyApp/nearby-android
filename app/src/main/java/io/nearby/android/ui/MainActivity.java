@@ -17,7 +17,6 @@ import io.nearby.android.R;
 import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
-import io.nearby.android.ui.newspotted.NewSpottedActivity;
 import io.nearby.android.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{

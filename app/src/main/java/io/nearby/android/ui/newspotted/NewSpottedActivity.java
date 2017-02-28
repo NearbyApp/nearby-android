@@ -18,7 +18,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -45,7 +44,7 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     private static final int REQUEST_IMAGE_CAPTURE = 9003;
 
     private EditText mSpottedMessageEditText;
-    private ImageView mSpottedImageImageView;
+    private ImageView mSpottedPictureImageView;
     private ImageButton mSpottedAnonymityButton;
     private ImageButton mSendButton;
 
@@ -83,9 +82,9 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_IMAGE_CAPTURE ){
-            int targetWidth = mSpottedImageImageView.getWidth();
+            int targetWidth = mSpottedPictureImageView.getWidth();
             Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoPath,targetWidth);
-            mSpottedImageImageView.setImageBitmap(bitmap);
+            mSpottedPictureImageView.setImageBitmap(bitmap);
         }
     }
 
@@ -143,7 +142,7 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
         mSendButton.setClickable(false);
         mSendButton.setEnabled(false);
 
-        mSpottedImageImageView = (ImageView) findViewById(R.id.spotted_picture);
+        mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
         mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);
         mSpottedAnonymityButton.setOnClickListener(this);
 
@@ -183,15 +182,32 @@ public class NewSpottedActivity extends AppCompatActivity implements View.OnClic
             }
 
             Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            double lat = lastLocation.getLatitude();
-            double lng = lastLocation.getLongitude();
+            if(lastLocation == null) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Turn on localisation")
+                        .setMessage("Please turn on localisation to create a new spotted.")
+                        .setPositiveButton(R.string.settings, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Intent callGPSSettingIntent = new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                                startActivity(callGPSSettingIntent);
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .create()
+                        .show();
+            }
+            else {
+                double lat = lastLocation.getLatitude();
+                double lng = lastLocation.getLongitude();
 
+                mPresenter.createSpotted(lat,
+                        lng,
+                        text,
+                        mAnonymity,
+                        mCurrentPhotoPath);
+            }
 
-            mPresenter.createSpotted(lat,
-                    lng,
-                    text,
-                    mAnonymity,
-                    mCurrentPhotoPath);
         }
     }
 
