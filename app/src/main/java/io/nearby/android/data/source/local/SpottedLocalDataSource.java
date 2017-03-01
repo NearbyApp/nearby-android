@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookException;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
@@ -71,22 +72,23 @@ public class SpottedLocalDataSource implements SpottedDataSource {
      * https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
      * Visited 22-01-2017
      */
-    private void facebookAuthentification(UserLoginStatusCallback callback){
-        boolean isUserLoggedIn = false;
-
+    private void facebookAuthentification(final UserLoginStatusCallback callback){
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
-                AccessToken.refreshCurrentAccessTokenAsync();
-                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
-                isUserLoggedIn = true;
-            }
-        }
+                AccessToken.refreshCurrentAccessTokenAsync(new AccessToken.AccessTokenRefreshCallback() {
+                    @Override
+                    public void OnTokenRefreshed(AccessToken accessToken) {
+                        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+                        mSharedPreferencesHelper.setFacebookToken(accessToken.getToken());
+                        callback.userIsLoggedIn();
+                    }
 
-        if(isUserLoggedIn){
-            callback.userIsLoggedIn();
-        }
-        else {
-            callback.userIsNotLoggedIn();
+                    @Override
+                    public void OnTokenRefreshFailed(FacebookException exception) {
+                        callback.userIsNotLoggedIn();
+                    }
+                });
+            }
         }
     }
 
@@ -115,6 +117,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
     private void handleGoogleResult(GoogleSignInResult googleSignInResult, UserLoginStatusCallback callback){
         if(googleSignInResult != null && googleSignInResult.isSuccess()){
             mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+            mSharedPreferencesHelper.setGoogleToken(googleSignInResult.getSignInAccount().getIdToken());
             callback.userIsLoggedIn();
         }
         else {
