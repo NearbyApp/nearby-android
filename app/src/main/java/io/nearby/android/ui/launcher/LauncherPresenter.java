@@ -29,6 +29,11 @@ public class LauncherPresenter implements LauncherContract.Presenter {
     public void isUserLoggedIn() {
         mDataManager.isUserLoggedIn(new SpottedDataSource.UserLoginStatusCallback() {
             @Override
+            public void onError() {
+
+            }
+
+            @Override
             public void userIsLoggedIn() {
                 mView.onUserLoggedIn();
             }

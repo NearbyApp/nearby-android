@@ -70,11 +70,6 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
         mListener = listener;
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        return super.onMarkerClick(marker);
-    }
-
     public void setOnClusterItemClickListener(OnClusterItemClickListener<T> listener){
         mRenderer.setOnClusterItemClickListener(listener);
     }

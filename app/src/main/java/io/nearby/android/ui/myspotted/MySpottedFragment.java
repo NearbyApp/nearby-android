@@ -146,8 +146,6 @@ public class MySpottedFragment extends Fragment implements MySpottedContract.Vie
 
     @Override
     public void onMySpottedReceived(List<Spotted> spottedList) {
-        //TODO A merging would probably be better
-
         if(spottedList.size() == 0 && mAdapter.getItemCount() == 0){
             showEmptyListMessage();
         }

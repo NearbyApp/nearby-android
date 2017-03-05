@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -140,7 +141,7 @@ public class DataManager implements SpottedDataSource{
             public void onError() {
                 callback.onError();
             }
-
+/*
             @Override
             public void onUserDeactivated() {
                 callback.onUserDeactivated();
@@ -150,6 +151,7 @@ public class DataManager implements SpottedDataSource{
             public void onUserUnauthorized() {
                 callback.onUserUnauthorized();
             }
+            */
         });
     }
 }

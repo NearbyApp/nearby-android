@@ -5,7 +5,7 @@ import dagger.Provides;
 
 @Module
 public class SpottedDetailPresenterModule {
-    private final SpottedDetailContract.View mView;
+    private SpottedDetailContract.View mView;
 
     public SpottedDetailPresenterModule(SpottedDetailContract.View view){
         mView = view;

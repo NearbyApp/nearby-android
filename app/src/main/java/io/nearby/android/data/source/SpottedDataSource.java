@@ -14,8 +14,8 @@ public interface SpottedDataSource {
 
     interface ErrorCallback{
         void onError();
-        void onUserDeactivated();
-        void onUserUnauthorized();
+        //void onUserDeactivated();
+        //void onUserUnauthorized();
     }
 
     interface Callback extends ErrorCallback{

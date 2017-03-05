@@ -209,7 +209,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                             double minLng, double maxLng,
                             boolean locationOnly,
                             final SpottedLoadedCallback callback) {
-        Observable<List<Spotted>> call = mNearbyService.getSpotteds(minLat, maxLat, minLng, maxLng, true);
+        Observable<List<Spotted>> call = mNearbyService.getSpotteds(minLat, maxLat, minLng, maxLng, locationOnly);
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<Spotted>>() {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -24,8 +25,10 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.VisibleRegion;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -37,6 +40,7 @@ import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
+import io.nearby.android.ui.spottedclusterdetail.SpottedClusterDetailActivity;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import timber.log.Timber;
 
@@ -196,6 +200,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager = new NearbyClusterManager<>(getContext(), mMap);
         mClusterManager.setOnCameraIdleListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<SpottedClusterItem>() {
+            @Override
+            public boolean onClusterClick(Cluster<SpottedClusterItem> cluster) {
+                boolean handled = false;
+
+                if(mMap.getCameraPosition().zoom > 19){
+                    handled = true;
+
+                    ArrayList<Parcelable> spotteds = new ArrayList<>();
+
+                    for(SpottedClusterItem item : cluster.getItems()){
+                        spotteds.add(item);
+                    }
+
+                    Intent intent = new Intent(getActivity(), SpottedClusterDetailActivity.class);
+                    intent.putParcelableArrayListExtra(SpottedClusterDetailActivity.EXTRAS_SPOTTEDS, spotteds);
+                    getActivity().startActivity(intent);
+                }
+                else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMap.getCameraPosition().target, mMap.getCameraPosition().zoom + 1));
+                    handled = true;
+                }
+
+                return handled;
+            }
+        });
 
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);

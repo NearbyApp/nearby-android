@@ -1,21 +1,15 @@
 package io.nearby.android.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-import timber.log.Timber;
-
-/**
- * Created by Marc on 2017-01-29.
- */
-
-public class Spotted {
+public class Spotted implements Parcelable{
 
     public static final String DEFAULT_ID = "0";
 
@@ -70,6 +64,20 @@ public class Spotted {
         this.location = new Location(latitude, longitude);
         this.latLng = new LatLng(latitude,longitude);
         this.anonymous = anonymous;
+    }
+
+    /**
+     * Constructor used when Spotted used as a Parcelable
+     */
+    public Spotted(Parcel source) {
+        id = source.readString();
+        userId = source.readString();
+        message = source.readString();
+        anonymous = source.readByte() != 1;
+        pictureUrl = source.readString();
+        fullName = source.readString();
+        profilePictureUrl = source.readString();
+        location = source.readParcelable(Location.class.getClassLoader());
     }
 
     public boolean hasImage() {
@@ -158,41 +166,32 @@ public class Spotted {
                 '}';
     }
 
-    /**
-     * Location class
-     */
-    private class Location{
-        private static final int LONGITUDE_INDEX = 0;
-        private static final int LATITUDE_INDEX = 1;
-
-        @SerializedName("coordinates")
-        @Expose
-        private List<Double> coordinates;
-
-        @SuppressWarnings("unused")
-        public Location() {
-        }
-
-        public Location(double lat, double lng){
-            coordinates = new ArrayList<>();
-            setCoordinates(lat, lng);
-        }
-
-        public double getLatitude(){
-            return coordinates.get(LATITUDE_INDEX);
-        }
-
-        public double getLongitude(){
-            return coordinates.get(LONGITUDE_INDEX);
-        }
-
-        public void setCoordinates(double lat, double lng){
-            coordinates.clear();
-
-            // The order here is really important
-            coordinates.add(lng);
-            coordinates.add(lat);
-        }
-
+    @Override
+    public int describeContents() {
+        return 0;
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(userId);
+        dest.writeString(message);
+        dest.writeByte((byte) (anonymous ? 1 : 0));
+        dest.writeString(pictureUrl);
+        dest.writeString(fullName);
+        dest.writeString(profilePictureUrl);
+        dest.writeParcelable(location, flags);
+    }
+
+    public static final Parcelable.Creator<Spotted> CREATOR = new Creator<Spotted>() {
+        @Override
+        public Spotted createFromParcel(Parcel source) {
+            return new Spotted(source);
+        }
+
+        @Override
+        public Spotted[] newArray(int size) {
+            return new Spotted[size];
+        }
+    };
 }
