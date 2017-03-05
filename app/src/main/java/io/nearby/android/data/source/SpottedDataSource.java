@@ -12,32 +12,30 @@ import io.nearby.android.data.User;
 
 public interface SpottedDataSource {
 
-    interface ErrorCallback{
-        void onError();
-        //void onUserDeactivated();
-        //void onUserUnauthorized();
-    }
-
-    interface Callback extends ErrorCallback{
+    interface Callback {
         void onSuccess();
-
+        void onError();
     }
 
-    interface UserLoginStatusCallback extends ErrorCallback{
+    interface UserLoginStatusCallback{
         void userIsLoggedIn();
         void userIsNotLoggedIn();
+        void onError();
     }
 
-    interface SpottedCreatedCallback extends ErrorCallback{
+    interface SpottedCreatedCallback{
         void onSpottedCreated();
+        void onError();
     }
 
-    interface MySpottedLoadedCallback extends ErrorCallback{
+    interface MySpottedLoadedCallback {
         void onMySpottedLoaded(List<Spotted> mySpotted);
+        void onError();
     }
 
-    interface UserInfoLoadedCallback extends ErrorCallback{
+    interface UserInfoLoadedCallback{
         void onUserInfoLoaded(User user);
+        void onError();
     }
 
     interface FacebookLinkAccountCallback extends Callback {

@@ -141,17 +141,6 @@ public class DataManager implements SpottedDataSource{
             public void onError() {
                 callback.onError();
             }
-/*
-            @Override
-            public void onUserDeactivated() {
-                callback.onUserDeactivated();
-            }
-
-            @Override
-            public void onUserUnauthorized() {
-                callback.onUserUnauthorized();
-            }
-            */
         });
     }
 }
