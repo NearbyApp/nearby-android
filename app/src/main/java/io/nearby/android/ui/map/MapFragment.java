@@ -203,11 +203,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<SpottedClusterItem>() {
             @Override
             public boolean onClusterClick(Cluster<SpottedClusterItem> cluster) {
-                boolean handled = false;
-
                 if(mMap.getCameraPosition().zoom > 19){
-                    handled = true;
-
                     ArrayList<Parcelable> spotteds = new ArrayList<>();
 
                     for(SpottedClusterItem item : cluster.getItems()){
@@ -220,10 +216,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 }
                 else {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMap.getCameraPosition().target, mMap.getCameraPosition().zoom + 1));
-                    handled = true;
                 }
 
-                return handled;
+                return true;
             }
         });
 
