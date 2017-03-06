@@ -66,6 +66,10 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void googleLogin(String userId, String token, final LoginCallback callback) {
+        mSharedPreferencesHelper.setGoogleToken(token);
+        mSharedPreferencesHelper.setGoogleUserId(userId);
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+
         mRemoteDataSource.googleLogin(userId, token, new LoginCallback() {
             @Override
             public void onAccountCreated() {

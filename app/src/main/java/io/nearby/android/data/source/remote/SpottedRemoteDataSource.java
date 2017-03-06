@@ -64,7 +64,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
     }
 
     private void login(final LoginCallback callback) {
-        Observable<Response<ResponseBody>> call = mNearbyService.login();
+        final Observable<Response<ResponseBody>> call = mNearbyService.login();
         Disposable disposable = call.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<Response<ResponseBody>>() {
