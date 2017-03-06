@@ -1,6 +1,6 @@
 ---
 Certificate chain
- 0 s:/CN=nbyapi.mo-bergeron.com
+ 0 s:/CN=test.mo-bergeron.com
    i:/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3
 ---
 Server certificate
@@ -34,7 +34,7 @@ Eycc95rzQcKP34qjPJ+I7XBDQSLTCTZM4TI+SxSHZT2e0LJINA3muWDeQJoCB4BC
 APeRGOPz1J+MQZY1Po9dLltCpIwcZlx+49B+m6NYKGrJBJvSfAEg/pkpb10SATUy
 RaOqQg==
 -----END CERTIFICATE-----
-subject=/CN=nbyapi.mo-bergeron.com
+subject=/CN=test.mo-bergeron.com
 issuer=/C=US/O=Let's Encrypt/CN=Let's Encrypt Authority X3
 ---
 No client certificate CA names sent
@@ -52,27 +52,27 @@ No ALPN negotiated
 SSL-Session:
     Protocol  : TLSv1.2
     Cipher    : ECDHE-RSA-AES256-GCM-SHA384
-    Session-ID: 4BF9B480F604C4F5F08A68A510763B53954A50D482BD2CFA131D626C5A0E4B52
+    Session-ID: B96B5B6AF722B175D387D6D65C32ADFBE441257A88EC2CDC7B61CD93D8C841D9
     Session-ID-ctx: 
-    Master-Key: EDAC71ACC66CA02E3DE5E95E9A850F08A7F1A5D35651735DFF6BAC41EE9C8980F01DAA2248A84F591D4F2ED7B873F462
+    Master-Key: CD32F68FB656CE9A370EDC6D6A8DF8CAA9143EE7054D9A69C8E3DFEE1FDA20DF689C9E76B24B9FD34B07DDA9B09EC98C
     Key-Arg   : None
     PSK identity: None
     PSK identity hint: None
     SRP username: None
     TLS session ticket lifetime hint: 300 (seconds)
     TLS session ticket:
-    0000 - 4f a2 64 37 2d 6c d4 aa-28 89 7e de 8f 29 e5 2e   O.d7-l..(.~..)..
-    0010 - d5 d3 0b 73 cc 82 ca 7d-c6 38 34 9f 27 8d 70 d5   ...s...}.84.'.p.
-    0020 - 25 79 52 42 51 54 1d 21-fb 9d 49 9a de ef 01 6b   %yRBQT.!..I....k
-    0030 - 9f 63 46 fe 3c d1 1c 20-d0 17 a0 26 dc a5 33 0b   .cF.<.. ...&..3.
-    0040 - a3 36 a8 5e f4 61 21 9d-a0 37 23 fb f1 f9 0b 53   .6.^.a!..7#....S
-    0050 - 3f 90 f5 5e ee e0 b3 1d-16 56 1e 38 c3 4c 5d 74   ?..^.....V.8.L]t
-    0060 - 46 d1 9b 32 04 cb 9d 3e-43 47 6a 10 9c a3 6b 98   F..2...>CGj...k.
-    0070 - c4 e6 38 1e 22 fa 34 a9-cf 67 f1 31 39 f2 25 85   ..8.".4..g.19.%.
-    0080 - dc 25 4b f7 63 d5 7e 5b-fc c7 30 af 78 8b c7 55   .%K.c.~[..0.x..U
-    0090 - 04 ae 00 49 a4 66 28 c7-4f 7c d7 dd 47 85 98 3c   ...I.f(.O|..G..<
+    0000 - 1b 83 b7 5d 5d 40 43 f3-d9 82 60 a3 f7 d7 3e 17   ...]]@C...`...>.
+    0010 - 9a 6e 20 9a 7b 53 95 60-62 11 c0 cc bc a1 f9 83   .n .{S.`b.......
+    0020 - e2 e6 e3 00 36 4b af 5d-1e d0 5b e8 74 c7 db 5f   ....6K.]..[.t.._
+    0030 - 3d fa a7 7c 80 b0 9c b3-5b 0d 4e 92 8b 8f ed 80   =..|....[.N.....
+    0040 - 65 a4 86 9a d1 38 48 87-94 88 9d 38 b0 cb b2 5b   e....8H....8...[
+    0050 - 17 b2 dc 5e b0 b1 30 79-ed 4f 50 bf f5 c5 52 f9   ...^..0y.OP...R.
+    0060 - 3d 96 85 da dc 09 e0 9a-24 41 ca 05 4f dc f4 ce   =.......$A..O...
+    0070 - 89 dc c5 64 03 43 b6 6f-30 a4 f5 36 aa f9 9c db   ...d.C.o0..6....
+    0080 - 27 e0 47 5a eb aa 00 bd-5e 89 a7 8e 16 bd 21 38   '.GZ....^.....!8
+    0090 - cb e6 25 2f 89 c8 ea d6-36 cd 73 61 64 e5 4d c1   ..%/....6.sad.M.
 
-    Start Time: 1486688526
+    Start Time: 1488759932
     Timeout   : 300 (sec)
     Verify return code: 21 (unable to verify the first certificate)
 ---
