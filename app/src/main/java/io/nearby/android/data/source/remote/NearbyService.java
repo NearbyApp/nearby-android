@@ -26,7 +26,8 @@ import retrofit2.http.Query;
 @Remote
 public interface NearbyService {
 
-    String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
+    //String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
+    String ENDPOINT = "https://test.mo-bergeron.com/";
 
     @GET("/v1/spotteds/me")
     Observable<List<Spotted>> getMySpotteds();

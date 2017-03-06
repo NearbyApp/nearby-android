@@ -92,7 +92,7 @@ public class ServiceCreator<T> {
 
             Certificate ca;
 
-            InputStream cert = mContext.getResources().openRawResource(R.raw.my_cert);
+            InputStream cert = mContext.getResources().openRawResource(R.raw.test_cert);
             ca = cf.generateCertificate(cert);
 
 

@@ -37,21 +37,55 @@ public class DataManager implements SpottedDataSource{
     }
 
     @Override
-    public void facebookLogin(String userId, String token, LoginCallback callback) {
+    public void facebookLogin(String userId, String token, final LoginCallback callback) {
         mSharedPreferencesHelper.setFacebookUserId(userId);
         mSharedPreferencesHelper.setFacebookToken(token);
         mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
 
-        mRemoteDataSource.googleLogin(userId, token, callback);
+        mRemoteDataSource.facebookLogin(userId, token, new LoginCallback() {
+            @Override
+            public void onAccountCreated() {
+                callback.onAccountCreated();
+            }
+
+            @Override
+            public void onLoginSuccess() {
+                callback.onLoginSuccess();
+            }
+
+            @Override
+            public void onError() {
+                mSharedPreferencesHelper.setFacebookUserId("");
+                mSharedPreferencesHelper.setFacebookToken("");
+                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+
+                callback.onError();
+            }
+        });
     }
 
     @Override
-    public void googleLogin(String userId, String token, LoginCallback callback) {
-        mSharedPreferencesHelper.setGoogleUserId(userId);
-        mSharedPreferencesHelper.setGoogleToken(token);
-        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+    public void googleLogin(String userId, String token, final LoginCallback callback) {
+        mRemoteDataSource.googleLogin(userId, token, new LoginCallback() {
+            @Override
+            public void onAccountCreated() {
+                callback.onAccountCreated();
+            }
 
-        mRemoteDataSource.googleLogin(userId, token, callback);
+            @Override
+            public void onLoginSuccess() {
+                callback.onLoginSuccess();
+            }
+
+            @Override
+            public void onError() {
+                mSharedPreferencesHelper.setGoogleUserId("");
+                mSharedPreferencesHelper.setGoogleToken("");
+                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+
+                callback.onError();
+            }
+        });
     }
 
     @Override

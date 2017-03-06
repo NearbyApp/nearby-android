@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getSupportFragmentManager()
                         .beginTransaction()
                         .replace(R.id.container, MapFragment.newInstance())
+                        .addToBackStack(MapFragment.class.getName())
                         .commit();
                 break;
             case R.id.my_spotted:
