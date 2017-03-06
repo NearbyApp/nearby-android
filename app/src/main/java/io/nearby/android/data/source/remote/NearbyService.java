@@ -1,6 +1,5 @@
 package io.nearby.android.data.source.remote;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -26,8 +25,7 @@ import retrofit2.http.Query;
 @Remote
 public interface NearbyService {
 
-    //String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
-    String ENDPOINT = "https://test.mo-bergeron.com/";
+    String ENDPOINT = "https://nbyapi.mo-bergeron.com/";
 
     @GET("/v1/spotteds/me")
     Observable<List<Spotted>> getMySpotteds();

@@ -69,7 +69,6 @@ public class ServiceCreator<T> {
 
         Gson gson = new GsonBuilder().create();
 
-        addSslInterceptor();
         addAuthentificationInterceptor();
 
         OkHttpClient client = mOkHttpClientBuilder.build();
@@ -84,6 +83,7 @@ public class ServiceCreator<T> {
         return mRetrofit.create(mServiceClass);
     }
 
+    /*
     private void addSslInterceptor() {
         try{
             // Loading CAs from an InputStream
@@ -92,7 +92,7 @@ public class ServiceCreator<T> {
 
             Certificate ca;
 
-            InputStream cert = mContext.getResources().openRawResource(R.raw.test_cert);
+            InputStream cert = mContext.getResources().openRawResource(R.raw.debug_cert);
             ca = cf.generateCertificate(cert);
 
 
@@ -125,6 +125,7 @@ public class ServiceCreator<T> {
             Timber.e(e);
         }
     }
+    */
 
     private void addAuthentificationInterceptor() {
         mOkHttpClientBuilder.addInterceptor(new Interceptor() {
