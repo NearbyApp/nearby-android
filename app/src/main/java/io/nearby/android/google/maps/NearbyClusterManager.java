@@ -44,7 +44,10 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
     public void onCameraIdle() {
         super.onCameraIdle();
 
-        mListener.onCameraIdle();
+        if(mListener != null){
+            mListener.onCameraIdle();
+        }
+
         cluster();
     }
 
@@ -64,6 +67,12 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
                 super.addItem(item);
             }
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        boolean temp = super.onMarkerClick(marker);
+        return true;
     }
 
     public void setOnCameraIdleListener(GoogleMap.OnCameraIdleListener listener){

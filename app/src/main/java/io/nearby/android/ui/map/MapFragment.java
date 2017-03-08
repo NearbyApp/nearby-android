@@ -62,6 +62,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private GoogleApiClient mGoogleApiClient;
     private GoogleMap mMap;
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
+    private SupportMapFragment mMapFragment;
 
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
@@ -108,6 +109,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
+
+        mMapFragment =  SupportMapFragment.newInstance();
+        getChildFragmentManager().beginTransaction().replace(R.id.support_map_fragment, mMapFragment).commit();
+
         view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,8 +179,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.support_map_fragment);
-        mapFragment.getMapAsync(this);
+        mMapFragment.getMapAsync(this);
     }
 
     @Override
