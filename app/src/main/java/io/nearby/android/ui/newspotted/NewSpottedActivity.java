@@ -35,11 +35,12 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.util.ImageUtil;
 
 import static dagger.internal.Preconditions.checkNotNull;
 
-public class NewSpottedActivity extends AppCompatActivity implements View.OnClickListener, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
+public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presenter> implements View.OnClickListener, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 9003;
 

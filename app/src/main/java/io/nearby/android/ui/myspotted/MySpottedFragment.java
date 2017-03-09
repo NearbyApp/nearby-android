@@ -26,11 +26,12 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.adapter.SpottedAdapter;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import io.reactivex.functions.Consumer;
 
-public class MySpottedFragment extends Fragment implements MySpottedContract.View, SwipeRefreshLayout.OnRefreshListener{
+public class MySpottedFragment extends BaseFragment<MySpottedContract.Presenter> implements MySpottedContract.View, SwipeRefreshLayout.OnRefreshListener{
 
     private static final int VISIBLE_THRESHOLD = 5;
     private static final int LAYOUT = R.layout.my_spotted_fragment;

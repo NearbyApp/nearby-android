@@ -39,12 +39,13 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.google.GoogleApiClientBuilder;
 import io.nearby.android.google.maps.NearbyClusterManager;
 import io.nearby.android.google.maps.SpottedClusterItem;
+import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
 import io.nearby.android.ui.spottedclusterdetail.SpottedClusterDetailActivity;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import timber.log.Timber;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback,
+public class MapFragment extends BaseFragment<MapContract.Presenter> implements OnMapReadyCallback,
         MapContract.View,
         GoogleApiClient.ConnectionCallbacks,
         GoogleMap.OnCameraIdleListener,

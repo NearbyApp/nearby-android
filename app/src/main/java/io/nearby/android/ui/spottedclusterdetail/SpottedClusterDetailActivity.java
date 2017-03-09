@@ -3,7 +3,6 @@ package io.nearby.android.ui.spottedclusterdetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +21,12 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.ui.adapter.SpottedAdapter;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import io.reactivex.functions.Consumer;
 
-public class SpottedClusterDetailActivity extends AppCompatActivity implements SpottedClusterDetailContract.View{
+public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDetailContract.Presenter> implements SpottedClusterDetailContract.View{
 
     public static final String EXTRAS_SPOTTEDS = "extras_spotteds";
 

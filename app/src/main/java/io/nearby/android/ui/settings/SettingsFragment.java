@@ -23,6 +23,7 @@ import java.util.Arrays;
 import io.nearby.android.R;
 import io.nearby.android.data.User;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.launcher.LauncherActivity;
 import timber.log.Timber;
 
@@ -133,6 +134,19 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     @Override
     public void setPresenter(SettingsContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void onUserAccountDisabled() {
+        BaseFragment.showAccountAlreadyDisabledDialog(getActivity());
+    }
+
+    @Override
+    public void onUserUnauthorized() {
+        Intent intent = new Intent(getActivity(), LauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     @Override

@@ -19,8 +19,9 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.nearby.android.ui.BaseActivity;
 
-public class SpottedDetailActivity extends AppCompatActivity implements SpottedDetailContract.View{
+public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Presenter> implements SpottedDetailContract.View{
 
     public static final String EXTRAS_SPOTTED_ID = "extras_spotted_id";
 
