@@ -70,6 +70,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 .subscribe(new Consumer<Response<ResponseBody>>() {
                     @Override
                     public void accept(Response<ResponseBody> response) throws Exception {
+
                         switch(response.code()){
                             case 200:
                                 //Normal login
@@ -79,6 +80,8 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                                 // Account created
                                 callback.onAccountCreated();
                                 break;
+                            default:
+                                throw new HttpException(response);
                         }
                     }
                 }, new Consumer<Throwable>() {
