@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.User;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class SettingsPresenter implements SettingsContract.Presenter {
 
@@ -34,7 +35,11 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError(SpottedDataSource.ErrorType errorType) { }
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
+            }
         });
     }
 
@@ -56,7 +61,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
@@ -79,7 +86,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
@@ -94,7 +103,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
@@ -109,7 +120,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
@@ -124,7 +137,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
@@ -139,7 +154,9 @@ public class SettingsPresenter implements SettingsContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }

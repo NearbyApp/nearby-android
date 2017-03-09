@@ -7,21 +7,22 @@ import javax.inject.Inject;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class MapPresenter implements MapContract.Presenter {
 
-    private MapContract.View mMapView;
+    private MapContract.View mView;
     private DataManager mDataManager;
 
     @Inject
     public MapPresenter(MapContract.View mapView, DataManager DataManager) {
-        mMapView = mapView;
+        mView = mapView;
         mDataManager = DataManager;
     }
 
     @Inject
     void setupListeners(){
-        mMapView.setPresenter(this);
+        mView.setPresenter(this);
     }
 
     @Override
@@ -35,12 +36,14 @@ public class MapPresenter implements MapContract.Presenter {
                 new SpottedDataSource.SpottedLoadedCallback() {
             @Override
             public void onSpottedLoaded(List<Spotted> spotted) {
-                mMapView.onSpottedsReceived(spotted);
+                mView.onSpottedsReceived(spotted);
             }
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-                // TODO manage error
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }

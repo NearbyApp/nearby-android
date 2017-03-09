@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class SpottedDetailPresenter implements SpottedDetailContract.Presenter {
 
@@ -32,7 +33,9 @@ public class SpottedDetailPresenter implements SpottedDetailContract.Presenter {
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // TODO Manage unhandled error
+                }
             }
         });
     }
