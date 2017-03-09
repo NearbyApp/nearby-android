@@ -71,7 +71,7 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        boolean temp = super.onMarkerClick(marker);
+        super.onMarkerClick(marker);
         return true;
     }
 

@@ -67,6 +67,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
     private CameraPosition mCameraPosition;
+    private boolean mMapInitialized = false;
 
     @Inject MapPresenter mPresenter;
 
@@ -93,6 +94,32 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 .dataManagerComponent(((NearbyApplication) getActivity().getApplication())
                         .getDataManagerComponent()).build()
                 .inject(this);
+
+        mMapFragment =  SupportMapFragment.newInstance();
+        mMapInitialized = false;
+
+        //enableAutoManage can't be used because it would be binded with the MainActivity.
+        mGoogleApiClient = new GoogleApiClientBuilder(getContext())
+                .addLocationServicesApi()
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
+        View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
+
+        getChildFragmentManager().beginTransaction().replace(R.id.support_map_fragment, mMapFragment).commit();
+
+        view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
+                startActivity(intent);
+            }
+        });
+        return view;
     }
 
     @Override
@@ -107,35 +134,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
-        View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
-
-        mMapFragment =  SupportMapFragment.newInstance();
-        getChildFragmentManager().beginTransaction().replace(R.id.support_map_fragment, mMapFragment).commit();
-
-        view.findViewById(R.id.fab).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(),NewSpottedActivity.class);
-                startActivity(intent);
-            }
-        });
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //enableAutoManage can't be used because it would be binded with the MainActivity.
-        mGoogleApiClient = new GoogleApiClientBuilder(getContext())
-                .addLocationServicesApi()
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-    }
-
-    @Override
     public void onStart() {
         super.onStart();
         mGoogleApiClient.connect();
@@ -146,8 +144,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (mMap != null) {
             outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
             outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
-            super.onSaveInstanceState(outState);
         }
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -179,7 +178,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
      */
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        mMapFragment.getMapAsync(this);
+        if(!mMapInitialized){
+            mMapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -198,6 +199,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
      */
     @Override
     public void onMapReady(GoogleMap map) {
+        mMapInitialized = true;
         mMap = map;
 
         //Setting up the cluster manager
@@ -219,7 +221,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                     getActivity().startActivity(intent);
                 }
                 else {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mMap.getCameraPosition().target, mMap.getCameraPosition().zoom + 1));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), mMap.getCameraPosition().zoom + 1));
                 }
 
                 return true;
