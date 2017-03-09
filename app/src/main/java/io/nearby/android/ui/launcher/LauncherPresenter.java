@@ -5,10 +5,6 @@ import javax.inject.Inject;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
 
-/**
- * Created by Marc on 2017-02-16.
- */
-
 public class LauncherPresenter implements LauncherContract.Presenter {
 
     private LauncherContract.View mView;
@@ -29,7 +25,7 @@ public class LauncherPresenter implements LauncherContract.Presenter {
     public void isUserLoggedIn() {
         mDataManager.isUserLoggedIn(new SpottedDataSource.UserLoginStatusCallback() {
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
 

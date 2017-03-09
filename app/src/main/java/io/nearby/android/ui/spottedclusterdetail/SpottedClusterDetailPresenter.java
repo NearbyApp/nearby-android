@@ -33,7 +33,7 @@ public class SpottedClusterDetailPresenter implements SpottedClusterDetailContra
                     }
 
                     @Override
-                    public void onError() {
+                    public void onError(SpottedDataSource.ErrorType errorType) {
 
                     }
                 });

@@ -54,7 +54,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                     }
 
                     @Override
-                    public void onError() {
+                    public void onError(SpottedDataSource.ErrorType errorType) {
                         mView.onSpottedNotCreated();
                     }
                 });

@@ -34,7 +34,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() { }
+            public void onError(SpottedDataSource.ErrorType errorType) { }
         });
     }
 
@@ -55,7 +55,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });
@@ -78,7 +78,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });
@@ -93,7 +93,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });
@@ -108,7 +108,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });
@@ -123,7 +123,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });
@@ -138,7 +138,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });

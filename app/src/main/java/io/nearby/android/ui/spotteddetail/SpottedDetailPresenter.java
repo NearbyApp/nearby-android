@@ -31,7 +31,7 @@ public class SpottedDetailPresenter implements SpottedDetailContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });

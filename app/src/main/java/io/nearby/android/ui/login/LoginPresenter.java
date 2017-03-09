@@ -8,10 +8,6 @@ import javax.inject.Inject;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
 
-/**
- * Created by Marc on 2017-02-08.
- */
-
 public class LoginPresenter implements LoginContract.Presenter {
 
     private DataManager mDataManager;
@@ -69,7 +65,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                     }
 
                     @Override
-                    public void onError() {
+                    public void onError(SpottedDataSource.ErrorType errorType) {
                         // TODO Add to view
                         //mLoginView.onLoginFailed();
                     }
@@ -95,7 +91,7 @@ public class LoginPresenter implements LoginContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
                 // TODO Add to view
                 //mLoginView.onLoginFailed();
             }

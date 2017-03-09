@@ -216,7 +216,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
                     callback.onSuccess();
                 } else {
-                    callback.onError();
+                    callback.onError(ErrorType.Other);
                     Timber.d("Log out is error");
                 }
             }
@@ -239,7 +239,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                     callback.onSuccess();
                 }
                 else {
-                    callback.onError();
+                    callback.onError(ErrorType.Other);
                 }
             }
         });

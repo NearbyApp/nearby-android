@@ -12,30 +12,45 @@ import io.nearby.android.data.User;
 
 public interface SpottedDataSource {
 
-    interface Callback {
-        void onSuccess();
-        void onError();
+    enum ErrorType{
+
+        // 400 - Bad request
+        // 403 - Forbidden
+        // 404 - Not Found
+        // 405 - Not allowed
+        // 500 - Internal error
+        Other,
+
+        // 401 - Unauthorized
+        UnauthorizedUser,
+
+        // 410 - Gone
+        DisabledUser
     }
 
-    interface UserLoginStatusCallback{
+    interface ErrorCallback{
+        void onError(ErrorType errorType);
+    }
+
+    interface Callback extends ErrorCallback{
+        void onSuccess();
+    }
+
+    interface UserLoginStatusCallback extends ErrorCallback{
         void userIsLoggedIn();
         void userIsNotLoggedIn();
-        void onError();
     }
 
-    interface SpottedCreatedCallback{
+    interface SpottedCreatedCallback extends ErrorCallback{
         void onSpottedCreated();
-        void onError();
     }
 
-    interface MySpottedLoadedCallback {
+    interface MySpottedLoadedCallback extends ErrorCallback{
         void onMySpottedLoaded(List<Spotted> mySpotted);
-        void onError();
     }
 
-    interface UserInfoLoadedCallback{
+    interface UserInfoLoadedCallback extends ErrorCallback{
         void onUserInfoLoaded(User user);
-        void onError();
     }
 
     interface FacebookLinkAccountCallback extends Callback {
@@ -46,24 +61,21 @@ public interface SpottedDataSource {
         void onGoogleAccountAlreadyExist(String userId, String token);
     }
 
-    interface SpottedDetailsLoadedCallback{
+    interface SpottedDetailsLoadedCallback extends ErrorCallback{
         void onSpottedDetailsLoaded(Spotted spotted);
-        void onError();
     }
 
-    interface SpottedLoadedCallback {
+    interface SpottedLoadedCallback extends ErrorCallback{
         void onSpottedLoaded(List<Spotted> spotted);
-        void onError();
     }
 
-    interface LoginCallback {
+    interface LoginCallback extends ErrorCallback{
         void onAccountCreated();
         void onLoginSuccess();
-
-        void onError();
     }
 
     void isUserLoggedIn(UserLoginStatusCallback callback);
+
     void facebookLogin(String userId, String token, LoginCallback callback);
 
     void googleLogin(String userId, String token, LoginCallback callback);

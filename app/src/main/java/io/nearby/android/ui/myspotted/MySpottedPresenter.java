@@ -10,10 +10,6 @@ import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
 import timber.log.Timber;
 
-/**
- * Created by Marc on 2017-02-08.
- */
-
 public class MySpottedPresenter implements MySpottedContract.Presenter{
 
     private MySpottedContract.View mView;
@@ -41,7 +37,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
                 //TODO Manage errors
             }
         });
@@ -57,7 +53,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
                 mView.stopRefreshing();
             }
         });
@@ -73,7 +69,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
 
             }
         });

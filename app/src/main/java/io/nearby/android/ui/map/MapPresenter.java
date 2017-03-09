@@ -39,7 +39,7 @@ public class MapPresenter implements MapContract.Presenter {
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
                 // TODO manage error
             }
         });

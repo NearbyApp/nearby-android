@@ -54,12 +54,12 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
+            public void onError(ErrorType errorType) {
                 mSharedPreferencesHelper.setFacebookUserId("");
                 mSharedPreferencesHelper.setFacebookToken("");
                 mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
 
-                callback.onError();
+                callback.onError(errorType);
             }
         });
     }
@@ -82,12 +82,12 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
+            public void onError(ErrorType errorType) {
                 mSharedPreferencesHelper.setGoogleUserId("");
                 mSharedPreferencesHelper.setGoogleToken("");
                 mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
 
-                callback.onError();
+                callback.onError(errorType);
             }
         });
     }
@@ -176,8 +176,8 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
-                callback.onError();
+            public void onError(ErrorType errorType) {
+                callback.onError(errorType);
             }
         });
     }
