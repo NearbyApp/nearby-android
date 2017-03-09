@@ -206,19 +206,18 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void signOut(final Callback callback) {
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
+
+        LoginManager.getInstance().logOut();
+
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
-                    Timber.d("Log out is success");
-                    LoginManager.getInstance().logOut();
-
-                    clearFacebookLoginPrefenrences();
-
                     callback.onSuccess();
                 } else {
                     callback.onError(ErrorType.Other);
-                    Timber.d("Log out is error");
                 }
             }
         });
@@ -227,14 +226,15 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void deactivateAccount(final Callback callback) {
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
+
+        LoginManager.getInstance().logOut();
+
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(Status status) {
                 if(status.isSuccess()){
-                    LoginManager.getInstance().logOut();
-
-                    clearGoogleLoginPrefenrences();
-
                     callback.onSuccess();
                 }
                 else {
@@ -242,17 +242,29 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                 }
             }
         });
+    }
 
+    /**
+     * This methods should only be used when a 401 or 410 error is received that confirms
+     * the fact that the account is already deactivated or unauthorized.
+     */
+    public void forceSignOutOrForceDeactivate(){
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
 
-
+        LoginManager.getInstance().logOut();
     }
 
     public void setFacebookAuthPrefs(String userId, String token){
         mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+        mSharedPreferencesHelper.setFacebookUserId(userId);
+        mSharedPreferencesHelper.setFacebookToken(token);
     }
 
     public void setGoogleAuthPrefs(String userId, String token){
         mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+        mSharedPreferencesHelper.setGoogleUserId(userId);
+        mSharedPreferencesHelper.setGoogleToken(token);
     }
 
     public void clearFacebookLoginPrefenrences(){
