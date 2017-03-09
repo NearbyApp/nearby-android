@@ -48,10 +48,9 @@ abstract class DataManagerModule {
 
     @Singleton
     @Provides
-    static NearbyService provideNearbyService(Context context, SharedPreferencesHelper sharedPreferencesHelper){
+    static NearbyService provideNearbyService(SharedPreferencesHelper sharedPreferencesHelper){
         ServiceCreator<NearbyService> creator = new ServiceCreator<>(NearbyService.class,
                 NearbyService.ENDPOINT,
-                context,
                 sharedPreferencesHelper);
         return creator.create();
     }

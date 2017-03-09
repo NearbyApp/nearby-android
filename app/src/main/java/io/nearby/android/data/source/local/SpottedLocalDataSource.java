@@ -73,6 +73,9 @@ public class SpottedLocalDataSource implements SpottedDataSource {
      * https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
      * Visited 22-01-2017
      */
+    /**
+     * Verifies that the user is connected and has a valid token.
+     */
     private void facebookAuthentification(final UserLoginStatusCallback callback){
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
@@ -210,9 +213,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                     Timber.d("Log out is success");
                     LoginManager.getInstance().logOut();
 
-                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-                    mSharedPreferencesHelper.setFacebookToken(null);
-                    mSharedPreferencesHelper.setGoogleToken(null);
+                    clearFacebookLoginPrefenrences();
 
                     callback.onSuccess();
                 } else {
@@ -232,9 +233,7 @@ public class SpottedLocalDataSource implements SpottedDataSource {
                 if(status.isSuccess()){
                     LoginManager.getInstance().logOut();
 
-                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-                    mSharedPreferencesHelper.setFacebookToken(null);
-                    mSharedPreferencesHelper.setGoogleToken(null);
+                    clearGoogleLoginPrefenrences();
 
                     callback.onSuccess();
                 }
@@ -246,5 +245,25 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
 
 
+    }
+
+    public void setFacebookAuthPrefs(String userId, String token){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+    }
+
+    public void setGoogleAuthPrefs(String userId, String token){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+    }
+
+    public void clearFacebookLoginPrefenrences(){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+        mSharedPreferencesHelper.setFacebookToken(null);
+        mSharedPreferencesHelper.setFacebookUserId(null);
+    }
+
+    public void clearGoogleLoginPrefenrences(){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+        mSharedPreferencesHelper.setGoogleToken(null);
+        mSharedPreferencesHelper.setGoogleUserId(null);
     }
 }

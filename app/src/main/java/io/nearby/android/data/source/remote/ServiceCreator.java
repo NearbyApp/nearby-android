@@ -1,37 +1,11 @@
 package io.nearby.android.data.source.remote;
 
-import android.content.Context;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonPrimitive;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
-
-import io.nearby.android.R;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import okhttp3.Credentials;
 import okhttp3.Interceptor;
@@ -40,11 +14,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import timber.log.Timber;
 
-/**
- * Created by Marc on 2017-02-14.
- */
 
 public class ServiceCreator<T> {
 
@@ -53,15 +23,13 @@ public class ServiceCreator<T> {
 
     private OkHttpClient.Builder mOkHttpClientBuilder;
     private String mEndPoint;
-    private Context mContext;
     private SharedPreferencesHelper mSharedPreferenceHelper;
     private Class<T> mServiceClass;
 
-    public ServiceCreator(Class<T> serviceClass, String endPoint, Context context, SharedPreferencesHelper sharedPreferencesHelper){
+    public ServiceCreator(Class<T> serviceClass, String endPoint, SharedPreferencesHelper sharedPreferencesHelper){
         mOkHttpClientBuilder = new OkHttpClient.Builder();
         mServiceClass = serviceClass;
         mEndPoint = endPoint;
-        mContext = context;
         mSharedPreferenceHelper = sharedPreferencesHelper;
     }
 

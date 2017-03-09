@@ -1,6 +1,5 @@
 package io.nearby.android.data.source.local;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -13,9 +12,6 @@ import io.nearby.android.R;
 import io.nearby.android.data.source.Local;
 
 
-/**
- * Created by Marc on 2017-02-08.
- */
 @Singleton
 @Local
 public class SharedPreferencesHelper {

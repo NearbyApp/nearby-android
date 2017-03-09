@@ -5,13 +5,11 @@ import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
-import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
 
@@ -20,15 +18,12 @@ public class DataManager implements SpottedDataSource{
 
     private final SpottedLocalDataSource mLocalDataSource;
     private final SpottedRemoteDataSource mRemoteDataSource;
-    private final SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Inject
     public DataManager(SpottedRemoteDataSource remoteDataSource,
-                       SpottedLocalDataSource localDataSource,
-                       SharedPreferencesHelper sharedPreferencesHelper) {
+                       SpottedLocalDataSource localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
-        mSharedPreferencesHelper = sharedPreferencesHelper;
     }
 
     @Override
@@ -38,9 +33,7 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void facebookLogin(String userId, String token, final LoginCallback callback) {
-        mSharedPreferencesHelper.setFacebookUserId(userId);
-        mSharedPreferencesHelper.setFacebookToken(token);
-        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+        mLocalDataSource.setFacebookAuthPrefs(userId, token);
 
         mRemoteDataSource.facebookLogin(userId, token, new LoginCallback() {
             @Override
@@ -55,10 +48,7 @@ public class DataManager implements SpottedDataSource{
 
             @Override
             public void onError(ErrorType errorType) {
-                mSharedPreferencesHelper.setFacebookUserId("");
-                mSharedPreferencesHelper.setFacebookToken("");
-                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-
+                mLocalDataSource.clearFacebookLoginPrefenrences();
                 callback.onError(errorType);
             }
         });
@@ -66,9 +56,7 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void googleLogin(String userId, String token, final LoginCallback callback) {
-        mSharedPreferencesHelper.setGoogleToken(token);
-        mSharedPreferencesHelper.setGoogleUserId(userId);
-        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+        mLocalDataSource.setGoogleAuthPrefs(userId, token);
 
         mRemoteDataSource.googleLogin(userId, token, new LoginCallback() {
             @Override
@@ -83,10 +71,7 @@ public class DataManager implements SpottedDataSource{
 
             @Override
             public void onError(ErrorType errorType) {
-                mSharedPreferencesHelper.setGoogleUserId("");
-                mSharedPreferencesHelper.setGoogleToken("");
-                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-
+                mLocalDataSource.clearGoogleLoginPrefenrences();
                 callback.onError(errorType);
             }
         });
