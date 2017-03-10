@@ -40,7 +40,6 @@ public class MapPresenter implements MapContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
                     // Do nothing
                 }
             }
