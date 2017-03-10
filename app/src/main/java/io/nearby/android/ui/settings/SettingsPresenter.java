@@ -63,8 +63,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // mView.linkAccountFailed();
+                    mView.linkAccountFailed();
                 }
             }
         });
@@ -89,8 +88,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // mView.linkAccountFailed();
+                    mView.linkAccountFailed();
                 }
             }
         });
@@ -107,7 +105,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
+                    //Normally a sign out should never fail so we do as if we had a success.
                     mView.onSignOutCompleted();
                 }
             }
@@ -125,8 +123,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    mView.onAccountDeactivated();
+                    mView.deactivateAccountFailed();
                 }
             }
         });
@@ -143,8 +140,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // mView.accountMergeFailed();
+                    mView.mergeAccountFailed();
                 }
             }
         });
@@ -161,8 +157,7 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // mView.accountMergeFailed();
+                    mView.mergeAccountFailed();
                 }
             }
         });

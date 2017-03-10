@@ -22,6 +22,12 @@ public interface SettingsContract {
 
         void onGoogleAccountMerged();
         void onFacebookAccountMerged();
+
+        void linkAccountFailed();
+
+        void deactivateAccountFailed();
+
+        void mergeAccountFailed();
     }
 
     interface Presenter{

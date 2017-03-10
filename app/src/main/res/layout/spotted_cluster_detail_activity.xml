@@ -60,7 +60,7 @@
 
     <!-- Error message -->
     <include
-        layout="@layout/error_message"
+        layout="@layout/generic_error_message"
 
         tools:visibility="gone"
         />

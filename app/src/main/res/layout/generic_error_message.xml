@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
 
-            android:text="We're sorry, an error occurred. \n Please try again later"
+            android:text="@string/generic_error_message"
 
             />
     </LinearLayout>

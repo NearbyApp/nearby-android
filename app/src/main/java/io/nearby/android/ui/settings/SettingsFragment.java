@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -69,11 +70,13 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
 
             @Override
             public void onCancel() {
+                linkAccountFailed();
                 Timber.d("Facebook Login result canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
+                linkAccountFailed();
                 Timber.d("Facebook Login result error");
             }
         });
@@ -124,6 +127,9 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 mPresenter.linkGoogleAccount(account);
+            }
+            else {
+                linkAccountFailed();
             }
         }
         else {
@@ -219,6 +225,21 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     @Override
     public void onFacebookAccountMerged() {
         getPreferenceScreen().findPreference(PREF_LINK_FACEBOOK_ACCOUNT).setEnabled(false);
+    }
+
+    @Override
+    public void linkAccountFailed() {
+        Toast.makeText(getActivity(), R.string.link_account_failed, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void deactivateAccountFailed() {
+        Toast.makeText(getActivity(), R.string.account_dactivation_failed, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void mergeAccountFailed() {
+        Toast.makeText(getActivity(), R.string.merge_account_failed, Toast.LENGTH_LONG).show();
     }
 
     private void navigateToLauncherActivity(){
