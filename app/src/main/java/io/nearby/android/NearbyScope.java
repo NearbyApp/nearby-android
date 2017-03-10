@@ -1,4 +1,4 @@
-package io.nearby.android.util;
+package io.nearby.android;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;

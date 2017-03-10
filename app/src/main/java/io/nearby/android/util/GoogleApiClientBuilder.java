@@ -1,4 +1,4 @@
-package io.nearby.android.google;
+package io.nearby.android.util;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;

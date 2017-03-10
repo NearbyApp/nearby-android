@@ -24,7 +24,7 @@ import javax.inject.Inject;
 
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
-import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.util.GoogleApiClientBuilder;
 import io.nearby.android.ui.MainActivity;
 import timber.log.Timber;
 

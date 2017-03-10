@@ -15,7 +15,7 @@ import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.NearbyService;
 import io.nearby.android.data.source.remote.ServiceCreator;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
-import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.util.GoogleApiClientBuilder;
 
 /**
  * Created by Marc on 2017-02-16.

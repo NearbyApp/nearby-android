@@ -14,7 +14,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -34,7 +33,7 @@ import javax.inject.Inject;
 
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
-import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.util.GoogleApiClientBuilder;
 import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.util.ImageUtil;
 

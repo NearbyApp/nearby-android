@@ -1,4 +1,4 @@
-package io.nearby.android.google.maps;
+package io.nearby.android.ui.map.cluster;
 
 import android.os.Parcelable;
 
