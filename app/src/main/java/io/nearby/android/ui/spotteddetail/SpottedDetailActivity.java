@@ -2,9 +2,7 @@ package io.nearby.android.ui.spotteddetail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -89,20 +87,20 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            updateUI();
+                            hideProgressBar();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            updateUI();
+                            hideProgressBar();
                             return false;
                         }
                     })
                     .into(mSpottedPictureImageView);
         }
         else {
-            updateUI();
+            hideProgressBar();
         }
     }
 
@@ -126,7 +124,8 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
         mProfilePictureImageView = (ImageView) findViewById(R.id.spotted_profile_picture);
     }
 
-    private void updateUI(){
+    @Override
+    public void hideProgressBar(){
         mProgressBarContainer.setVisibility(View.GONE);
     }
 }

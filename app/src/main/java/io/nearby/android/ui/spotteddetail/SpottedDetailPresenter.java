@@ -28,12 +28,14 @@ public class SpottedDetailPresenter implements SpottedDetailContract.Presenter {
         mDataManager.loadSpottedDetails(spottedId, new SpottedDataSource.SpottedDetailsLoadedCallback() {
             @Override
             public void onSpottedDetailsLoaded(Spotted spotted) {
+                //Don't hide the progress bar. It will be done when the pictures are loaded.
                 mView.onSpottedDetailsReceived(spotted);
             }
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
+                    mView.hideProgressBar();
                     mView.spottedDetailsLoadingError();
                 }
             }

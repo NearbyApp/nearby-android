@@ -8,6 +8,7 @@ public interface SpottedDetailContract {
     interface View extends BaseView<Presenter>{
         void onSpottedDetailsReceived(Spotted spotted);
 
+        void hideProgressBar();
         void spottedDetailsLoadingError();
     }
 

@@ -30,14 +30,15 @@ public class SpottedClusterDetailPresenter implements SpottedClusterDetailContra
                 new SpottedDataSource.SpottedLoadedCallback() {
                     @Override
                     public void onSpottedLoaded(List<Spotted> spotted) {
+                        mView.hideProgressBar();
                         mView.onSpottedsReceived(spotted);
                     }
 
                     @Override
                     public void onError(SpottedDataSource.ErrorType errorType) {
+                        mView.hideProgressBar();
                         if(!BasePresenter.manageError(mView, errorType)){
-                            // TODO Manage unhandled error
-                            //mView.spottedsListCouldNotBeRetreived();
+                            mView.spottedLoadingError();
                         }
                     }
                 });

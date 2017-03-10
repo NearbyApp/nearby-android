@@ -34,7 +34,8 @@ public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDet
     private SpottedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView mEmptyListTextView;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
+    private View mErrorMessage;
 
     @Inject
     SpottedClusterDetailPresenter mPresenter;
@@ -99,6 +100,16 @@ public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDet
         }
     }
 
+    @Override
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void spottedLoadingError() {
+        mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
     private void initializeView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -106,7 +117,8 @@ public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDet
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mEmptyListTextView = (TextView) findViewById(R.id.empty);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mProgressBar = findViewById(R.id.progress_bar_container);
+        mErrorMessage = findViewById(R.id.error);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
         mLayoutManager = new LinearLayoutManager(this);

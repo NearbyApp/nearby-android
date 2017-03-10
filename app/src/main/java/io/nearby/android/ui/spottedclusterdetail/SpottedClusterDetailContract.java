@@ -13,6 +13,9 @@ public interface SpottedClusterDetailContract {
 
     interface View extends BaseView<Presenter>{
         void onSpottedsReceived(List<Spotted> spotteds);
+
+        void hideProgressBar();
+        void spottedLoadingError();
     }
 
     interface Presenter{
