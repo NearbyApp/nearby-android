@@ -28,11 +28,9 @@ public class MapPresenter implements MapContract.Presenter {
     @Override
     public void getSpotteds(double minLat, double maxLat,
                             double minLng, double maxLng){
-        boolean locationOnly = true;
-
         mDataManager.loadSpotted(minLat, maxLat,
                 minLng, maxLng,
-                locationOnly,
+                true,
                 new SpottedDataSource.SpottedLoadedCallback() {
             @Override
             public void onSpottedLoaded(List<Spotted> spotted) {
@@ -43,6 +41,7 @@ public class MapPresenter implements MapContract.Presenter {
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
                     // TODO Manage unhandled error
+                    // Do nothing
                 }
             }
         });

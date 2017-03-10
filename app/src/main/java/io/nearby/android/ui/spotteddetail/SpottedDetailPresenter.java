@@ -35,6 +35,7 @@ public class SpottedDetailPresenter implements SpottedDetailContract.Presenter {
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
                     // TODO Manage unhandled error
+                    //mView.onSpottedDetailsNotLoaded();
                 }
             }
         });

@@ -9,7 +9,6 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
 import io.nearby.android.ui.BasePresenter;
-import timber.log.Timber;
 
 public class MySpottedPresenter implements MySpottedContract.Presenter{
 
@@ -41,6 +40,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
                     // TODO Manage unhandled error
+                    //mView.mySpottedLoadingFailed();
                 }
             }
         });
@@ -60,6 +60,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
                 mView.stopRefreshing();
                 if(!BasePresenter.manageError(mView, errorType)){
                     // TODO Manage unhandled error
+                    // Do nothing
                 }
             }
         });
@@ -78,6 +79,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
                     // TODO Manage unhandled error
+                    // Do nothing
                 }
             }
         });
