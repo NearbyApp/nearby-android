@@ -1,28 +1,44 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="168dp"
+    android:orientation="vertical"
 
     android:paddingTop="40dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp"
+    android:paddingLeft="@dimen/medium"
+    android:paddingRight="@dimen/medium"
 
     android:background="?attr/colorPrimary"
     >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="@dimen/avatar_large"
+            android:layout_height="@dimen/avatar_large"
+
+            tools:src="@drawable/ic_person_white" />
+
+    </FrameLayout>
+
     <TextView
-        android:id="@+id/profile_email_text"
+        android:id="@+id/profile_full_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:layout_alignParentBottom="true"
-        android:paddingBottom="16dp"
+        android:paddingBottom="@dimen/medium"
 
         android:textSize="14sp"
         android:maxLines="1"
         android:ellipsize="end"
 
-        android:text="nearby@nearby.io"
+        tools:text="nearby@nearby.io"
         />
-</RelativeLayout>
+</LinearLayout>

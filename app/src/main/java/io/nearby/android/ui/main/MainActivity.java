@@ -1,4 +1,4 @@
-package io.nearby.android.ui;
+package io.nearby.android.ui.main;
 
 import android.content.Intent;
 import android.content.res.Configuration;
