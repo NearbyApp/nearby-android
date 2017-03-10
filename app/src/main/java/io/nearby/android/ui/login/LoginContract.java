@@ -13,6 +13,7 @@ public interface LoginContract {
 
     interface View extends BaseView<Presenter>{
         void onLoginSuccessful();
+        void onLoginFailed();
     }
 
     interface Presenter{

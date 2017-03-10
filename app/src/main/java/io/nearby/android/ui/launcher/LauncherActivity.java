@@ -41,12 +41,12 @@ public class LauncherActivity extends AppCompatActivity implements LauncherContr
 
     @Override
     public void onUserAccountDisabled() {
-
+        onUserNotLoggedIn();
     }
 
     @Override
     public void onUserUnauthorized() {
-
+        onUserNotLoggedIn();
     }
 
     @Override

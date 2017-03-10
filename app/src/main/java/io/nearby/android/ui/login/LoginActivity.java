@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -64,6 +65,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 GoogleSignInAccount account = result.getSignInAccount();
                 mPresenter.loginWithGoogle(account);
             }
+            else {
+                onLoginFailed();
+            }
         }
         else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -97,6 +101,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         finish();
     }
 
+    @Override
+    public void onLoginFailed() {
+        Toast.makeText(this,R.string.login_failed,Toast.LENGTH_LONG).show();
+    }
+
     private void initializeFacebook(){
         mCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
@@ -107,11 +116,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onCancel() {
+                onLoginFailed();
                 Timber.d("Facebook Login result canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
+                onLoginFailed();
                 Timber.d("Facebook Login result error");
             }
         });
@@ -131,11 +142,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onUserAccountDisabled() {
-
+        onLoginFailed();
     }
 
     @Override
     public void onUserUnauthorized() {
-
+        onLoginFailed();
     }
 }

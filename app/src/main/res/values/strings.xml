@@ -13,6 +13,7 @@
     <!-- Login Activity -->
     <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>
     <string name="therms_of_service">By Signing up you accept the <a href="">ToS</a> and <a href="">Condition of usage.</a></string>
+    <string name="login_failed">Sign in failed.</string>
 
     <!-- New spotted Activity -->
     <string name="send">Send</string>
@@ -70,6 +71,5 @@
     <string name="cancel">Cancel</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
-
 
 </resources>

@@ -11,16 +11,16 @@ import io.nearby.android.data.source.SpottedDataSource;
 public class LoginPresenter implements LoginContract.Presenter {
 
     private DataManager mDataManager;
-    private LoginContract.View mLoginView;
+    private LoginContract.View mView;
 
     @Inject
     public LoginPresenter(LoginContract.View loginView, DataManager dataManager) {
-        mLoginView = loginView;
+        mView = loginView;
         mDataManager = dataManager;
     }
 
     @Inject
-    void setupListeners(){ mLoginView.setPresenter(this);}
+    void setupListeners(){ mView.setPresenter(this);}
 
     @Override
     public void loginWithFacebook(LoginResult loginResult) {
@@ -56,18 +56,17 @@ public class LoginPresenter implements LoginContract.Presenter {
                 new SpottedDataSource.LoginCallback() {
                     @Override
                     public void onAccountCreated() {
-                        mLoginView.onLoginSuccessful();
+                        mView.onLoginSuccessful();
                     }
 
                     @Override
                     public void onLoginSuccess() {
-                        mLoginView.onLoginSuccessful();
+                        mView.onLoginSuccessful();
                     }
 
                     @Override
                     public void onError(SpottedDataSource.ErrorType errorType) {
-                        // TODO Add to view
-                        //mLoginView.onLoginFailed();
+                        mView.onLoginFailed();
                     }
                 });
 
@@ -82,18 +81,17 @@ public class LoginPresenter implements LoginContract.Presenter {
         mDataManager.googleLogin(userId, idToken, new SpottedDataSource.LoginCallback() {
             @Override
             public void onAccountCreated() {
-                mLoginView.onLoginSuccessful();
+                mView.onLoginSuccessful();
             }
 
             @Override
             public void onLoginSuccess() {
-                mLoginView.onLoginSuccessful();
+                mView.onLoginSuccessful();
             }
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
-                // TODO Add to view
-                //mLoginView.onLoginFailed();
+                mView.onLoginFailed();
             }
         });
     }
