@@ -128,4 +128,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void setPresenter(LoginContract.Presenter presenter) {
         mPresenter = (LoginPresenter) presenter;
     }
+
+    @Override
+    public void onUserAccountDisabled() {
+
+    }
+
+    @Override
+    public void onUserUnauthorized() {
+
+    }
 }

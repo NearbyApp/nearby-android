@@ -30,6 +30,7 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
     private TextView mFullNameTextView;
     private ImageView mProfilePictureImageView;
     private View mProgressBarContainer;
+    private View mErrorMessage;
 
     @Inject
     SpottedDetailPresenter mPresenter;
@@ -105,6 +106,11 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
         }
     }
 
+    @Override
+    public void spottedDetailsLoadingError() {
+        mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
     private void initializeView(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -112,6 +118,7 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgressBarContainer = findViewById(R.id.progress_bar_container);
+        mErrorMessage = findViewById(R.id.error);
 
         mMessageTextView = (TextView) findViewById(R.id.spotted_message);
         mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
