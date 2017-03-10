@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class SpottedClusterDetailPresenter implements SpottedClusterDetailContract.Presenter {
 
@@ -29,12 +30,16 @@ public class SpottedClusterDetailPresenter implements SpottedClusterDetailContra
                 new SpottedDataSource.SpottedLoadedCallback() {
                     @Override
                     public void onSpottedLoaded(List<Spotted> spotted) {
+                        mView.hideProgressBar();
                         mView.onSpottedsReceived(spotted);
                     }
 
                     @Override
-                    public void onError() {
-
+                    public void onError(SpottedDataSource.ErrorType errorType) {
+                        mView.hideProgressBar();
+                        if(!BasePresenter.manageError(mView, errorType)){
+                            mView.spottedLoadingError();
+                        }
                     }
                 });
     }

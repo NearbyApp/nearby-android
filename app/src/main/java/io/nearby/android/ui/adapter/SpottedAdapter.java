@@ -15,13 +15,9 @@ import java.util.List;
 
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
-import io.reactivex.Observable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.PublishSubject;
 
-/**
- * Created by Marc on 2017-02-02.
- */
 public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapter {
 
     private List<Spotted> mDataset;
@@ -65,7 +61,9 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
 
         if (spotted.getPictureUrl() == null) {
             Glide.clear(spottedViewHolder.pictureImageView);
+            spottedViewHolder.pictureImageView.setVisibility(View.GONE);
         } else{
+            spottedViewHolder.pictureImageView.setVisibility(View.VISIBLE);
             mGlide.load(spotted.getPictureUrl())
                     .into(spottedViewHolder.pictureImageView);
         }

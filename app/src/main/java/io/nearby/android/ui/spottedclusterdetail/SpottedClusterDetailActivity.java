@@ -3,7 +3,6 @@ package io.nearby.android.ui.spottedclusterdetail;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,11 +21,12 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.ui.adapter.SpottedAdapter;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
 import io.reactivex.functions.Consumer;
 
-public class SpottedClusterDetailActivity extends AppCompatActivity implements SpottedClusterDetailContract.View{
+public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDetailContract.Presenter> implements SpottedClusterDetailContract.View{
 
     public static final String EXTRAS_SPOTTEDS = "extras_spotteds";
 
@@ -34,7 +34,8 @@ public class SpottedClusterDetailActivity extends AppCompatActivity implements S
     private SpottedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView mEmptyListTextView;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
+    private View mErrorMessage;
 
     @Inject
     SpottedClusterDetailPresenter mPresenter;
@@ -99,6 +100,16 @@ public class SpottedClusterDetailActivity extends AppCompatActivity implements S
         }
     }
 
+    @Override
+    public void hideProgressBar() {
+        mProgressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void spottedLoadingError() {
+        mErrorMessage.setVisibility(View.VISIBLE);
+    }
+
     private void initializeView() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -106,7 +117,8 @@ public class SpottedClusterDetailActivity extends AppCompatActivity implements S
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mEmptyListTextView = (TextView) findViewById(R.id.empty);
-        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        mProgressBar = findViewById(R.id.progress_bar_container);
+        mErrorMessage = findViewById(R.id.error);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.list_view);
         mLayoutManager = new LinearLayoutManager(this);

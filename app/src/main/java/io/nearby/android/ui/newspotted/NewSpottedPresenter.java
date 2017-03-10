@@ -10,6 +10,7 @@ import javax.inject.Singleton;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
@@ -54,8 +55,10 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                     }
 
                     @Override
-                    public void onError() {
-                        mView.onSpottedNotCreated();
+                    public void onError(SpottedDataSource.ErrorType errorType) {
+                        if(!BasePresenter.manageError(mView, errorType)){
+                            mView.onSpottedNotCreated();
+                        }
                     }
                 });
     }

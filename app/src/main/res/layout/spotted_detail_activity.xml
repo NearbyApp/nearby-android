@@ -17,6 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Spotted detail -->
         <ScrollView
             android:id="@+id/content"
             android:layout_width="match_parent"
@@ -28,6 +29,7 @@
                 android:orientation="vertical"
                 >
 
+                <!-- Profile -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -95,11 +97,16 @@
             </LinearLayout>
         </ScrollView>
 
+        <!-- Progress bar -->
         <FrameLayout
             android:id="@+id/progress_bar_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/white">
+            android:background="@color/white"
+
+            tools:background="#00ffffff"
+
+            >
             <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -108,6 +115,13 @@
                 style="?android:progressBarStyleLarge"
                 />
         </FrameLayout>
+
+        <!-- Error message -->
+        <include
+            layout="@layout/generic_error_message"
+
+            tools:visibility="gone"
+            />
     </FrameLayout>
 
 </LinearLayout>

@@ -15,13 +15,16 @@ public interface MySpottedContract {
     interface View extends BaseView<Presenter>{
         void onMySpottedReceived(List<Spotted> spottedList);
         void onMyOlderSpottedReceived(List<Spotted> spottedList);
-
-        void showLoadingProgressBar();
-        void hideLoadingProgressBar();
-
         void onMyNewerSpottedReceived(List<Spotted> mySpotted);
 
+        void loadingMySpottedFailed();
+
         void stopRefreshing();
+        void hideLoadingProgressBar();
+
+        void loadOlderFailed();
+
+        void refreshFailed();
     }
 
     interface Presenter{

@@ -40,6 +40,16 @@ public class LauncherActivity extends AppCompatActivity implements LauncherContr
     }
 
     @Override
+    public void onUserAccountDisabled() {
+        onUserNotLoggedIn();
+    }
+
+    @Override
+    public void onUserUnauthorized() {
+        onUserNotLoggedIn();
+    }
+
+    @Override
     public void onUserNotLoggedIn() {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

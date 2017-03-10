@@ -5,11 +5,14 @@ import io.nearby.android.ui.BaseView;
 
 public interface SpottedDetailContract {
 
-    public interface View extends BaseView<Presenter>{
+    interface View extends BaseView<Presenter>{
         void onSpottedDetailsReceived(Spotted spotted);
+
+        void hideProgressBar();
+        void spottedDetailsLoadingError();
     }
 
-    public interface Presenter{
+    interface Presenter{
         void loadSpottedDetails(String spottedId);
     }
 }

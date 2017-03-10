@@ -1,46 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
 
-    <include layout="@layout/generic_toolbar" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_view"
-        android:scrollbars="vertical"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
 
-        android:background="#CCC"
+        <include layout="@layout/generic_toolbar" />
 
-        tools:listitem="@layout/spotted_card"
-        />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_view"
+            android:scrollbars="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
-    <TextView
-        android:id="@+id/empty"
+            android:background="#CCC"
+
+            tools:listitem="@layout/spotted_card"
+            />
+
+        <TextView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+
+            android:visibility="gone"
+            android:text="You have no spotted."
+
+            tools:visibility="visible"
+            />
+
+    </LinearLayout>
+
+    <!-- Progress bar -->
+    <FrameLayout
+        android:id="@+id/progress_bar_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
+        android:background="@color/white"
 
-        android:visibility="gone"
-        android:text="You have no spotted."
+        tools:background="#00ffffff"
+        >
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
 
-        tools:visibility="visible"
+            style="?android:progressBarStyleLarge"
+            />
+    </FrameLayout>
+
+    <!-- Error message -->
+    <include
+        layout="@layout/generic_error_message"
+
+        tools:visibility="gone"
         />
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
 
-        android:visibility="gone"
-        tools:visibility="visible"
-        />
 
-</LinearLayout>
+</FrameLayout>

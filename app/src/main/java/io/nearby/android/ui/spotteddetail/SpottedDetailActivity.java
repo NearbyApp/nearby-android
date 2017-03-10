@@ -2,9 +2,7 @@ package io.nearby.android.ui.spotteddetail;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,8 +17,9 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
+import io.nearby.android.ui.BaseActivity;
 
-public class SpottedDetailActivity extends AppCompatActivity implements SpottedDetailContract.View{
+public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Presenter> implements SpottedDetailContract.View{
 
     public static final String EXTRAS_SPOTTED_ID = "extras_spotted_id";
 
@@ -29,6 +28,7 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
     private TextView mFullNameTextView;
     private ImageView mProfilePictureImageView;
     private View mProgressBarContainer;
+    private View mErrorMessage;
 
     @Inject
     SpottedDetailPresenter mPresenter;
@@ -87,21 +87,26 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
                     .listener(new RequestListener<String, GlideDrawable>() {
                         @Override
                         public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                            updateUI();
+                            hideProgressBar();
                             return false;
                         }
 
                         @Override
                         public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                            updateUI();
+                            hideProgressBar();
                             return false;
                         }
                     })
                     .into(mSpottedPictureImageView);
         }
         else {
-            updateUI();
+            hideProgressBar();
         }
+    }
+
+    @Override
+    public void spottedDetailsLoadingError() {
+        mErrorMessage.setVisibility(View.VISIBLE);
     }
 
     private void initializeView(){
@@ -111,6 +116,7 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mProgressBarContainer = findViewById(R.id.progress_bar_container);
+        mErrorMessage = findViewById(R.id.error);
 
         mMessageTextView = (TextView) findViewById(R.id.spotted_message);
         mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
@@ -118,7 +124,8 @@ public class SpottedDetailActivity extends AppCompatActivity implements SpottedD
         mProfilePictureImageView = (ImageView) findViewById(R.id.spotted_profile_picture);
     }
 
-    private void updateUI(){
+    @Override
+    public void hideProgressBar(){
         mProgressBarContainer.setVisibility(View.GONE);
     }
 }

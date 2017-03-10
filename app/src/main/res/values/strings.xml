@@ -13,6 +13,7 @@
     <!-- Login Activity -->
     <string name="sign_in_or_sign_up"><b>Sign Up</b> or <b>Sign In</b> here</string>
     <string name="therms_of_service">By Signing up you accept the <a href="">ToS</a> and <a href="">Condition of usage.</a></string>
+    <string name="login_failed">Sign in failed.</string>
 
     <!-- New spotted Activity -->
     <string name="send">Send</string>
@@ -23,6 +24,9 @@
 
     <!-- Spotted detail Activity -->
     <string name="anonymous">Anonymous</string>
+
+    <!-- My spotted Activity -->
+    <string name="could_not_refresh_feed">Could not refresh feed.</string>
 
     <!-- Settings Activity -->
     <string name="logout">Logout</string>
@@ -39,6 +43,12 @@
     <string name="link_google_account_message">Link your Google account to your current account.</string>
     <string name="deactivate">Deactivate</string>
     <string name="deactivate_account_message">Deactivating your account will prevent other user from seeing your spotted. Your spotted won\'t be deleted.</string>
+    <string name="link_account_failed">An error occurred. Your account wasn\'t linked.</string>
+    <string name="account_dactivation_failed">An error occurred. Your account wasn\'t deactivated.</string>
+    <string name="merge_account_failed">An error occurred. Your account wasn\'t merged.</string>
+
+    <!-- Generic error layout -->
+    <string name="generic_error_message">We\'re sorry, an error occurred.\nPlease try again later</string>
 
     <!-- Drawer menu items -->
     <string name="map">Map</string>
@@ -61,6 +71,5 @@
     <string name="cancel">Cancel</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
-
 
 </resources>

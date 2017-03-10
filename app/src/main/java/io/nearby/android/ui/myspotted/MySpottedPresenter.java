@@ -8,11 +8,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
-import timber.log.Timber;
-
-/**
- * Created by Marc on 2017-02-08.
- */
+import io.nearby.android.ui.BasePresenter;
 
 public class MySpottedPresenter implements MySpottedContract.Presenter{
 
@@ -32,7 +28,6 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
 
     @Override
     public void loadMySpotted(){
-        mView.showLoadingProgressBar();
         mDataManager.loadMySpotted(new SpottedDataSource.MySpottedLoadedCallback() {
             @Override
             public void onMySpottedLoaded(List<Spotted> mySpotted) {
@@ -41,8 +36,11 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
-                //TODO Manage errors
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                mView.hideLoadingProgressBar();
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.loadingMySpottedFailed();
+                }
             }
         });
     }
@@ -57,8 +55,11 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
+            public void onError(SpottedDataSource.ErrorType errorType) {
                 mView.stopRefreshing();
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.refreshFailed();
+                }
             }
         });
     }
@@ -73,8 +74,10 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.loadOlderFailed();
+                }
             }
         });
     }

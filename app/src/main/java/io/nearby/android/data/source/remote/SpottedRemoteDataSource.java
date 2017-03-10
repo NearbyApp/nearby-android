@@ -87,8 +87,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -134,7 +133,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -155,8 +154,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -177,8 +175,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -199,8 +196,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -223,8 +219,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -244,8 +239,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -275,8 +269,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -307,8 +300,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }
 
                 if (!exceptionHandled) {
-                    Timber.e(throwable);
-                    callback.onError();
+                    manageError(throwable, callback);
                 }
             }
         });
@@ -340,8 +332,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                         }
 
                         if(!exceptionHandled) {
-                            Timber.e(throwable);
-                            callback.onError();
+                            manageError(throwable, callback);
                         }
                     }
                 });
@@ -362,8 +353,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -383,8 +373,7 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
@@ -409,11 +398,41 @@ public class SpottedRemoteDataSource implements SpottedDataSource {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        Timber.e(throwable);
-                        callback.onError();
+                        manageError(throwable, callback);
                     }
                 });
 
         mCompositeDisposable.add(disposable);
+    }
+
+
+    private void manageError(Throwable throwable, ErrorCallback callback) {
+        Timber.e(throwable);
+
+        if(throwable instanceof  HttpException){
+            HttpException exception = (HttpException) throwable;
+
+            switch(exception.code()){
+                case 400:
+                case 403:
+                case 404:
+                case 405:
+                case 500:
+                    callback.onError(ErrorType.Other);
+                    break;
+                case 401:
+                    callback.onError(ErrorType.UnauthorizedUser);
+                    break;
+                case 410:
+                    callback.onError(ErrorType.DisabledUser);
+                    break;
+                default:
+                    callback.onError(ErrorType.Other);
+                    break;
+            }
+        }
+        else {
+            callback.onError(ErrorType.Other);
+        }
     }
 }

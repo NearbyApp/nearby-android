@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import io.nearby.android.R;
 import io.nearby.android.data.User;
 import io.nearby.android.google.GoogleApiClientBuilder;
+import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.launcher.LauncherActivity;
 import timber.log.Timber;
 
@@ -68,11 +70,13 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
 
             @Override
             public void onCancel() {
+                linkAccountFailed();
                 Timber.d("Facebook Login result canceled");
             }
 
             @Override
             public void onError(FacebookException error) {
+                linkAccountFailed();
                 Timber.d("Facebook Login result error");
             }
         });
@@ -124,6 +128,9 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
                 GoogleSignInAccount account = result.getSignInAccount();
                 mPresenter.linkGoogleAccount(account);
             }
+            else {
+                linkAccountFailed();
+            }
         }
         else {
             mCallbackManager.onActivityResult(requestCode, resultCode, data);
@@ -133,6 +140,19 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     @Override
     public void setPresenter(SettingsContract.Presenter presenter) {
         mPresenter = presenter;
+    }
+
+    @Override
+    public void onUserAccountDisabled() {
+        BaseFragment.showAccountAlreadyDisabledDialog(getActivity());
+    }
+
+    @Override
+    public void onUserUnauthorized() {
+        Intent intent = new Intent(getActivity(), LauncherActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        getActivity().finish();
     }
 
     @Override
@@ -205,6 +225,21 @@ public class SettingsFragment extends PreferenceFragment implements SettingsCont
     @Override
     public void onFacebookAccountMerged() {
         getPreferenceScreen().findPreference(PREF_LINK_FACEBOOK_ACCOUNT).setEnabled(false);
+    }
+
+    @Override
+    public void linkAccountFailed() {
+        Toast.makeText(getActivity(), R.string.link_account_failed, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void deactivateAccountFailed() {
+        Toast.makeText(getActivity(), R.string.account_dactivation_failed, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void mergeAccountFailed() {
+        Toast.makeText(getActivity(), R.string.merge_account_failed, Toast.LENGTH_LONG).show();
     }
 
     private void navigateToLauncherActivity(){

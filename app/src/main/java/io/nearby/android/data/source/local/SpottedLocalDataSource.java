@@ -73,6 +73,9 @@ public class SpottedLocalDataSource implements SpottedDataSource {
      * https://developers.facebook.com/docs/facebook-login/access-tokens/expiration-and-extension
      * Visited 22-01-2017
      */
+    /**
+     * Verifies that the user is connected and has a valid token.
+     */
     private void facebookAuthentification(final UserLoginStatusCallback callback){
         if(AccessToken.getCurrentAccessToken() != null){
             if(!AccessToken.getCurrentAccessToken().isExpired()) {
@@ -203,21 +206,18 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void signOut(final Callback callback) {
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
+
+        LoginManager.getInstance().logOut();
+
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
                 if (status.isSuccess()) {
-                    Timber.d("Log out is success");
-                    LoginManager.getInstance().logOut();
-
-                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-                    mSharedPreferencesHelper.setFacebookToken(null);
-                    mSharedPreferencesHelper.setGoogleToken(null);
-
                     callback.onSuccess();
                 } else {
-                    callback.onError();
-                    Timber.d("Log out is error");
+                    callback.onError(ErrorType.Other);
                 }
             }
         });
@@ -226,25 +226,56 @@ public class SpottedLocalDataSource implements SpottedDataSource {
 
     @Override
     public void deactivateAccount(final Callback callback) {
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
+
+        LoginManager.getInstance().logOut();
+
         Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(Status status) {
                 if(status.isSuccess()){
-                    LoginManager.getInstance().logOut();
-
-                    mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-                    mSharedPreferencesHelper.setFacebookToken(null);
-                    mSharedPreferencesHelper.setGoogleToken(null);
-
                     callback.onSuccess();
                 }
                 else {
-                    callback.onError();
+                    callback.onError(ErrorType.Other);
                 }
             }
         });
+    }
 
+    /**
+     * This methods should only be used when a 401 or 410 error is received that confirms
+     * the fact that the account is already deactivated or unauthorized.
+     */
+    public void forceSignOutOrForceDeactivate(){
+        clearFacebookLoginPrefenrences();
+        clearGoogleLoginPrefenrences();
 
+        LoginManager.getInstance().logOut();
+    }
 
+    public void setFacebookAuthPrefs(String userId, String token){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+        mSharedPreferencesHelper.setFacebookUserId(userId);
+        mSharedPreferencesHelper.setFacebookToken(token);
+    }
+
+    public void setGoogleAuthPrefs(String userId, String token){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+        mSharedPreferencesHelper.setGoogleUserId(userId);
+        mSharedPreferencesHelper.setGoogleToken(token);
+    }
+
+    public void clearFacebookLoginPrefenrences(){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+        mSharedPreferencesHelper.setFacebookToken(null);
+        mSharedPreferencesHelper.setFacebookUserId(null);
+    }
+
+    public void clearGoogleLoginPrefenrences(){
+        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
+        mSharedPreferencesHelper.setGoogleToken(null);
+        mSharedPreferencesHelper.setGoogleUserId(null);
     }
 }

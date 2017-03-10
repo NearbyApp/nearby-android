@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import io.nearby.android.data.User;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
+import io.nearby.android.ui.BasePresenter;
 
 public class SettingsPresenter implements SettingsContract.Presenter {
 
@@ -34,7 +35,12 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() { }
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    // Do nothing
+                    // Keep both link account preferences disabled
+                }
+            }
         });
     }
 
@@ -55,8 +61,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.linkAccountFailed();
+                }
             }
         });
     }
@@ -78,8 +86,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.linkAccountFailed();
+                }
             }
         });
     }
@@ -93,8 +103,11 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    //Normally a sign out should never fail so we do as if we had a success.
+                    mView.onSignOutCompleted();
+                }
             }
         });
     }
@@ -108,8 +121,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.deactivateAccountFailed();
+                }
             }
         });
     }
@@ -123,8 +138,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.mergeAccountFailed();
+                }
             }
         });
     }
@@ -138,8 +155,10 @@ public class SettingsPresenter implements SettingsContract.Presenter {
             }
 
             @Override
-            public void onError() {
-
+            public void onError(SpottedDataSource.ErrorType errorType) {
+                if(!BasePresenter.manageError(mView, errorType)){
+                    mView.mergeAccountFailed();
+                }
             }
         });
     }

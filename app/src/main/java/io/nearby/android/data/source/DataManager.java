@@ -11,7 +11,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
-import io.nearby.android.data.source.local.SharedPreferencesHelper;
+import io.nearby.android.data.User;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;
 import io.nearby.android.data.source.remote.SpottedRemoteDataSource;
 
@@ -20,15 +20,12 @@ public class DataManager implements SpottedDataSource{
 
     private final SpottedLocalDataSource mLocalDataSource;
     private final SpottedRemoteDataSource mRemoteDataSource;
-    private final SharedPreferencesHelper mSharedPreferencesHelper;
 
     @Inject
     public DataManager(SpottedRemoteDataSource remoteDataSource,
-                       SpottedLocalDataSource localDataSource,
-                       SharedPreferencesHelper sharedPreferencesHelper) {
+                       SpottedLocalDataSource localDataSource) {
         mRemoteDataSource = remoteDataSource;
         mLocalDataSource = localDataSource;
-        mSharedPreferencesHelper = sharedPreferencesHelper;
     }
 
     @Override
@@ -38,9 +35,7 @@ public class DataManager implements SpottedDataSource{
 
     @Override
     public void facebookLogin(String userId, String token, final LoginCallback callback) {
-        mSharedPreferencesHelper.setFacebookUserId(userId);
-        mSharedPreferencesHelper.setFacebookToken(token);
-        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_FACEBOOK);
+        mLocalDataSource.setFacebookAuthPrefs(userId, token);
 
         mRemoteDataSource.facebookLogin(userId, token, new LoginCallback() {
             @Override
@@ -54,21 +49,16 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
-                mSharedPreferencesHelper.setFacebookUserId("");
-                mSharedPreferencesHelper.setFacebookToken("");
-                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-
-                callback.onError();
+            public void onError(ErrorType errorType) {
+                mLocalDataSource.clearFacebookLoginPrefenrences();
+                callback.onError(errorType);
             }
         });
     }
 
     @Override
     public void googleLogin(String userId, String token, final LoginCallback callback) {
-        mSharedPreferencesHelper.setGoogleToken(token);
-        mSharedPreferencesHelper.setGoogleUserId(userId);
-        mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_GOOGLE);
+        mLocalDataSource.setGoogleAuthPrefs(userId, token);
 
         mRemoteDataSource.googleLogin(userId, token, new LoginCallback() {
             @Override
@@ -82,49 +72,112 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
-                mSharedPreferencesHelper.setGoogleUserId("");
-                mSharedPreferencesHelper.setGoogleToken("");
-                mSharedPreferencesHelper.setLastSignInMethod(SharedPreferencesHelper.LAST_SIGN_IN_METHOD_NONE);
-
-                callback.onError();
+            public void onError(ErrorType errorType) {
+                mLocalDataSource.clearGoogleLoginPrefenrences();
+                callback.onError(errorType);
             }
         });
     }
 
     @Override
-    public void createSpotted(@NonNull Spotted spotted, @Nullable File image, SpottedCreatedCallback callback) {
-        mRemoteDataSource.createSpotted(spotted, image,callback);
+    public void createSpotted(@NonNull Spotted spotted, @Nullable File image, final SpottedCreatedCallback callback) {
+        mRemoteDataSource.createSpotted(spotted, image, new SpottedCreatedCallback() {
+            @Override
+            public void onSpottedCreated() {
+                callback.onSpottedCreated();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void loadMySpotted(MySpottedLoadedCallback callback) {
-        mRemoteDataSource.loadMySpotted(callback);
+    public void loadMySpotted(final MySpottedLoadedCallback callback) {
+        mRemoteDataSource.loadMySpotted(new MySpottedLoadedCallback() {
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                callback.onMySpottedLoaded(mySpotted);
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void loadSpotted(double minLat,double maxLat,
+    public void loadSpotted(double minLat, double maxLat,
                             double minLng, double maxLng,
                             boolean locationOnly,
-                            SpottedLoadedCallback callback) {
+                            final SpottedLoadedCallback callback) {
         mRemoteDataSource.loadSpotted(minLat, maxLat,
                 minLng, maxLng,
-                locationOnly, callback);
+                locationOnly, new SpottedLoadedCallback() {
+                    @Override
+                    public void onSpottedLoaded(List<Spotted> spotted) {
+                        callback.onSpottedLoaded(spotted);
+                    }
+
+                    @Override
+                    public void onError(ErrorType errorType) {
+                        manageError(errorType);
+                        callback.onError(errorType);
+                    }
+                });
     }
 
     @Override
-    public void loadSpottedDetails(String spottedId, SpottedDetailsLoadedCallback callback) {
-        mRemoteDataSource.loadSpottedDetails(spottedId, callback);
+    public void loadSpottedDetails(String spottedId, final SpottedDetailsLoadedCallback callback) {
+        mRemoteDataSource.loadSpottedDetails(spottedId, new SpottedDetailsLoadedCallback() {
+            @Override
+            public void onSpottedDetailsLoaded(Spotted spotted) {
+                callback.onSpottedDetailsLoaded(spotted);
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void loadMyOlderSpotted(int spottedCount, MySpottedLoadedCallback callback) {
-        mRemoteDataSource.loadMyOlderSpotted(spottedCount, callback);
+    public void loadMyOlderSpotted(int spottedCount, final MySpottedLoadedCallback callback) {
+        mRemoteDataSource.loadMyOlderSpotted(spottedCount, new MySpottedLoadedCallback() {
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                callback.onMySpottedLoaded(mySpotted);
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void getMyNewerSpotteds(Date myOlderSpotted, MySpottedLoadedCallback callback) {
-        mRemoteDataSource.getMyNewerSpotteds(myOlderSpotted, callback);
+    public void getMyNewerSpotteds(Date myOlderSpotted, final MySpottedLoadedCallback callback) {
+        mRemoteDataSource.getMyNewerSpotteds(myOlderSpotted, new MySpottedLoadedCallback() {
+            @Override
+            public void onMySpottedLoaded(List<Spotted> mySpotted) {
+                callback.onMySpottedLoaded(mySpotted);
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
@@ -138,33 +191,109 @@ public class DataManager implements SpottedDataSource{
     }
 
     @Override
-    public void getUserInfo(UserInfoLoadedCallback callback) {
-        mRemoteDataSource.getUserInfo(callback);
+    public void getUserInfo(final UserInfoLoadedCallback callback) {
+        mRemoteDataSource.getUserInfo(new UserInfoLoadedCallback() {
+            @Override
+            public void onUserInfoLoaded(User user) {
+                callback.onUserInfoLoaded(user);
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void linkFacebookAccount(String userId, String token, FacebookLinkAccountCallback callback) {
-        mRemoteDataSource.linkFacebookAccount(userId, token, callback);
+    public void linkFacebookAccount(String userId, String token, final FacebookLinkAccountCallback callback) {
+        mRemoteDataSource.linkFacebookAccount(userId, token, new FacebookLinkAccountCallback() {
+            @Override
+            public void onFacebookAccountAlreadyExist(String userId, String token) {
+                callback.onFacebookAccountAlreadyExist(userId, token);
+            }
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void linkGoogleAccount(String userId, String token, GoogleLinkAccountCallback callback) {
-        mRemoteDataSource.linkGoogleAccount(userId, token, callback);
+    public void linkGoogleAccount(String userId, String token, final GoogleLinkAccountCallback callback) {
+        mRemoteDataSource.linkGoogleAccount(userId, token, new GoogleLinkAccountCallback() {
+            @Override
+            public void onGoogleAccountAlreadyExist(String userId, String token) {
+                callback.onGoogleAccountAlreadyExist(userId,token);
+            }
+
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void mergeFacebookAccount(String userId, String token, Callback callback) {
-        mRemoteDataSource.mergeFacebookAccount(userId, token, callback);
+    public void mergeFacebookAccount(String userId, String token, final Callback callback) {
+        mRemoteDataSource.mergeFacebookAccount(userId, token, new Callback() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void mergeGoogleAccount(String userId, String token, Callback callback) {
-        mRemoteDataSource.mergeGoogleAccount(userId, token, callback);
+    public void mergeGoogleAccount(String userId, String token, final Callback callback) {
+        mRemoteDataSource.mergeGoogleAccount(userId, token, new Callback() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
-    public void signOut(Callback callback) {
-        mLocalDataSource.signOut(callback);
+    public void signOut(final Callback callback) {
+        mLocalDataSource.signOut(new Callback() {
+            @Override
+            public void onSuccess() {
+                callback.onSuccess();
+            }
+
+            @Override
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
+            }
+        });
     }
 
     @Override
@@ -176,9 +305,16 @@ public class DataManager implements SpottedDataSource{
             }
 
             @Override
-            public void onError() {
-                callback.onError();
+            public void onError(ErrorType errorType) {
+                manageError(errorType);
+                callback.onError(errorType);
             }
         });
+    }
+
+    private void manageError(ErrorType errorType){
+        if(errorType == ErrorType.UnauthorizedUser || errorType == ErrorType.DisabledUser){
+            mLocalDataSource.forceSignOutOrForceDeactivate();
+        }
     }
 }
