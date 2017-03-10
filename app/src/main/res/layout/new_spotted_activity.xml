@@ -37,6 +37,7 @@
                 android:layout_marginBottom="@dimen/medium"
 
                 android:hint="@string/new_spotted_hint"
+                android:inputType="textCapSentences"
 
                 android:gravity="top|start"
                 android:background="@android:color/transparent"

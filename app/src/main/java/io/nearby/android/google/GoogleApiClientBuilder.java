@@ -60,18 +60,4 @@ public class GoogleApiClientBuilder {
     public GoogleApiClient build(){
         return mGoogleApiBuilder.build();
     }
-
-    //TODO remove
-    public static GoogleApiClient buildLocationApiclient(FragmentActivity activity,
-                                                         GoogleApiClient.ConnectionCallbacks connectionCallbacks,
-                                                         GoogleApiClient.OnConnectionFailedListener onConnectionFailedListener){
-        GoogleApiClient client = new GoogleApiClient.Builder(activity)
-                    .enableAutoManage(activity, onConnectionFailedListener)
-                    .addConnectionCallbacks(connectionCallbacks)
-                    .addApi(LocationServices.API)
-                    .build();
-        return client;
-    }
-
-
 }

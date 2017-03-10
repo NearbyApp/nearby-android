@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         mNavigationView.setCheckedItem(mCurrentNavDrawerItem);
         navigate(mCurrentNavDrawerItem);
+
+        //TODO fetch user info to show in the drawer
     }
 
     private void navigate(int itemId){
