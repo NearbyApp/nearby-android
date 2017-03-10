@@ -57,7 +57,6 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                     @Override
                     public void onError(SpottedDataSource.ErrorType errorType) {
                         if(!BasePresenter.manageError(mView, errorType)){
-                            // TODO Manage unhandled error
                             mView.onSpottedNotCreated();
                         }
                     }
