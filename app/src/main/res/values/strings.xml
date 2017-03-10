@@ -24,6 +24,9 @@
     <!-- Spotted detail Activity -->
     <string name="anonymous">Anonymous</string>
 
+    <!-- My spotted Activity -->
+    <string name="could_not_refresh_feed">Could not refresh feed.</string>
+
     <!-- Settings Activity -->
     <string name="logout">Logout</string>
     <string name="logout_message">Are you sure you want to sign out?</string>

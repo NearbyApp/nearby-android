@@ -3,7 +3,6 @@ package io.nearby.android.ui.myspotted;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,11 +10,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -43,7 +41,8 @@ public class MySpottedFragment extends BaseFragment<MySpottedContract.Presenter>
     private SpottedAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private TextView mEmptyListTextView;
-    private ProgressBar mProgressBar;
+    private View mProgressBar;
+    private View mErrorMessage;
 
     private boolean mIsLoadingOlderSpotted = false;
     private boolean mHasOlderSpotted = true;
@@ -75,7 +74,8 @@ public class MySpottedFragment extends BaseFragment<MySpottedContract.Presenter>
         View view = inflater.inflate(LAYOUT, container, false);
 
         mEmptyListTextView = (TextView) view.findViewById(R.id.empty);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+        mProgressBar = view.findViewById(R.id.progress_bar_container);
+        mErrorMessage = view.findViewById(R.id.error);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
@@ -168,18 +168,28 @@ public class MySpottedFragment extends BaseFragment<MySpottedContract.Presenter>
     }
 
     @Override
-    public void showLoadingProgressBar() {
-        mProgressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
     public void hideLoadingProgressBar() {
         mProgressBar.setVisibility(View.GONE);
     }
 
     @Override
+    public void loadOlderFailed() {
+        Toast.makeText(getActivity(), R.string.could_not_refresh_feed, Toast.LENGTH_LONG) .show();
+    }
+
+    @Override
+    public void refreshFailed() {
+        Toast.makeText(getActivity(), R.string.could_not_refresh_feed, Toast.LENGTH_LONG) .show();
+    }
+
+    @Override
     public void onMyNewerSpottedReceived(List<Spotted> mySpotted) {
         mAdapter.insertAll(mySpotted);
+    }
+
+    @Override
+    public void loadingMySpottedFailed() {
+        mErrorMessage.setVisibility(View.VISIBLE);
     }
 
     @Override

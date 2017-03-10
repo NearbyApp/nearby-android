@@ -28,7 +28,6 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
 
     @Override
     public void loadMySpotted(){
-        mView.showLoadingProgressBar();
         mDataManager.loadMySpotted(new SpottedDataSource.MySpottedLoadedCallback() {
             @Override
             public void onMySpottedLoaded(List<Spotted> mySpotted) {
@@ -38,9 +37,9 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
 
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
+                mView.hideLoadingProgressBar();
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    //mView.mySpottedLoadingFailed();
+                    mView.loadingMySpottedFailed();
                 }
             }
         });
@@ -59,8 +58,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             public void onError(SpottedDataSource.ErrorType errorType) {
                 mView.stopRefreshing();
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // Do nothing
+                    mView.refreshFailed();
                 }
             }
         });
@@ -78,8 +76,7 @@ public class MySpottedPresenter implements MySpottedContract.Presenter{
             @Override
             public void onError(SpottedDataSource.ErrorType errorType) {
                 if(!BasePresenter.manageError(mView, errorType)){
-                    // TODO Manage unhandled error
-                    // Do nothing
+                    mView.loadOlderFailed();
                 }
             }
         });
