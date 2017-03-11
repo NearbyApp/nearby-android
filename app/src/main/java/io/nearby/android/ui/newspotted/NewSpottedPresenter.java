@@ -1,8 +1,14 @@
 package io.nearby.android.ui.newspotted;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.BitmapCompat;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.OutputStream;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,6 +50,14 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
         if(filePath != null){
             file = new File(filePath);
+
+            /*BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
+            bitmap = Bitmap.createScaledBitmap(bitmap,1440,1440,false);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG,75,stream);
+            Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(stream.toByteArray()));
+            */
         }
 
         mDataManager.createSpotted(spotted,
