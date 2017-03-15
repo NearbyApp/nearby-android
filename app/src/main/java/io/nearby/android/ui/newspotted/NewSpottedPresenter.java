@@ -17,6 +17,7 @@ import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;
 import io.nearby.android.data.source.SpottedDataSource;
 import io.nearby.android.ui.BasePresenter;
+import io.nearby.android.util.ImageUtil;
 
 public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
@@ -49,15 +50,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         File file = null;
 
         if(filePath != null){
-            file = new File(filePath);
-
-            /*BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-            Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath(),bmOptions);
-            bitmap = Bitmap.createScaledBitmap(bitmap,1440,1440,false);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG,75,stream);
-            Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(stream.toByteArray()));
-            */
+            ImageUtil.compressBitmap(filePath);
         }
 
         mDataManager.createSpotted(spotted,

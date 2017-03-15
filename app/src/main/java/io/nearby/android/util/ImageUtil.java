@@ -11,8 +11,13 @@ import android.support.annotation.DrawableRes;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.AppCompatDrawableManager;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -42,29 +47,58 @@ public class ImageUtil {
     public static File createImageFile(Context context) throws IOException{
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        return File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
+        String imageFileName = "JPEG_" + timeStamp ;
+
+        // creates the folder nearby in pictures if it doesn't exists
+        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Nearby").mkdir();
+
+        // creates the file for the bitmap
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Nearby",imageFileName + ".jpg");
+
+        file.createNewFile();
+
+        return file;
     }
 
-    public static Bitmap createBitmapFromFile(String filePath, int targetWidth){
+    public static Bitmap createBitmapFromFile(String filePath){
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(filePath, bmOptions);
-        int photoW = bmOptions.outWidth;
-
-        // Determine how much to scale down the image
-        int scaleFactor = photoW/targetWidth;
 
         // Decode the image file into a Bitmap sized to fill the View
         bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
 
         return BitmapFactory.decodeFile(filePath, bmOptions);
+    }
+
+    public static Bitmap compressBitmap(String filePath){
+        Bitmap bitmap = createBitmapFromFile(filePath);
+        int bytecount = bitmap.getByteCount();
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        boolean compressed = bitmap.compress(Bitmap.CompressFormat.JPEG,75,stream);
+        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(stream.toByteArray()));
+
+        File file = new File(filePath);
+        file.delete();
+
+        try {
+            file.createNewFile();
+
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            fileOutputStream.write(stream.toByteArray());
+            fileOutputStream.flush();
+            fileOutputStream.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+        int test = decoded.getByteCount();
+
+        return decoded;
     }
 }

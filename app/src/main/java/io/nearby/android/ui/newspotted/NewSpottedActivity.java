@@ -82,8 +82,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_IMAGE_CAPTURE ){
-            int targetWidth = mSpottedPictureImageView.getWidth();
-            Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoPath,targetWidth);
+            Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoPath);
             mSpottedPictureImageView.setImageBitmap(bitmap);
         }
     }
@@ -225,11 +224,9 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
                 // Save a file: path for use with ACTION_VIEW intents
                 mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
+                Uri photoUri = FileProvider.getUriForFile(this, "io.nearby.android.fileprovider",photoFile);
 
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
                 startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
             }
         }
