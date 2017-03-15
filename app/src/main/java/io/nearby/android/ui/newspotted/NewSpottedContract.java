@@ -1,5 +1,7 @@
 package io.nearby.android.ui.newspotted;
 
+import java.io.File;
+
 import io.nearby.android.ui.BaseView;
 
 /**
@@ -14,7 +16,7 @@ public interface NewSpottedContract {
     }
 
     interface Presenter{
-        void createSpotted(double lat, double lng, String message, boolean anonymity, String filePath);
+        void createSpotted(double lat, double lng, String message, boolean anonymity, File file);
 
         boolean getDefaultAnonymity();
         void updateDefaultAnonymity(boolean anonymity);

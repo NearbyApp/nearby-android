@@ -21,6 +21,8 @@ import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import timber.log.Timber;
+
 /**
  * Created by Marc on 2017-01-29.
  */
@@ -60,6 +62,10 @@ public class ImageUtil {
         return file;
     }
 
+    public static Bitmap createBitmapFromFile(File file){
+        return createBitmapFromFile(file.getAbsolutePath());
+    }
+
     public static Bitmap createBitmapFromFile(String filePath){
         // Get the dimensions of the bitmap
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
@@ -72,33 +78,44 @@ public class ImageUtil {
         return BitmapFactory.decodeFile(filePath, bmOptions);
     }
 
-    public static Bitmap compressBitmap(String filePath){
-        Bitmap bitmap = createBitmapFromFile(filePath);
-        int bytecount = bitmap.getByteCount();
+    /**
+     * Compresses a JPEG with a compression value of 75.
+     * @param file The file to compress (Only Jpeg are supported)
+     * @return file of the compressed image or null if the image was not compressed.
+     */
+    public static File compressBitmap(File file){
+        File compressedPictureFile = null;
 
+        // Create Streams
+        FileOutputStream fileOutputStream;
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        boolean compressed = bitmap.compress(Bitmap.CompressFormat.JPEG,75,stream);
-        Bitmap decoded = BitmapFactory.decodeStream(new ByteArrayInputStream(stream.toByteArray()));
 
-        File file = new File(filePath);
-        file.delete();
+        // Create a bitmap from the passed file
+        Bitmap bitmap = createBitmapFromFile(file.getAbsolutePath());
+        // Compress the bitmap
+        boolean compressed = bitmap.compress(Bitmap.CompressFormat.JPEG,75,stream);
 
         try {
-            file.createNewFile();
+            if(compressed){
 
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            fileOutputStream.write(stream.toByteArray());
-            fileOutputStream.flush();
-            fileOutputStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+                String fileName = file.getName().split("\\.")[0] + "_temp";
+                File tempFile = File.createTempFile(fileName, ".jpg");
+
+                fileOutputStream = new FileOutputStream(tempFile);
+                fileOutputStream.write(stream.toByteArray());
+
+                fileOutputStream.flush();
+                fileOutputStream.close();
+
+                stream.flush();
+                stream.close();
+
+                compressedPictureFile = tempFile;
+            }
         } catch (IOException e) {
-            e.printStackTrace();
+            Timber.e(e);
         }
 
-
-        int test = decoded.getByteCount();
-
-        return decoded;
+        return compressedPictureFile;
     }
 }

@@ -40,17 +40,20 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                               double lng,
                               String message,
                               boolean anonymity,
-                              @Nullable String filePath){
+                              @Nullable File file){
+        final File compressPicture;
+
         Spotted spotted = new Spotted(Spotted.DEFAULT_ID,
                 message,
                 lat,
                 lng,
                 anonymity);
 
-        File file = null;
-
-        if(filePath != null){
-            ImageUtil.compressBitmap(filePath);
+        if(file != null){
+            compressPicture = ImageUtil.compressBitmap(file);
+        }
+        else {
+            compressPicture = null;
         }
 
         mDataManager.createSpotted(spotted,
@@ -59,12 +62,18 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                     @Override
                     public void onSpottedCreated() {
                         mView.onSpottedCreated();
+                        if(compressPicture != null){
+                            compressPicture.delete();
+                        }
                     }
 
                     @Override
                     public void onError(SpottedDataSource.ErrorType errorType) {
                         if(!BasePresenter.manageError(mView, errorType)){
                             mView.onSpottedNotCreated();
+                        }
+                        if(compressPicture != null){
+                            compressPicture.delete();
                         }
                     }
                 });

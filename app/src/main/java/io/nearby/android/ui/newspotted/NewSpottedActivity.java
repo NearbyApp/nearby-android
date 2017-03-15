@@ -36,6 +36,7 @@ import io.nearby.android.R;
 import io.nearby.android.util.GoogleApiClientBuilder;
 import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.util.ImageUtil;
+import timber.log.Timber;
 
 import static dagger.internal.Preconditions.checkNotNull;
 
@@ -52,7 +53,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
 
     private boolean mGoogleLocationServiceIsConnected = false;
     private GoogleApiClient mGoogleApiClient;
-    private String mCurrentPhotoPath;
+    private File mCurrentPhotoFile;
     private boolean mAnonymity;
 
     @Override
@@ -82,7 +83,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_IMAGE_CAPTURE ){
-            Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoPath);
+            Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoFile);
             mSpottedPictureImageView.setImageBitmap(bitmap);
         }
     }
@@ -204,7 +205,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
                         lng,
                         text,
                         mAnonymity,
-                        mCurrentPhotoPath);
+                        mCurrentPhotoFile);
             }
 
         }
@@ -218,11 +219,12 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
             try {
                 photoFile = ImageUtil.createImageFile(this);
             } catch (IOException e) {
-                e.printStackTrace();
+                Timber.e(e);
             }
+
             if(photoFile != null){
                 // Save a file: path for use with ACTION_VIEW intents
-                mCurrentPhotoPath = photoFile.getAbsolutePath();
+                mCurrentPhotoFile = photoFile;
 
                 Uri photoUri = FileProvider.getUriForFile(this, "io.nearby.android.fileprovider",photoFile);
 
