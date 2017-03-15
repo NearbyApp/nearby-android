@@ -100,7 +100,7 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster<T> cluster) {
-            return cluster.getItems().size() > 2;
+            return cluster.getItems().size() > 1;
         }
     }
 }
