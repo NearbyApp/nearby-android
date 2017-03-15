@@ -1,14 +1,19 @@
 package io.nearby.android.ui.map;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.net.ConnectivityManagerCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,6 +69,8 @@ public class MapFragment extends BaseFragment<MapContract.Presenter> implements 
     private NearbyClusterManager<SpottedClusterItem> mClusterManager;
     private SupportMapFragment mMapFragment;
 
+    private View mNoInternetConnectionView;
+
     private boolean mLocationPermissionGranted;
     private Location mLastKnownLocation;
     private CameraPosition mCameraPosition;
@@ -104,11 +111,35 @@ public class MapFragment extends BaseFragment<MapContract.Presenter> implements 
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .build();
+
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                boolean noConnectivity = false;
+
+                // EXTRA_NO_CONNECTIVITY will always be there if no connectivity is available.
+                if(intent.getExtras().containsKey(ConnectivityManager.EXTRA_NO_CONNECTIVITY)) {
+                    noConnectivity = intent.getExtras().getBoolean(ConnectivityManager.EXTRA_NO_CONNECTIVITY);
+                }
+
+                if(noConnectivity){
+                    showNoConnectivityNotification();
+                }
+                else {
+                    hideNoConnectivityNotification();
+                }
+            }
+        };
+
+        IntentFilter connectivityFilter = new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION);
+        getActivity().registerReceiver(broadcastReceiver,connectivityFilter);
     }
 
     @Override
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState) {
         View view = layoutInflater.inflate(R.layout.map_fragment, viewGroup, false);
+
+        mNoInternetConnectionView = view.findViewById(R.id.no_internet_connection);
 
         getChildFragmentManager().beginTransaction().replace(R.id.support_map_fragment, mMapFragment).commit();
 
@@ -327,6 +358,20 @@ public class MapFragment extends BaseFragment<MapContract.Presenter> implements 
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(DEFAULT_LOCATION, DEFAULT_ZOOM));
             mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
+    }
+
+    private void showNoConnectivityNotification() {
+        mNoInternetConnectionView.setVisibility(View.VISIBLE);
+    }
+
+    private void hideNoConnectivityNotification(){
+
+        if(mNoInternetConnectionView.getVisibility() == View.VISIBLE){
+            // Call onCameraIdle() which will fetch the spotteds.
+            onCameraIdle();
+        }
+
+        mNoInternetConnectionView.setVisibility(View.GONE);
     }
 
     /**
