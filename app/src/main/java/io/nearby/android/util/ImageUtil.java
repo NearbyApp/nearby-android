@@ -49,10 +49,11 @@ public class ImageUtil {
     public static File createImageFile(Context context) throws IOException{
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp ;
+        String imageFileName = "IMG_" + timeStamp ;
 
         // creates the folder nearby in pictures if it doesn't exists
-        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Nearby").mkdir();
+        File folder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Nearby");
+        folder.mkdir();
 
         // creates the file for the bitmap
         File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/Nearby",imageFileName + ".jpg");
