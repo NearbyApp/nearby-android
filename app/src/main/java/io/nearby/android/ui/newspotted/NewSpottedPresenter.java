@@ -50,7 +50,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
         }
 
         mDataManager.createSpotted(spotted,
-                file,
+                compressPicture,
                 new SpottedDataSource.SpottedCreatedCallback() {
                     @Override
                     public void onSpottedCreated() {
