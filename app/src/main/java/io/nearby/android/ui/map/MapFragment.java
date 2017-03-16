@@ -35,13 +35,13 @@ import javax.inject.Inject;
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
-import io.nearby.android.util.GoogleApiClientBuilder;
+import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.map.cluster.NearbyClusterManager;
 import io.nearby.android.ui.map.cluster.SpottedClusterItem;
-import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.newspotted.NewSpottedActivity;
 import io.nearby.android.ui.spottedclusterdetail.SpottedClusterDetailActivity;
 import io.nearby.android.ui.spotteddetail.SpottedDetailActivity;
+import io.nearby.android.util.GoogleApiClientBuilder;
 import timber.log.Timber;
 
 public class MapFragment extends BaseFragment<MapContract.Presenter> implements OnMapReadyCallback,

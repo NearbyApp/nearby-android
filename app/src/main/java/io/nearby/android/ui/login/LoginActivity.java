@@ -24,8 +24,8 @@ import javax.inject.Inject;
 
 import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
-import io.nearby.android.util.GoogleApiClientBuilder;
 import io.nearby.android.ui.main.MainActivity;
+import io.nearby.android.util.GoogleApiClientBuilder;
 import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, LoginContract.View, GoogleApiClient.OnConnectionFailedListener {

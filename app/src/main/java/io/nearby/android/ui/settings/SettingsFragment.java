@@ -23,9 +23,9 @@ import java.util.Arrays;
 
 import io.nearby.android.R;
 import io.nearby.android.data.User;
-import io.nearby.android.util.GoogleApiClientBuilder;
 import io.nearby.android.ui.BaseFragment;
 import io.nearby.android.ui.launcher.LauncherActivity;
+import io.nearby.android.util.GoogleApiClientBuilder;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragment implements SettingsContract.View {

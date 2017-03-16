@@ -8,7 +8,6 @@ import javax.inject.Singleton;
 
 import dagger.Binds;
 import dagger.Module;
-
 import dagger.Provides;
 import io.nearby.android.data.source.local.SharedPreferencesHelper;
 import io.nearby.android.data.source.local.SpottedLocalDataSource;

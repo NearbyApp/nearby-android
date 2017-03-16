@@ -15,7 +15,6 @@ import com.google.android.gms.common.api.Status;
 
 import java.io.File;
 import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,7 +22,6 @@ import javax.inject.Singleton;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.Local;
 import io.nearby.android.data.source.SpottedDataSource;
-import timber.log.Timber;
 
 @Singleton
 @Local

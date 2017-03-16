@@ -6,7 +6,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.maps.android.MarkerManager;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.maps.android.clustering.ClusterManager;
@@ -18,7 +17,6 @@ import java.util.List;
 
 import io.nearby.android.R;
 import io.nearby.android.util.ImageUtil;
-import timber.log.Timber;
 
 /**
  * Created by Marc on 2017-01-31.

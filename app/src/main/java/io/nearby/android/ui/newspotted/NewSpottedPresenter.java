@@ -1,17 +1,10 @@
 package io.nearby.android.ui.newspotted;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.BitmapCompat;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.OutputStream;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 import io.nearby.android.data.Spotted;
 import io.nearby.android.data.source.DataManager;

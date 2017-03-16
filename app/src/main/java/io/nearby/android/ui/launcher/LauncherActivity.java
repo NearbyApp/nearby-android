@@ -7,8 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import io.nearby.android.NearbyApplication;
-import io.nearby.android.ui.main.MainActivity;
 import io.nearby.android.ui.login.LoginActivity;
+import io.nearby.android.ui.main.MainActivity;
 
 /**
  * Created by Marc on 2017-01-22.
