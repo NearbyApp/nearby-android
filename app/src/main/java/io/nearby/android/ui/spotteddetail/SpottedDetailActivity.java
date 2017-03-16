@@ -19,6 +19,10 @@ import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.BaseActivity;
 
+
+/**
+ * Activity showing the details of a spotted.
+ */
 public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Presenter> implements SpottedDetailContract.View{
 
     public static final String EXTRAS_SPOTTED_ID = "extras_spotted_id";
@@ -34,14 +38,10 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
     SpottedDetailPresenter mPresenter;
 
     @Override
-    public void setPresenter(SpottedDetailContract.Presenter presenter) {
-        mPresenter = (SpottedDetailPresenter) presenter;
-    }
-
-    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //Dagger injection
         DaggerSpottedDetailComponent.builder()
                 .spottedDetailPresenterModule(new SpottedDetailPresenterModule(this))
                 .dataManagerComponent(((NearbyApplication) getApplication())
@@ -52,13 +52,20 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
 
         initializeView();
 
+        // Show error message if no spotted_id was passed in the extras.
+        boolean spottedIdInExtras = false;
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             String spottedId = (String) extras.get(EXTRAS_SPOTTED_ID);
 
             if(spottedId != null && !spottedId.isEmpty()){
+                spottedIdInExtras = true;
                 mPresenter.loadSpottedDetails(spottedId);
             }
+        }
+
+        if(!spottedIdInExtras){
+            spottedDetailsLoadingError();
         }
     }
 
@@ -72,6 +79,7 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
     public void onSpottedDetailsReceived(Spotted spotted) {
         mMessageTextView.setText(spotted.getMessage());
 
+        // Load profile picture and full name of the owner of the spotted if thr spotted is public.
         if(!spotted.isAnonymous()){
             mFullNameTextView.setText(spotted.getFullName());
 
@@ -81,6 +89,8 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
                     .into(mProfilePictureImageView);
         }
 
+        // Load the spotted picture if the spotted has one.
+        // Once the picture is loaded or that an error occurred, the progress bar will be hidden.
         if(spotted.getPictureUrl() != null){
             Glide.with(this)
                     .load(spotted.getPictureUrl())
@@ -109,6 +119,19 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
         mErrorMessage.setVisibility(View.VISIBLE);
     }
 
+    @Override
+    public void hideProgressBar(){
+        mProgressBarContainer.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void setPresenter(SpottedDetailContract.Presenter presenter) {
+        mPresenter = (SpottedDetailPresenter) presenter;
+    }
+
+    /**
+     * Initialize views of the activity.
+     */
     private void initializeView(){
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
@@ -122,10 +145,5 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
         mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
         mFullNameTextView = (TextView) findViewById(R.id.spotted_full_name);
         mProfilePictureImageView = (ImageView) findViewById(R.id.spotted_profile_picture);
-    }
-
-    @Override
-    public void hideProgressBar(){
-        mProgressBarContainer.setVisibility(View.GONE);
     }
 }
