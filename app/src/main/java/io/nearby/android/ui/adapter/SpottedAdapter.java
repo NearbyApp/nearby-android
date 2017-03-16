@@ -59,12 +59,13 @@ public class SpottedAdapter extends android.support.v7.widget.RecyclerView.Adapt
 
         spottedViewHolder.messageTextView.setText(spotted.getMessage());
 
-        if (spotted.getPictureUrl() == null) {
+        if (spotted.getPictureThumbnailURL() == null) {
             Glide.clear(spottedViewHolder.pictureImageView);
             spottedViewHolder.pictureImageView.setVisibility(View.GONE);
-        } else{
+        }
+        else{
             spottedViewHolder.pictureImageView.setVisibility(View.VISIBLE);
-            mGlide.load(spotted.getPictureUrl())
+            mGlide.load(spotted.getPictureThumbnailURL())
                     .into(spottedViewHolder.pictureImageView);
         }
 

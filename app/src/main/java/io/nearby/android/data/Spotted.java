@@ -37,6 +37,10 @@ public class Spotted implements Parcelable{
     @Expose
     private Date creationDate;
 
+    @SerializedName("thumbnailURL")
+    @Expose
+    private String pictureThumbnailURL;
+
     @SerializedName("pictureURL")
     @Expose
     private String pictureUrl;
@@ -75,6 +79,7 @@ public class Spotted implements Parcelable{
         message = source.readString();
         anonymous = source.readByte() != 1;
         pictureUrl = source.readString();
+        pictureThumbnailURL = source.readString();
         fullName = source.readString();
         profilePictureUrl = source.readString();
         location = source.readParcelable(Location.class.getClassLoader());
@@ -128,6 +133,10 @@ public class Spotted implements Parcelable{
         return pictureUrl;
     }
 
+    public String getPictureThumbnailURL() {
+        return pictureThumbnailURL;
+    }
+
     public String getProfilePictureUrl() {
         return profilePictureUrl;
     }
@@ -161,6 +170,7 @@ public class Spotted implements Parcelable{
                 ", location=" + location +
                 ", anonymous=" + anonymous +
                 ", pictureUrl='" + pictureUrl + '\'' +
+                ", pictureThumbnailURL='" + pictureThumbnailURL + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
                 '}';
@@ -178,6 +188,7 @@ public class Spotted implements Parcelable{
         dest.writeString(message);
         dest.writeByte((byte) (anonymous ? 1 : 0));
         dest.writeString(pictureUrl);
+        dest.writeString(pictureThumbnailURL);
         dest.writeString(fullName);
         dest.writeString(profilePictureUrl);
         dest.writeParcelable(location, flags);
