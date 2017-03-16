@@ -38,6 +38,7 @@
 
                 android:hint="@string/new_spotted_hint"
                 android:inputType="textCapSentences"
+                android:maxLength="1000"
 
                 android:gravity="top|start"
                 android:background="@android:color/transparent"
