@@ -9,24 +9,37 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import javax.inject.Inject;
+
+import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
+import io.nearby.android.data.User;
+import io.nearby.android.ui.BaseActivity;
 import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.ui.settings.SettingsActivity;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity<MainContract.Presenter>
+        implements NavigationView.OnNavigationItemSelectedListener, MainContract.View{
 
     private static final int DEFAULT_NAV_DRAWER_ITEM = R.id.map;
     private static final String NAV_DRAWER_INDEX = "nav_drawer_index";
 
+    @Inject MainPresenter mPresenter;
+
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
     private Toolbar mToolbar;
+    private ImageView mProfilePictureImageView;
+    private TextView mProfileFullName;
 
     private ActionBarDrawerToggle mDrawerToggle;
 
@@ -37,15 +50,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
 
-        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mToolbar = (Toolbar) findViewById(R.id.toolbar);
-
         if(savedInstanceState != null){
             mCurrentNavDrawerItem = savedInstanceState.getInt(NAV_DRAWER_INDEX);
         }
 
+        mNavigationView = (NavigationView) findViewById(R.id.navigation_view);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        mProfileFullName = (TextView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_full_name);
+        mProfilePictureImageView = (ImageView) mNavigationView.getHeaderView(0).findViewById(R.id.profile_picture);
+
         this.setupActionBarAndNavigationDrawer();
+
+        DaggerMainComponent.builder()
+                .mainPresenterModule(new MainPresenterModule(this))
+                .dataManagerComponent(((NearbyApplication) getApplication())
+                        .getDataManagerComponent()).build()
+                .inject(this);
+
+        mPresenter.getUserInfo();
     }
 
     @Override
@@ -91,6 +114,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout.closeDrawer(GravityCompat.START);
 
         return true;
+    }
+
+    @Override
+    public void onUserInfoReceived(User user) {
+        mProfileFullName.setText(user.getFullName());
+
+        if(user.getProfilePictureUrl() != null){
+            Glide.with(this)
+                    .load(user.getProfilePictureUrl())
+                    .into(mProfilePictureImageView);
+        }
+    }
+
+    @Override
+    public void setPresenter(MainContract.Presenter presenter) {
+        mPresenter = (MainPresenter) presenter;
     }
 
     private void setupActionBarAndNavigationDrawer(){
