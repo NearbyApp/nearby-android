@@ -28,6 +28,7 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.VisibleRegion;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -233,6 +234,8 @@ public class MapFragment extends BaseFragment<MapContract.Presenter> implements 
         mMapInitialized = true;
         mMap = map;
 
+        mMap.setMaxZoomPreference(20.0f);
+
         //Setting up the cluster manager
         mClusterManager = new NearbyClusterManager<>(getContext(), mMap);
         mClusterManager.setOnCameraIdleListener(this);
@@ -252,7 +255,14 @@ public class MapFragment extends BaseFragment<MapContract.Presenter> implements 
                     getActivity().startActivity(intent);
                 }
                 else {
-                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), mMap.getCameraPosition().zoom + 1));
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+
+                    for(SpottedClusterItem item : cluster.getItems()){
+                        builder.include(item.getLatLng());
+                    }
+
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(builder.build(),128));
+                    //mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(cluster.getPosition(), mMap.getCameraPosition().zoom + 1));
                 }
 
                 return true;
