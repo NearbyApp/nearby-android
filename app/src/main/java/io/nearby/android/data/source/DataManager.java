@@ -116,6 +116,13 @@ public class DataManager implements SpottedDataSource{
                             double minLng, double maxLng,
                             boolean locationOnly,
                             final SpottedLoadedCallback callback) {
+        // Add small buffer to min and max so that if we have multiple spotteds at the same
+        // location, we won't send identical min and max.
+        minLat -= 0.000001;
+        minLng -= 0.000001;
+        maxLat += 0.000001;
+        maxLng += 0.000001;
+
         mRemoteDataSource.loadSpotted(minLat, maxLat,
                 minLng, maxLng,
                 locationOnly, new SpottedLoadedCallback() {

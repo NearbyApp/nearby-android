@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-    <LinearLayout
+    <include layout="@layout/generic_toolbar" />
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+
         >
 
-        <include layout="@layout/generic_toolbar" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/list_view"
@@ -38,33 +40,31 @@
             tools:visibility="visible"
             />
 
-    </LinearLayout>
+        <!-- Progress bar -->
+        <FrameLayout
+            android:id="@+id/progress_bar_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
 
-    <!-- Progress bar -->
-    <FrameLayout
-        android:id="@+id/progress_bar_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+            tools:background="#00ffffff"
+            >
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
 
-        tools:background="#00ffffff"
-        >
-        <ProgressBar
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+                style="?android:progressBarStyleLarge"
+                />
+        </FrameLayout>
 
-            style="?android:progressBarStyleLarge"
+        <!-- Error message -->
+        <include
+            layout="@layout/generic_error_message"
+
+            tools:visibility="gone"
             />
+
     </FrameLayout>
 
-    <!-- Error message -->
-    <include
-        layout="@layout/generic_error_message"
-
-        tools:visibility="gone"
-        />
-
-
-
-</FrameLayout>
+</LinearLayout>
