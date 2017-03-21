@@ -21,6 +21,7 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.BaseActivity;
+import io.nearby.android.util.TimeUtils;
 
 
 /**
@@ -82,9 +83,7 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
     @Override
     public void onSpottedDetailsReceived(Spotted spotted) {
         mMessageTextView.setText(spotted.getMessage());
-
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        mCreationDateTextView.setText(dateFormat.format(spotted.getCreationDate()));
+        mCreationDateTextView.setText(TimeUtils.getHumanFriendlyTimeAgo(this,spotted.getCreationDate()));
 
         // Load profile picture and full name of the owner of the spotted if thr spotted is public.
         if(!spotted.isAnonymous()){
