@@ -1,6 +1,7 @@
 package io.nearby.android.ui.newspotted;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -48,6 +49,8 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     private ImageView mSpottedPictureImageView;
     private ImageButton mSpottedAnonymityButton;
     private ImageButton mSendButton;
+
+    private ProgressDialog mProgressDialog;
 
     @Inject NewSpottedPresenter mPresenter;
 
@@ -118,6 +121,21 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     @Override
     public void onSpottedNotCreated(){
         Toast.makeText(this,R.string.new_spotted_not_created,Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showSendingProgressDialog() {
+        if(mProgressDialog == null){
+            mProgressDialog =  ProgressDialog.show(this, null, "Sending", true, false);
+        }
+        else {
+            mProgressDialog.show();
+        }
+    }
+
+    @Override
+    public void hideSendingProgressDialog() {
+        mProgressDialog.hide();
     }
 
     @Override

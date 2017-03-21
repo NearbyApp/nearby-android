@@ -13,6 +13,9 @@ public interface NewSpottedContract {
     interface View extends BaseView<Presenter>{
         void onSpottedCreated();
         void onSpottedNotCreated();
+
+        void showSendingProgressDialog();
+        void hideSendingProgressDialog();
     }
 
     interface Presenter{
