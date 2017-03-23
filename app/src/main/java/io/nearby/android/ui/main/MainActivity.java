@@ -26,6 +26,7 @@ import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.ui.settings.SettingsActivity;
+import io.nearby.android.ui.glide.CircleTransform;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
         implements NavigationView.OnNavigationItemSelectedListener, MainContract.View{
@@ -123,6 +124,7 @@ public class MainActivity extends BaseActivity<MainContract.Presenter>
         if(user.getProfilePictureUrl() != null){
             Glide.with(this)
                     .load(user.getProfilePictureUrl())
+                    .transform(new CircleTransform(this))
                     .into(mProfilePictureImageView);
         }
     }

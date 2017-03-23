@@ -18,6 +18,7 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.Spotted;
 import io.nearby.android.ui.BaseActivity;
+import io.nearby.android.ui.glide.CircleTransform;
 
 
 /**
@@ -85,6 +86,7 @@ public class SpottedDetailActivity extends BaseActivity<SpottedDetailContract.Pr
 
             Glide.with(this)
                     .load(spotted.getProfilePictureUrl())
+                    .transform(new CircleTransform(this))
                     .fallback(R.drawable.ic_person)
                     .into(mProfilePictureImageView);
         }
