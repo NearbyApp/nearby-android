@@ -43,3 +43,7 @@ captures/
 # Other
 .DS_Store
 .externalNativeBuild
+
+# Nearby ignore
+keystore.properties
+debug.keystore.jks
