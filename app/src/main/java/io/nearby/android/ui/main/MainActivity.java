@@ -22,11 +22,11 @@ import io.nearby.android.NearbyApplication;
 import io.nearby.android.R;
 import io.nearby.android.data.User;
 import io.nearby.android.ui.BaseActivity;
+import io.nearby.android.ui.glide.CircleTransform;
 import io.nearby.android.ui.help.HelpActivity;
 import io.nearby.android.ui.map.MapFragment;
 import io.nearby.android.ui.myspotted.MySpottedFragment;
 import io.nearby.android.ui.settings.SettingsActivity;
-import io.nearby.android.ui.glide.CircleTransform;
 
 public class MainActivity extends BaseActivity<MainContract.Presenter>
         implements NavigationView.OnNavigationItemSelectedListener, MainContract.View{
