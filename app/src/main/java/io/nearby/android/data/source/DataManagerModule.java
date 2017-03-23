@@ -37,7 +37,6 @@ abstract class DataManagerModule {
     @Local
     abstract SharedPreferencesHelper provideSharedPreferencesHelper(SharedPreferencesHelper sharedPreferencesHelper);
 
-    @Singleton
     @Provides
     static GoogleApiClient provideGoogleApiClient(Context context){
         return new GoogleApiClientBuilder(context)
