@@ -9,6 +9,10 @@ import android.graphics.Paint;
 import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
+/**
+ * Source
+ * http://stackoverflow.com/questions/25278821/how-to-round-an-image-with-glide-library#answer-25806229
+ */
 public class CircleTransform extends BitmapTransformation {
     public CircleTransform(Context context) {
         super(context);
