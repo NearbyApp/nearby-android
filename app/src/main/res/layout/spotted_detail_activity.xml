@@ -45,17 +45,34 @@
                         app:srcCompat="@drawable/ic_person"
                         />
 
-                    <!-- Full name -->
-                    <TextView
-                        android:id="@+id/spotted_full_name"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="@dimen/medium"
+                        android:orientation="vertical"
 
-                        android:textSize="18sp"
-                        android:text="@string/anonymous"
-                        />
+                        android:layout_marginLeft="@dimen/medium"
+                        >
+                        <!-- Full name -->
+                        <TextView
+                            android:id="@+id/spotted_full_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+
+
+                            android:textSize="18sp"
+                            android:text="@string/anonymous"
+                            />
+
+                        <TextView
+                            android:id="@+id/spotted_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:textSize="12sp"
+
+                            tools:text="12 minnutes ago"/>
+                    </LinearLayout>
 
                 </LinearLayout>
 

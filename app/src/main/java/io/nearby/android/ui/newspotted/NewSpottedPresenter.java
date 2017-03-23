@@ -34,6 +34,8 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
                               String message,
                               boolean anonymity,
                               @Nullable File file){
+        mView.showSendingProgressDialog();
+
         final File compressPicture;
 
         Spotted spotted = new Spotted(Spotted.DEFAULT_ID,
@@ -62,6 +64,7 @@ public class NewSpottedPresenter implements NewSpottedContract.Presenter{
 
                     @Override
                     public void onError(SpottedDataSource.ErrorType errorType) {
+                        mView.hideSendingProgressDialog();
                         if(!BasePresenter.manageError(mView, errorType)){
                             mView.onSpottedNotCreated();
                         }

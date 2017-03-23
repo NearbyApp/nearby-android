@@ -24,8 +24,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-
-            android:padding="@dimen/medium"
             >
 
             <EditText
@@ -34,10 +32,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
 
-                android:layout_marginBottom="@dimen/medium"
+                android:padding="@dimen/medium"
 
                 android:hint="@string/new_spotted_hint"
-                android:inputType="textCapSentences"
+                android:inputType="textCapSentences|textMultiLine"
                 android:maxLength="1000"
 
                 android:gravity="top|start"

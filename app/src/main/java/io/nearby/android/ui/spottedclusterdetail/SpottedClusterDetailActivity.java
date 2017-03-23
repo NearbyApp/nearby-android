@@ -56,22 +56,24 @@ public class SpottedClusterDetailActivity extends BaseActivity<SpottedClusterDet
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             ArrayList<Spotted> spotteds = extras.getParcelableArrayList(EXTRAS_SPOTTEDS);
+            if(spotteds != null && spotteds.size() > 0){
 
-            double minLat = spotteds.get(0).getLatitude(),
-                   maxLat = minLat,
-                   minLng = spotteds.get(0).getLongitude(),
-                   maxLng = minLng;
+                double minLat = spotteds.get(0).getLatitude(),
+                        maxLat = minLat,
+                        minLng = spotteds.get(0).getLongitude(),
+                        maxLng = minLng;
 
 
-            for (int i=1 ; i< spotteds.size() ; i++) {
-                minLat = Math.min(spotteds.get(i).getLatitude(), minLat);
-                minLng = Math.min(spotteds.get(i).getLongitude(), minLng);
+                for (int i=1 ; i< spotteds.size() ; i++) {
+                    minLat = Math.min(spotteds.get(i).getLatitude(), minLat);
+                    minLng = Math.min(spotteds.get(i).getLongitude(), minLng);
 
-                maxLat = Math.max(spotteds.get(i).getLatitude(), maxLat);
-                maxLng = Math.max(spotteds.get(i).getLongitude(), maxLng);
+                    maxLat = Math.max(spotteds.get(i).getLatitude(), maxLat);
+                    maxLng = Math.max(spotteds.get(i).getLongitude(), maxLng);
+                }
+
+                mPresenter.getSpottedsDetails(minLat, maxLat, minLng, maxLng);
             }
-
-            mPresenter.getSpottedsDetails(minLat, maxLat, minLng, maxLng);
         }
 
     }
