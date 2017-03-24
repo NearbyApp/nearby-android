@@ -20,6 +20,7 @@
   * [Retrofit](http://square.github.io/retrofit/)
   * [Gson](https://github.com/google/gson)
   * [Dagger](https://google.github.io/dagger/)
+  * [Facebook](https://developers.facebook.com/)
   
   
     
