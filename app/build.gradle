@@ -5,7 +5,7 @@ apply plugin: 'com.android.application'
 // Initialize a new Properties() object called keystoreProperties.
 // Load your keystore.properties file into the keystoreProperties object.
 def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystorePropertiesFile = rootProject.file("app/keystore.properties")
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
