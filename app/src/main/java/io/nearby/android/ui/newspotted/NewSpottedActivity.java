@@ -49,6 +49,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     private ImageView mSpottedPictureImageView;
     private ImageButton mSpottedAnonymityButton;
     private ImageButton mSendButton;
+    private ImageButton mRemovePictureButton;
 
     private ProgressDialog mProgressDialog;
 
@@ -86,8 +87,14 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == REQUEST_IMAGE_CAPTURE ){
-            Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoFile);
-            mSpottedPictureImageView.setImageBitmap(bitmap);
+            if(resultCode == RESULT_OK){
+                Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoFile);
+                mSpottedPictureImageView.setImageBitmap(bitmap);
+                mRemovePictureButton.setVisibility(View.VISIBLE);
+            }
+            else{
+                mCurrentPhotoFile.delete();
+            }
         }
     }
 
@@ -108,6 +115,12 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
                 break;
             case R.id.anonymity_button:
                 onAnonymityButtonClicked();
+                break;
+            case R.id.remove_picture_button:
+                mCurrentPhotoFile.delete();
+                mCurrentPhotoFile = null;
+                mSpottedPictureImageView.setImageDrawable(null);
+                mRemovePictureButton.setVisibility(View.GONE);
                 break;
         }
     }
@@ -159,6 +172,9 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
         mSendButton.setOnClickListener(this);
         mSendButton.setClickable(false);
         mSendButton.setEnabled(false);
+
+        mRemovePictureButton = (ImageButton) findViewById(R.id.remove_picture_button);
+        mRemovePictureButton.setOnClickListener(this);
 
         mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
         mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);

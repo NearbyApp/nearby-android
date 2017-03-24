@@ -42,15 +42,35 @@
                 android:background="@android:color/transparent"
                 />
 
-            <ImageView
-                android:id="@+id/spotted_picture"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/spotted_picture"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
 
-                android:adjustViewBounds="true"
+                    android:adjustViewBounds="true"
 
-                tools:src="@mipmap/ic_launcher"
-                />
+                    tools:src="@mipmap/ic_launcher"
+                    />
+
+                <ImageButton
+                    android:id="@+id/remove_picture_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:layout_margin="@dimen/medium"
+
+                    android:layout_gravity="top|right"
+                    android:background="@drawable/circular_button"
+
+                    app:srcCompat="@drawable/ic_close"
+
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    />
+            </FrameLayout>
 
         </LinearLayout>
     </ScrollView>

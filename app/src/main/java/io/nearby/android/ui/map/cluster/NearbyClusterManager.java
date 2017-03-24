@@ -93,7 +93,7 @@ public class NearbyClusterManager<T extends ClusterItem> extends ClusterManager<
         @Override
         protected void onBeforeClusterItemRendered(T item, MarkerOptions markerOptions) {
             super.onBeforeClusterItemRendered(item, markerOptions);
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageUtil.vectorDrawableToBitmap(mContext, R.drawable.circle)));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(ImageUtil.vectorDrawableToBitmap(mContext, R.drawable.circular_marker)));
         }
 
         @Override
