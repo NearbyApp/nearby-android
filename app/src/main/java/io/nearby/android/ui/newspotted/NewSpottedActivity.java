@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -44,6 +45,7 @@ import static dagger.internal.Preconditions.checkNotNull;
 public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presenter> implements View.OnClickListener, NewSpottedContract.View, GoogleApiClient.ConnectionCallbacks {
 
     private static final int REQUEST_IMAGE_CAPTURE = 9003;
+    private static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 9009;
 
     private EditText mSpottedMessageEditText;
     private ImageView mSpottedPictureImageView;
@@ -59,6 +61,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     private GoogleApiClient mGoogleApiClient;
     private File mCurrentPhotoFile;
     private boolean mAnonymity;
+    private boolean mHasGivenStoragePermission = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,20 +84,41 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
 
         mAnonymity = mPresenter.getDefaultAnonymity();
         updateAnonymityIcon();
+
+        checkStoragePermission();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE_CAPTURE ){
-            if(resultCode == RESULT_OK){
-                Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoFile);
-                mSpottedPictureImageView.setImageBitmap(bitmap);
-                mRemovePictureButton.setVisibility(View.VISIBLE);
-            }
-            else{
-                mCurrentPhotoFile.delete();
-            }
+
+        switch(requestCode){
+            case REQUEST_IMAGE_CAPTURE:
+                if(resultCode == RESULT_OK){
+                    Bitmap bitmap = ImageUtil.createBitmapFromFile(mCurrentPhotoFile);
+                    mSpottedPictureImageView.setImageBitmap(bitmap);
+                    mRemovePictureButton.setVisibility(View.VISIBLE);
+                }
+                else{
+                    mCurrentPhotoFile.delete();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch(requestCode){
+            case REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE:
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(permissions.length > 0 && permissions[0].equals(android.Manifest.permission.WRITE_EXTERNAL_STORAGE )){
+                        mHasGivenStoragePermission = true;
+                    }
+                }
+                break;
         }
     }
 
@@ -167,17 +191,19 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     }
 
     private void initializeView(){
-        findViewById(R.id.upload_picture_button).setOnClickListener(this);
         mSendButton = (ImageButton) findViewById(R.id.send_button);
+        mRemovePictureButton = (ImageButton) findViewById(R.id.remove_picture_button);
+        mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
+        mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);
+
+        findViewById(R.id.upload_picture_button).setOnClickListener(this);
+
         mSendButton.setOnClickListener(this);
         mSendButton.setClickable(false);
         mSendButton.setEnabled(false);
 
-        mRemovePictureButton = (ImageButton) findViewById(R.id.remove_picture_button);
         mRemovePictureButton.setOnClickListener(this);
 
-        mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
-        mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);
         mSpottedAnonymityButton.setOnClickListener(this);
 
         mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_message);
@@ -247,7 +273,12 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
 
     private void onUploadPictureButtonClicked(){
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getPackageManager()) != null){
+
+        // If the user didn't give use the write permission we prompt him to give it.
+        if(!mHasGivenStoragePermission){
+            checkStoragePermission();
+        }
+        else if(takePictureIntent.resolveActivity(getPackageManager()) != null){
             File photoFile = null;
 
             try {
@@ -279,12 +310,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
                         mPresenter.updateDefaultAnonymity(mAnonymity);
                         updateAnonymityIcon();
                     }
-                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //DO nothing
-                    }
-                });
+                }).setNegativeButton(R.string.cancel, null);
 
         if (tempAnonymity) {
             builder.setMessage(R.string.new_spotted_anonymity_dialog_anonymous)
@@ -297,6 +323,14 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
         builder.create().show();
     }
 
+    private void checkStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+            mHasGivenStoragePermission = true;
+        }
+        else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
+        }
+    }
 
     private void updateAnonymityIcon(){
         if(mAnonymity){
