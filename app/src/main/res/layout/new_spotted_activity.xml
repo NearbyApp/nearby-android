@@ -57,14 +57,13 @@
 
                 <ImageButton
                     android:id="@+id/remove_picture_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="@dimen/standard_touch_target_size"
                     android:layout_height="wrap_content"
-
+                    android:layout_gravity="top|right"
                     android:layout_margin="@dimen/medium"
 
-                    android:layout_gravity="top|right"
+                    style="?android:borderlessButtonStyle"
                     android:background="@drawable/circular_button"
-
                     app:srcCompat="@drawable/ic_close"
 
                     android:visibility="gone"
@@ -102,7 +101,7 @@
 
             style="?android:borderlessButtonStyle"
             android:background="?attr/selectableItemBackgroundBorderless"
-            app:srcCompat="@drawable/ic_add_a_photo"/>
+            app:srcCompat="@drawable/ic_add_a_photo_selector" />
 
         <ImageButton
             android:id="@+id/anonymity_button"

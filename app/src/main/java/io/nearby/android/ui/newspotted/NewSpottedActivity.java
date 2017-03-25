@@ -52,6 +52,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     private ImageButton mSpottedAnonymityButton;
     private ImageButton mSendButton;
     private ImageButton mRemovePictureButton;
+    private ImageButton mUploadImageButton;
 
     private ProgressDialog mProgressDialog;
 
@@ -115,8 +116,12 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     if(permissions.length > 0 && permissions[0].equals(android.Manifest.permission.WRITE_EXTERNAL_STORAGE )){
+                        mUploadImageButton.setEnabled(true);
                         mHasGivenStoragePermission = true;
                     }
+                }
+                else {
+                    mUploadImageButton.setEnabled(false);
                 }
                 break;
         }
@@ -195,15 +200,15 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
         mRemovePictureButton = (ImageButton) findViewById(R.id.remove_picture_button);
         mSpottedPictureImageView = (ImageView) findViewById(R.id.spotted_picture);
         mSpottedAnonymityButton = (ImageButton) findViewById(R.id.anonymity_button);
+        mUploadImageButton = (ImageButton) findViewById(R.id.upload_picture_button);
 
-        findViewById(R.id.upload_picture_button).setOnClickListener(this);
 
         mSendButton.setOnClickListener(this);
         mSendButton.setClickable(false);
         mSendButton.setEnabled(false);
 
+        mUploadImageButton.setOnClickListener(this);
         mRemovePictureButton.setOnClickListener(this);
-
         mSpottedAnonymityButton.setOnClickListener(this);
 
         mSpottedMessageEditText = (EditText) findViewById(R.id.spotted_message);
@@ -326,6 +331,7 @@ public class NewSpottedActivity extends BaseActivity<NewSpottedContract.Presente
     private void checkStoragePermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
             mHasGivenStoragePermission = true;
+            mUploadImageButton.setEnabled(true);
         }
         else {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
